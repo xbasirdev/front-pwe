@@ -10,9 +10,9 @@ import { PresentacionService  } from './presentacion.service';
 })
 export class PresentacionComponent implements OnInit
 {
-    public products;
-    public productsCount;
-    public productsTableColumns: string[] = ['id', 'titulo'];
+    public presentaciones;
+    public presentacionesCount;
+    public presentacionesTableColumns: string[] = ['titulo', 'descripcion', 'deporte', 'lugar', 'fecha', 'acciones'];
 
     constructor(
         public presentacionService: PresentacionService,
@@ -23,9 +23,9 @@ export class PresentacionComponent implements OnInit
     ngOnInit(): void {
         this.presentacionService.getPresentaciones().subscribe((res) => {
             console.log(res)
-            this.products = res['data'];
-            this.productsCount = this.products.length
-            console.log(this.products)
+            this.presentaciones = res['data'];
+            this.presentacionesCount = this.presentaciones.length
+            console.log(this.presentaciones)
         })
     }
 }

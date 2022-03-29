@@ -6,35 +6,35 @@ export const defaultNavigation: FuseNavigationItem[] = [
         id   : 'cuestionarios',
         title: 'Cuestionarios y Encuestas',
         type : 'basic',
-        icon : 'heroicons_outline:support',
+        icon : 'heroicons_outline:clipboard-list',
         link : '/cuestionarios'
     },
     {
         id   : 'trabajo',
         title: 'Bolsa de trabajo',
         type : 'basic',
-        icon : 'heroicons_outline:support',
+        icon : 'heroicons_outline:briefcase',
         link : '/trabajo'
     },
     {
         id   : 'extension',
         title: 'Actividades de Extension',
         type : 'basic',
-        icon : 'heroicons_outline:support',
+        icon : 'heroicons_outline:folder-add',
         link : '/extension'
     },
     {
         id   : 'eventos',
         title: 'Eventos',
         type : 'basic',
-        icon : 'heroicons_outline:support',
+        icon : 'heroicons_outline:speakerphone',
         link : '/eventos'
     },
     {
         id   : 'grado',
         title: 'Actos de Grado',
         type : 'basic',
-        icon : 'heroicons_outline:support',
+        icon : 'heroicons_outline:academic-cap',
         link : '/grado'
     },
     {
