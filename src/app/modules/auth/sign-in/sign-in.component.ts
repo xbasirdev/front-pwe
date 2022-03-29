@@ -52,14 +52,6 @@ export class AuthSignInComponent implements OnInit
             rememberMe: ['']
         });
 
-        this._signIn.getTest().subscribe((res) => {
-            console.log('test', res)
-        })
-
-        this._signIn.getTest2().subscribe((res) => {
-            console.log('test2', res)
-        })
-
     }
 
     // -----------------------------------------------------------------------------------------------------
