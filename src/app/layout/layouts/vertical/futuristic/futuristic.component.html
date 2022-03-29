@@ -8,11 +8,7 @@
     <!-- Navigation header hook -->
     <ng-container fuseVerticalNavigationHeader>
         <!-- Logo -->
-        <div class="flex items-center h-20 p-6 pb-0">
-            <img
-                class="w-30"
-                src="assets/images/logo/logo-text-on-dark.svg">
-        </div>
+
     </ng-container>
     <!-- Navigation footer hook -->
     <ng-container fuseVerticalNavigationFooter>
@@ -45,10 +41,6 @@
         </button>
         <!-- Components -->
         <div class="flex items-center pl-2 ml-auto space-x-2">
-            <fuse-fullscreen></fuse-fullscreen>
-            <search [appearance]="'bar'"></search>
-            <shortcuts [shortcuts]="data.shortcuts"></shortcuts>
-            <messages [messages]="data.messages"></messages>
             <notifications [notifications]="data.notifications"></notifications>
         </div>
     </div>

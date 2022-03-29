@@ -71,12 +71,24 @@ export class AuthMockApi
             .reply(({request}) => {
 
                 // Sign in successful
-                if ( request.body.email === 'hughes.brian@company.com' && request.body.password === 'admin' )
+                if ( request.body.email === 'admin@admin.com' && request.body.password === 'admin' )
                 {
                     return [
                         200,
                         {
-                            user        : cloneDeep(this._user),
+                            user        : cloneDeep(this._user[0]),
+                            access_token: this._generateJWTToken(),
+                            token_type  : 'bearer'
+                        }
+                    ];
+                }
+
+                if (request.body.email === 'xbasir004@uneg.edu.ve' && request.body.password === 'admin' )
+                {
+                    return [
+                        200,
+                        {
+                            user        : cloneDeep(this._user[1]),
                             access_token: this._generateJWTToken(),
                             token_type  : 'bearer'
                         }
@@ -144,12 +156,24 @@ export class AuthMockApi
             .reply(({request}) => {
 
                 // Sign in successful
-                if ( request.body.email === 'hughes.brian@company.com' && request.body.password === 'admin' )
+                if ( request.body.email === 'admin@admin.com' && request.body.password === 'admin' )
                 {
                     return [
                         200,
                         {
-                            user        : cloneDeep(this._user),
+                            user        : cloneDeep(this._user[0]),
+                            access_token: this._generateJWTToken(),
+                            token_type  : 'bearer'
+                        }
+                    ];
+                }
+
+                if ( request.body.email === 'xbasir004@uneg.edu.ve' && request.body.password === 'admin' )
+                {
+                    return [
+                        200,
+                        {
+                            user        : cloneDeep(this._user[1]),
                             access_token: this._generateJWTToken(),
                             token_type  : 'bearer'
                         }
