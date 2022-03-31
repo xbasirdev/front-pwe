@@ -3,11 +3,32 @@ import { FuseNavigationItem } from '@fuse/components/navigation';
 
 export const defaultNavigation: FuseNavigationItem[] = [
     {
+        id   : 'usuarios',
+        title: 'Usuarios',
+        type : 'basic',
+        icon : 'heroicons_outline:user',
+        link : '/usuarios'
+    },
+    {
+        id   : 'egresados',
+        title: 'Egresados',
+        type : 'basic',
+        icon : 'heroicons_outline:user-group',
+        link : '/egresado'
+    },
+    {
+        id   : 'gestion_cuestionarios',
+        title: 'Gestionar cuestionarios',
+        type : 'basic',
+        icon : 'heroicons_outline:clipboard-copy',
+        link : '/gestion_cuestionarios'
+    },
+    {
         id   : 'cuestionarios',
         title: 'Cuestionarios y Encuestas',
         type : 'basic',
         icon : 'heroicons_outline:clipboard-list',
-        link : '/cuestionarios'
+        link : '/cuestionario'
     },
     {
         id   : 'trabajo',

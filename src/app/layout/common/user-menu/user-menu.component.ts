@@ -95,4 +95,9 @@ export class UserMenuComponent implements OnInit, OnDestroy
     {
         this._router.navigate(['/sign-out']);
     }
+
+    perfilRoute(): void {
+        console.log(this.user)
+        this._router.navigate(['egresado/perfil/' + this.user.id]);
+    }
 }

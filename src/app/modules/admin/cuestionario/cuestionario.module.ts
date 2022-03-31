@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
-import { PresentacionComponent } from 'app/modules/admin/presentacion/presentacion.component';
-import { PresentacionAddComponent } from 'app/modules/admin/presentacion/presentacion.component';
+import { CuestionarioComponent } from 'app/modules/admin/cuestionario/cuestionario.component';
+import { CuestionarioAddComponent } from 'app/modules/admin/cuestionario/cuestionario.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,29 +18,29 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
 
-const presentacionRoutes: Route[] = [
+const cuestionarioRoutes: Route[] = [
     {
         path     : '',
-        component: PresentacionComponent
+        component: CuestionarioComponent
     },
     {
         path     : 'create',
-        component: PresentacionAddComponent
+        component: CuestionarioAddComponent
       },
       {
         path     : 'edit/:id',
-        component: PresentacionAddComponent
+        component: CuestionarioAddComponent
       },
       {
         path     : 'detail/:id',
-        component: PresentacionAddComponent
+        component: CuestionarioAddComponent
       }
 ];
 
 @NgModule({
     declarations: [
-        PresentacionComponent,
-        PresentacionAddComponent,
+        CuestionarioComponent,
+        CuestionarioAddComponent,
     ],
     imports     : [
         MatButtonModule,
@@ -58,9 +58,9 @@ const presentacionRoutes: Route[] = [
         MatTableModule,
         MatTooltipModule,
         SharedModule,
-        RouterModule.forChild(presentacionRoutes)
+        RouterModule.forChild(cuestionarioRoutes)
     ]
 })
-export class PresentacionModule
+export class CuestionarioModule
 {
 }

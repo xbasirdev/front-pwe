@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
-import { PresentacionComponent } from 'app/modules/admin/presentacion/presentacion.component';
-import { PresentacionAddComponent } from 'app/modules/admin/presentacion/presentacion.component';
+import { EgresadoComponent } from 'app/modules/admin/egresado/egresado.component';
+import { EgresadoAddComponent } from 'app/modules/admin/egresado/egresado.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,29 +18,33 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
 
-const presentacionRoutes: Route[] = [
+const egresadoRoutes: Route[] = [
     {
         path     : '',
-        component: PresentacionComponent
+        component: EgresadoComponent
     },
     {
         path     : 'create',
-        component: PresentacionAddComponent
+        component: EgresadoAddComponent
       },
       {
         path     : 'edit/:id',
-        component: PresentacionAddComponent
+        component: EgresadoAddComponent
       },
       {
         path     : 'detail/:id',
-        component: PresentacionAddComponent
+        component: EgresadoAddComponent
+      },
+      {
+        path     : 'perfil/:id',
+        component: EgresadoAddComponent
       }
 ];
 
 @NgModule({
     declarations: [
-        PresentacionComponent,
-        PresentacionAddComponent,
+        EgresadoComponent,
+        EgresadoAddComponent,
     ],
     imports     : [
         MatButtonModule,
@@ -58,9 +62,9 @@ const presentacionRoutes: Route[] = [
         MatTableModule,
         MatTooltipModule,
         SharedModule,
-        RouterModule.forChild(presentacionRoutes)
+        RouterModule.forChild(egresadoRoutes)
     ]
 })
-export class PresentacionModule
+export class EgresadoModule
 {
 }
