@@ -98,121 +98,131 @@ export class PresentacionComponent implements OnInit
 export class PresentacionAddComponent implements OnInit
 {
 
-    public action: string = ''; 
-    public srcResult = ''; 
-    formFieldHelpers: string[] = [''];
+  public action: string = ''; 
+  public srcResult = ''; 
+  formFieldHelpers: string[] = [''];
 
+  
+  public presentacion: Presentacion = {    
+    id: null,
+    titulo: '',
+    user_id: 1,
+    descripcion: '',
+    deporte: '',
+    lugar: '',
+  };
+
+  public imageShow: string = '';
+
+  showAlert: boolean = false;
+  alert: { type: FuseAlertType, message: string } = {
+      type   : 'success',
+      message: ''
+  };
+
+  constructor(
+      public presentacionService: PresentacionService,
+      private route: Router,
+      private router: ActivatedRoute, 
+  ){
     
-    public presentacion: Presentacion = {    
-      id: null,
-      titulo: '',
-      user_id: 1,
-      descripcion: '',
-      deporte: '',
-      lugar: '',
-    };
+  }
 
-    public imageShow: string = '';
+  ngOnInit(): void {
+    if(this.router.snapshot.routeConfig.path !== 'create'){
 
-    showAlert: boolean = false;
-    alert: { type: FuseAlertType, message: string } = {
-        type   : 'success',
-        message: ''
-    };
+      if(this.router.snapshot.routeConfig.path === 'edit/:id') {
+        this.action = 'Edit';
+      }
 
-    constructor(
-        public presentacionService: PresentacionService,
-        private route: Router,
-        private router: ActivatedRoute, 
-    ){
-     
+      if(this.router.snapshot.routeConfig.path === 'detail/:id') {
+        this.action = 'Detail';
+      }
+      this.getPresentacion(this.router.snapshot.params.id);
     }
-
-    ngOnInit(): void {
-        if(this.router.snapshot.routeConfig.path !== 'create'){
-
-          if(this.router.snapshot.routeConfig.path === 'edit/:id') {
-            this.action = 'Edit';
-          }
-    
-          if(this.router.snapshot.routeConfig.path === 'detail/:id') {
-            this.action = 'Detail';
-          }
-          this.getPresentacion(this.router.snapshot.params.id);
-        }
-        else {
-          this.action = 'Add';
-        }
-    }
-
-    onFileSelected(event: any): void {
-      console.log("entra al file")
-      const fileList: FileList = event.target.files;
-      if (fileList.length > 0) {
-        const file = fileList[0];
-        this.presentacion.img = fileList[0];
-        const formData = new FormData();
-        formData.append('file', file, file.name);
-        console.log(formData)
+    else {
+      this.action = 'Add';
     }
   }
 
   onFileChanged(event) {
-    this.presentacion.img = event.target.files[0]
+    this.removerImagen();
+    this.presentacion.img = event.target.files[0];
   }
 
-    getPresentacion(id): void {
-      this.presentacionService.getPresentacion(id).subscribe((res) => {
-        this.presentacion = res['data'];
-        this.presentacion.fecha = moment(this.presentacion.fecha).format("YYYY-MM-DDTHH:mm");
-        this.imageShow = AppSettings.API_GENERAL + this.presentacion.imagen
-        console.log(this.imageShow)
-      }), (error) => {
-        console.log(error);
-        this.alert = {
-          type   : 'error',
-          message: 'No se encontro la presentacion Deportiva'
-        };
-        this.showAlert = true;
+  getPresentacion(id): void {
+    this.presentacionService.getPresentacion(id).subscribe((res) => {
+      this.presentacion = res['data'];
+      this.presentacion.fecha = moment(this.presentacion.fecha).format("YYYY-MM-DDTHH:mm");
+      this.imageShow = AppSettings.URI_GENERAL + this.presentacion.imagen
+      console.log(this.imageShow)
+    }), (error) => {
+      console.log(error);
+      this.alert = {
+        type   : 'error',
+        message: 'No se encontro la presentacion Deportiva'
       };
-    }
+      this.showAlert = true;
+    };
+  }
 
-    listPresentacionesRoute(): void {
-        this.route.navigate(['/presentacion']);
-    }  
-
-    savePresentacion(): void {
-      console.log(this.presentacion)
-      this.presentacionService.savePresentacion(this.presentacion).subscribe((res) => {
-        this.alert = {
-          type   : 'success',
-          message: 'Se guardo correctamente el registro'
-        };
-        this.showAlert = true;
-      }, (error) => {
-        console.log(error);
-        this.alert = {
-          type   : 'error',
-          message: 'No se pudo guardar el registro'
-        };
-        this.showAlert = true;
-      });
+  listPresentacionesRoute(): void {
+      this.route.navigate(['/presentacion']);
+  } 
+  
+  generateFinalForm(): any {
+    const finalData = new FormData();
+    if(this.presentacion.img){
+      finalData.append('img', this.presentacion.img);
     }
+    Object.keys(this.presentacion).forEach(key => {
+      finalData.append(key, this.presentacion[key]);
+    })
+    return finalData;
+  }
+  
+  removerImagen(): void {
+    this.presentacion.img = null;
+    this.presentacion.imagen = '';
+  }
 
-    updatePresentacion(): void {
-      this.presentacionService.updatePresentacion(this.presentacion.id, this.presentacion).subscribe((res) => {
-        this.alert = {
-          type   : 'success',
-          message: 'Se edito correctamente el registro'
-        };
-        this.showAlert = true;
-      }, (error) => {
-        console.log(error);
-        this.alert = {
-          type   : 'error',
-          message: 'No se pudo editar el registro'
-        };
-        this.showAlert = true;
-      });
-    }
+  savePresentacion(): void {
+    const finalForm = this.generateFinalForm();
+    this.presentacionService.savePresentacion(finalForm).subscribe((res) => {
+      this.alert = {
+        type   : 'success',
+        message: 'Se guardo correctamente el registro'
+      };
+      this.showAlert = true;
+      this.route.navigate(['/presentacion']);
+    }, (error) => {
+      console.log(error);
+      this.alert = {
+        type   : 'error',
+        message: 'No se pudo guardar el registro'
+      };
+      this.showAlert = true;
+    });
+  }
+
+  updatePresentacion(): void {
+    const finalUpdateForm = this.generateFinalForm();
+    console.log(finalUpdateForm);
+    console.log(this.presentacion);
+    this.presentacionService.updatePresentacion(this.presentacion.id, this.presentacion).subscribe((res) => {
+      this.alert = {
+        type   : 'success',
+        message: 'Se edito correctamente el registro'
+      };
+      this.showAlert = true;
+      this.route.navigate(['/presentacion']);
+    }, (error) => {
+      console.log(error);
+      this.alert = {
+        type   : 'error',
+        message: 'No se pudo editar el registro'
+      };
+      this.showAlert = true;
+    });
+  }
 }

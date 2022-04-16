@@ -27,14 +27,14 @@ export class PresentacionService {
     const httpOptions = {
       headers: new HttpHeaders({})
     };
-    return this.httpClient.post(`${AppSettings.API_GATEWAY}presentacionDep/`, parameters, httpOptions);
+    return this.httpClient.post(`${AppSettings.API_GENERAL}presentacionDep/`, parameters, httpOptions);
   }
 
   public updatePresentacion(id, parameters): any { 
     const httpOptions = {
       headers: new HttpHeaders({})
     };
-    return this.httpClient.patch(`${AppSettings.API_GATEWAY}presentacionDep/${id}`, parameters, httpOptions);
+    return this.httpClient.patch(`${AppSettings.API_GENERAL}presentacionDep/${id}`, parameters, httpOptions);
   }
 
   public deletePresentacion(id): any { 

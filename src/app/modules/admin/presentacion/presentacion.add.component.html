@@ -41,7 +41,7 @@
     <!-- Main -->
     <div class="flex-auto p-6 sm:p">
         <div class="max-w-full">
-            <form class="grid grid-cols-2 gap-4 mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
+            <form class="grid grid-cols-2 gap-4 mt-8 p-8 pb-4 bg-card rounded-2xl shadow">
                 <div class="flex flex-col gt-xs:flex-row">
                     <mat-form-field
                         [ngClass]="formFieldHelpers"
@@ -86,9 +86,19 @@
                         <input matInput type="datetime-local" placeholder="Fecha y hora" [(ngModel)]="presentacion.fecha" name="fecha" value="{{presentacion.fecha}}"
                         [disabled]="action === 'Detail'">
                     </mat-form-field>
-                    <div style="margin-top: 40px;">
-                        <div *ngIf="action !== 'Detail'">
-                            <input type="file" (change)="onFileChanged($event)">
+                    <div style="margin-top: 20px;">
+                        <div *ngIf="action !== 'Detail'" class="mt-4">
+                            <span mat-form-field-label-wrapper style="display: block;">Imagen</span>
+                            <div class="flex">
+                                <input type="file" (change)="onFileChanged($event)" accept="image/png, image/gif, image/jpeg">
+                                <button
+                                    (click)="removerImagen()"
+                                    mat-flat-button
+                                    class="bg-gray-300" *ngIf="action !== 'Detail' && presentacion.imagen !== '' && presentacion.imagen"
+                                    style="margin-top:-10px">
+                                    <span class="ml-2 mr-1">Remover imagen</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
