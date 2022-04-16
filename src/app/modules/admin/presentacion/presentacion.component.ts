@@ -1,6 +1,13 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewEncapsulation, ViewChild } from '@angular/core';
 import { PresentacionService  } from './presentacion.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { Presentacion } from './presentacion.model';
+import { FuseAlertType } from '@fuse/components/alert';
+import * as moment from 'moment';
+import { AppSettings } from '../../../core/settings/constants';
 
 @Component({
     selector     : 'presentacion',
@@ -13,20 +20,71 @@ export class PresentacionComponent implements OnInit
     public presentaciones;
     public presentacionesCount;
     public presentacionesTableColumns: string[] = ['titulo', 'descripcion', 'deporte', 'lugar', 'fecha', 'acciones'];
+    showAlert: boolean = false;
+    alert: { type: FuseAlertType, message: string } = {
+        type   : 'success',
+        message: ''
+    };
+
+    @ViewChild(MatPaginator, { static: true })
+    paginator: MatPaginator;
+
+    @ViewChild(MatSort, { static: true })
+    sort: MatSort;
+
+    @ViewChild('filter', { static: true })
+    filter: ElementRef;
 
     constructor(
         public presentacionService: PresentacionService,
+        private route: Router,
+        private router: ActivatedRoute, 
     ){
      
     }
 
     ngOnInit(): void {
-        this.presentacionService.getPresentaciones().subscribe((res) => {
-            console.log(res)
-            this.presentaciones = res['data'];
-            this.presentacionesCount = this.presentaciones.length
-            console.log(this.presentaciones)
-        })
+       this.getList();
+    }
+
+    getList(): void {
+      this.presentacionService.getPresentaciones().subscribe((res) => {
+        this.presentacionesCount = res['data'].length;
+        this.presentaciones = new MatTableDataSource<any>(res['data']);
+        this.presentaciones.paginator = this.paginator;
+        this.presentaciones.sort = this.sort;
+      })
+    }
+
+    applyFilter(event: Event): void {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.presentaciones.filter = filterValue.trim().toLowerCase();
+    }
+
+    delete(id): void {
+      this.presentacionService.deletePresentacion(id).subscribe((res) => {
+        this.alert = {
+          type   : 'success',
+          message: 'Se borro correctamente el registro'
+        };
+        this.showAlert = true;
+        this.getList();
+      }, (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se pudo borrar el registro'
+        };
+        this.showAlert = true;
+      });
+    }
+
+    edit(id): void {
+      this.route.navigate(['/presentacion/edit/' + id])
+    }
+
+    details(id): void {
+      this.route.navigate(['/presentacion/detail/' + id])
     }
 }
 
@@ -40,9 +98,27 @@ export class PresentacionComponent implements OnInit
 export class PresentacionAddComponent implements OnInit
 {
 
-    public action = ''; 
+    public action: string = ''; 
     public srcResult = ''; 
     formFieldHelpers: string[] = [''];
+
+    
+    public presentacion: Presentacion = {    
+      id: null,
+      titulo: '',
+      user_id: 1,
+      descripcion: '',
+      deporte: '',
+      lugar: '',
+    };
+
+    public imageShow: string = '';
+
+    showAlert: boolean = false;
+    alert: { type: FuseAlertType, message: string } = {
+        type   : 'success',
+        message: ''
+    };
 
     constructor(
         public presentacionService: PresentacionService,
@@ -53,38 +129,90 @@ export class PresentacionAddComponent implements OnInit
     }
 
     ngOnInit(): void {
-        console.log("pantalla correcta")
-        if(this.router.snapshot.routeConfig.path !== 'presentacion/create'){
+        if(this.router.snapshot.routeConfig.path !== 'create'){
 
-            if(this.router.snapshot.routeConfig.path === 'presentacion/edit/:id') {
-              this.action = 'Edit';
-            }
-      
-            if(this.router.snapshot.routeConfig.path === 'presentacion/detail/:id') {
-              this.action = 'Detail';
-            }
+          if(this.router.snapshot.routeConfig.path === 'edit/:id') {
+            this.action = 'Edit';
           }
-          else {
-            this.action = 'Add';
+    
+          if(this.router.snapshot.routeConfig.path === 'detail/:id') {
+            this.action = 'Detail';
           }
-    }
-
-    onFileSelected(): void {
-        const inputNode: any = document.querySelector('#file');
-      
-        if (typeof (FileReader) !== 'undefined') {
-          const reader = new FileReader();
-      
-          reader.onload = (e: any) => {
-            this.srcResult = e.target.result;
-          };
-      
-          reader.readAsArrayBuffer(inputNode.files[0]);
+          this.getPresentacion(this.router.snapshot.params.id);
+        }
+        else {
+          this.action = 'Add';
         }
     }
 
+    onFileSelected(event: any): void {
+      console.log("entra al file")
+      const fileList: FileList = event.target.files;
+      if (fileList.length > 0) {
+        const file = fileList[0];
+        this.presentacion.img = fileList[0];
+        const formData = new FormData();
+        formData.append('file', file, file.name);
+        console.log(formData)
+    }
+  }
+
+  onFileChanged(event) {
+    this.presentacion.img = event.target.files[0]
+  }
+
+    getPresentacion(id): void {
+      this.presentacionService.getPresentacion(id).subscribe((res) => {
+        this.presentacion = res['data'];
+        this.presentacion.fecha = moment(this.presentacion.fecha).format("YYYY-MM-DDTHH:mm");
+        this.imageShow = AppSettings.API_GENERAL + this.presentacion.imagen
+        console.log(this.imageShow)
+      }), (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se encontro la presentacion Deportiva'
+        };
+        this.showAlert = true;
+      };
+    }
+
     listPresentacionesRoute(): void {
-        console.log("entra")
         this.route.navigate(['/presentacion']);
     }  
+
+    savePresentacion(): void {
+      console.log(this.presentacion)
+      this.presentacionService.savePresentacion(this.presentacion).subscribe((res) => {
+        this.alert = {
+          type   : 'success',
+          message: 'Se guardo correctamente el registro'
+        };
+        this.showAlert = true;
+      }, (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se pudo guardar el registro'
+        };
+        this.showAlert = true;
+      });
+    }
+
+    updatePresentacion(): void {
+      this.presentacionService.updatePresentacion(this.presentacion.id, this.presentacion).subscribe((res) => {
+        this.alert = {
+          type   : 'success',
+          message: 'Se edito correctamente el registro'
+        };
+        this.showAlert = true;
+      }, (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se pudo editar el registro'
+        };
+        this.showAlert = true;
+      });
+    }
 }

@@ -17,11 +17,18 @@ export const defaultNavigation: FuseNavigationItem[] = [
         link : '/egresado'
     },
     {
+        id   : 'banco',
+        title: 'Banco de Preguntas',
+        type : 'basic',
+        icon : 'heroicons_outline:question-mark-circle',
+        link : '/egresado'
+    },
+    {
         id   : 'gestion_cuestionarios',
         title: 'Gestionar cuestionarios',
         type : 'basic',
         icon : 'heroicons_outline:clipboard-copy',
-        link : '/gestion_cuestionarios'
+        link : '/gestionCuestionario'
     },
     {
         id   : 'cuestionarios',
@@ -49,7 +56,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Eventos',
         type : 'basic',
         icon : 'heroicons_outline:speakerphone',
-        link : '/eventos'
+        link : '/evento'
     },
     {
         id   : 'grado',

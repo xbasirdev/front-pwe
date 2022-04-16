@@ -17,6 +17,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 const cuestionarioRoutes: Route[] = [
     {
@@ -58,6 +59,7 @@ const cuestionarioRoutes: Route[] = [
         MatTableModule,
         MatTooltipModule,
         SharedModule,
+        MatExpansionModule,
         RouterModule.forChild(cuestionarioRoutes)
     ]
 })

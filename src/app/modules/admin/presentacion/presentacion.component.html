@@ -12,11 +12,9 @@
                 <mat-icon
                     matPrefix
                     [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                <input
-                    matInput
-                    [autocomplete]="'off'"
-                    [placeholder]="'Buscar presentacion'">
+                <input matInput [autocomplete]="'off'" [placeholder]="'Buscar presentacion'" (keyup)="applyFilter($event)">
             </mat-form-field>
+
             <!-- Add product button -->
             <button
                 [routerLink]="[ './create']"
@@ -29,174 +27,66 @@
         </div>
     </div>
 
+    <fuse-alert
+        class="p-4"
+        *ngIf="showAlert"
+        [appearance]="'outline'"
+        [showIcon]="false"
+        [type]="alert.type">
+        {{alert.message}}
+    </fuse-alert>
+
     <!-- Main -->
     <div class="flex flex-auto overflow-hidden">
-
-        <!-- Products list -->
-        <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden">
-
-
-
-            <ng-template>
-                <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">There are no products!</div>
-            </ng-template>
-
+        <div class="content-card w-full min-w-320 table-fixed bg-transparent">
+            <div *ngIf="presentacionesCount === 0">
+                <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">No hay presentaciones deportivas</div>
+            </div>
+            <div class="mat-elevation-z8">
+              <table class="w-full min-w-320 table-fixed bg-transparent" mat-table [dataSource]="presentaciones" matSort>
+                <ng-container matColumnDef="{{column}}" *ngFor="let column of presentacionesTableColumns">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear class="bg-gray-50 dark:bg-black dark:bg-opacity-5 capitalize"> {{ column }} </th>
+                  <td mat-cell *matCellDef="let presentacion" style="text-align: left;">
+                    <span *ngIf='column == "titulo"'>
+                      {{presentacion.titulo}}
+                    </span>
+                    <span *ngIf='column == "descripcion"'>
+                        {{presentacion.descripcion}}
+                    </span>
+                    <span *ngIf='column == "deporte"'>
+                        {{presentacion.deporte}}
+                    </span>
+                    <span *ngIf='column == "lugar"'>
+                        {{presentacion.lugar}}
+                    </span>
+                    <span *ngIf='column == "fecha"'>
+                        {{presentacion.fecha | date :'short'}}
+                    </span>
+                    <span *ngIf='column == "acciones"'>
+                        <button
+                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                        (click)="details(presentacion.id)">
+                        <mat-icon class="icon-size-5">remove_red_eye</mat-icon>
+                    </button>
+                    <button
+                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                        (click)="edit(presentacion.id)">
+                        <mat-icon class="icon-size-5">edit</mat-icon>
+                    </button>
+                    <button
+                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                        (click)="delete(presentacion.id)">
+                        <mat-icon class="icon-size-5">delete</mat-icon>
+                    </button>
+                    </span>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="presentacionesTableColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: presentacionesTableColumns;">
+                </tr>
+              </table>
+              <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
+            </div>
         </div>
-
-        <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden">
-
-            <ng-container *ngIf="presentacionesCount > 0">
-
-                <!-- Table wrapper -->
-                <div
-                    class="overflow-x-auto sm:overflow-y-auto"
-                    cdkScrollable>
-
-                    <!-- Table -->
-                    <table
-                        class="w-full min-w-320 table-fixed bg-transparent"
-                        [ngClass]="{'pointer-events-none': isLoading}"
-                        mat-table
-                        matSort
-                        [matSortActive]="'name'"
-                        [matSortDisableClear]="true"
-                        [matSortDirection]="'asc'"
-                        [multiTemplateDataRows]="true"
-                        [dataSource]="presentaciones"
-                        [trackBy]="trackByFn">
-
-                        <!-- Name -->
-                        <ng-container matColumnDef="titulo">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Titulo
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let presentacion">
-                                {{presentacion.titulo}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="descripcion">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Descripcion
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let presentacion">
-                                {{presentacion.descripcion}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="deporte">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Deporte
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let presentacion">
-                                {{presentacion.deporte}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="lugar">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Lugar
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let presentacion">
-                                {{presentacion.lugar}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="fecha">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Fecha y hora
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let presentacion">
-                                {{presentacion.fecha}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="acciones">
-                            <th
-                                class="w-24 pr-8 bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef>
-                                Acciones
-                            </th>
-                            <td class="pr-8" mat-cell *matCellDef="let presentacion">
-                                <div>
-                                    <button
-                                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(presentacion.id)">
-                                        <mat-icon class="icon-size-5">remove_red_eye</mat-icon>
-                                    </button>
-                                    <button
-                                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(presentacion.id)">
-                                        <mat-icon class="icon-size-5">edit</mat-icon>
-                                    </button>
-                                    <button
-                                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(presentacion.id)">
-                                        <mat-icon class="icon-size-5">delete</mat-icon>
-                                    </button>
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <tr
-                            class="shadow"
-                            mat-header-row
-                            *matHeaderRowDef="presentacionesTableColumns; sticky: true"></tr>
-                        <tr
-                            class="h-18 hover:bg-hover"
-                            mat-row
-                            *matRowDef="let presentacion; columns: presentacionesTableColumns;"></tr>
-                    </table>
-                    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                                    showFirstLastButtons 
-                                    aria-label="Select page of periodic elements">
-                    </mat-paginator>
-                </div>
-
-            </ng-container>
-        </div>
-
     </div>
-
 </div>

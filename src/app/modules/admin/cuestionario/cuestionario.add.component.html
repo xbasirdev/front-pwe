@@ -12,19 +12,27 @@
                     <mat-icon
                         class="icon-size-5 text-secondary"
                         [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
-                    <a class="ml-1 text-primary-500">Crear</a>
+                    <a class="ml-1 text-primary-500">Gestionar preguntas</a>
                 </div>
             </div>
             <!-- Title -->
             <div class="mt-2">
                 <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
-                    <mat-icon [svgIcon]="'heroicons_outline:support'"></mat-icon> Crear Cuestionario o Encuesta
+                    <mat-icon [svgIcon]="'heroicons_outline:support'"></mat-icon> Gestionar preguntas - Que tecnologias de desarrollo usas...
                 </h2>
             </div>
         </div>
     </div>
     <!-- Main -->
     <div class="flex-auto p-6 sm:p">
+        <div style="margin-top: 10px; width: 100%; text-align: right;">
+            <button
+                mat-flat-button
+                [color]="'primary'">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">Banco de preguntas</span>
+            </button>
+        </div>
         <div class="max-w-full">
             <form class="grid grid-cols-2 gap-4 mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
                 <div class="flex flex-col gt-xs:flex-row">
@@ -34,42 +42,26 @@
                         <mat-label>Titulo</mat-label>
                         <input matInput>
                     </mat-form-field>
-                    <mat-form-field
-                        [ngClass]="formFieldHelpers"
-                        class="flex-auto gt-xs:pl-3">
-                        <mat-label>Descripcion</mat-label>
-                        <textarea cdkTextareaAutosize matInput></textarea>
-                    </mat-form-field>
-                    <mat-form-field
-                        [ngClass]="formFieldHelpers"
-                        class="flex-auto gt-md:pr-3">
-                        <mat-label>Deportes</mat-label>
-                        <input matInput>
-                        <mat-icon
-                            class="icon-size-5"
-                            matSuffix
-                            [svgIcon]="'heroicons_solid:support'"></mat-icon>
-                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Tipo Pregunta</mat-label>
+                        <mat-select>
+                          <mat-option>
+                            Seleccion multiple
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
                 </div>
                 <div class="flex flex-col gt-md:flex-row" style="max-height: 120px;">
-                    <mat-form-field
-                        [ngClass]="formFieldHelpers"
-                        class="flex-auto gt-md:pl-3">
-                        <mat-label>Lugar</mat-label>
-                        <input matInput>
-                        <mat-icon
-                            class="icon-size-5"
-                            matSuffix
-                            [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
-                    </mat-form-field>
-                    <mat-form-field aclass="flex-auto gt-md:pl-3">
-                        <mat-label>Fecha y hora</mat-label>
-                        <input matInput type="datetime-local" placeholder="Fecha y hora">
-                    </mat-form-field>
-                    <div style="margin-top: 40px;">
-                        <button type="button" mat-raised-button (click)="fileInput.click()">Seleccionar Imagen</button>
-                        <input hidden (change)="onFileSelected()" #fileInput type="file" id="file">
-                    </div>
+                    <mat-accordion style="margin-top: 20px; margin-bottom: 20px;">
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                              <mat-panel-title>
+                                Opciones de respuesta
+                              </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <p>I'm visible because I am open</p>
+                        </mat-expansion-panel>
+                    </mat-accordion>
                 </div>
             </form>
         </div>
@@ -79,8 +71,37 @@
                 mat-flat-button
                 [color]="'primary'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                <span class="ml-2 mr-1">Guardar</span>
+                <span class="ml-2 mr-1">Agregar Pregunta</span>
             </button>
         </div>
     </div>
+    <div class="flex-auto p-6 sm:p">
+        <div class="max-w-full">
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        1- En que sector trabajas?
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        Respuesta seleccion multiple
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <p>I'm visible because I am open</p>
+                </mat-expansion-panel>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        2 - Cuanto tiempo de experiencia tienes como desarrollador de software?
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        Respuesta seleccion multiple
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <p>I'm visible because I am open</p>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+    
 </div>

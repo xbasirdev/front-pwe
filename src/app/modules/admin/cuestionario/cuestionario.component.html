@@ -19,7 +19,7 @@
             </mat-form-field>
             <!-- Add product button -->
             <button
-                [routerLink]="[ './create']"
+                [routerLink]="[ './detail/1']"
                 class="ml-4"
                 mat-flat-button
                 [color]="'primary'">
@@ -59,7 +59,7 @@
                                 <ng-container>
                                     <div
                                         class="py-0.5 px-3 rounded-full text-sm font-semibold">
-                                        Informatica
+                                        Todas las Carreras
                                     </div>
                                 </ng-container>
                                 <!-- Completed at least once -->
@@ -71,15 +71,22 @@
                                 </div>
                             </div>
                             <!-- Course title & description -->
-                            <div class="mt-4 text-lg font-medium">Cuestionario</div>
-                            <div class="mt-0.5 line-clamp-2 text-secondary">Desc</div>
+                            <div class="mt-4 text-lg font-medium">Cuanto sabes de nuestra casa de estudio?</div>
+                            <div class="mt-0.5 line-clamp-2 text-secondary">
+                                Preguntas sobre nuestra UNEG para saber cuanto saben los egresados realmente de ella
+                            </div>
                             <div class="w-12 h-1 my-6 border-t-2"></div>
-                            <!-- Course time -->
+                            <div class="flex items-center leading-5 text-md text-secondary">
+                                <mat-icon
+                                    class="icon-size-5 text-hint"
+                                    [svgIcon]="'heroicons_solid:clipboard-list'"></mat-icon>
+                                <div class="ml-1.5">Cuestionario</div>
+                            </div>
                             <div class="flex items-center leading-5 text-md text-secondary">
                                 <mat-icon
                                     class="icon-size-5 text-hint"
                                     [svgIcon]="'heroicons_solid:clock'"></mat-icon>
-                                <div class="ml-1.5">10 min</div>
+                                <div class="ml-1.5">5 min</div>
                             </div>
 
                         </div>
@@ -116,73 +123,20 @@
                                         Informatica
                                     </div>
                                 </ng-container>
-                                <!-- Completed at least once -->
-                                <div class="flex items-center">
-                                    <mat-icon
-                                        class="icon-size-5 text-green-600"
-                                        [svgIcon]="'heroicons_solid:badge-check'"
-                                        [matTooltip]="'You completed this course at least once'"></mat-icon>
-                                </div>
                             </div>
                             <!-- Course title & description -->
-                            <div class="mt-4 text-lg font-medium">Cuestionario</div>
-                            <div class="mt-0.5 line-clamp-2 text-secondary">Desc</div>
+                            <div class="mt-4 text-lg font-medium">Tecnologias de desarrollo que usaste en la carrera</div>
+                            <div class="mt-0.5 line-clamp-2 text-secondary">
+                                Saber las tecnologias que usaste en la carrera y cuales usas laboralmente
+                            </div>
                             <div class="w-12 h-1 my-6 border-t-2"></div>
                             <!-- Course time -->
                             <div class="flex items-center leading-5 text-md text-secondary">
                                 <mat-icon
                                     class="icon-size-5 text-hint"
-                                    [svgIcon]="'heroicons_solid:clock'"></mat-icon>
-                                <div class="ml-1.5">10 min</div>
+                                    [svgIcon]="'heroicons_solid:clipboard-list'"></mat-icon>
+                                <div class="ml-1.5">Encuesta</div>
                             </div>
-
-                        </div>
-                        <!-- Footer -->
-                        <div class="flex flex-col w-full mt-auto">
-                            <!-- Course launch button -->
-                            <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
-                                <button
-                                    mat-stroked-button>
-                                    <span class="inline-flex items-center">
-
-                                        <ng-container>
-                                            <span>Responder</span>
-                                        </ng-container>
-
-                                        <mat-icon
-                                            class="ml-1.5 icon-size-5"
-                                            [svgIcon]="'heroicons_solid:arrow-sm-right'"></mat-icon>
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </ng-container>
-                <ng-container>
-                    <!-- Course -->
-                    <div class="flex flex-col h-96 shadow rounded-2xl overflow-hidden bg-card">
-                        <div class="flex flex-col p-6">
-                            <div class="flex items-center justify-between">
-                                <!-- Course category -->
-                                <ng-container>
-                                    <div
-                                        class="py-0.5 px-3 rounded-full text-sm font-semibold">
-                                        Informatica
-                                    </div>
-                                </ng-container>
-                                <!-- Completed at least once -->
-                                <div class="flex items-center">
-                                    <mat-icon
-                                        class="icon-size-5 text-green-600"
-                                        [svgIcon]="'heroicons_solid:badge-check'"
-                                        [matTooltip]="'You completed this course at least once'"></mat-icon>
-                                </div>
-                            </div>
-                            <!-- Course title & description -->
-                            <div class="mt-4 text-lg font-medium">Cuestionario</div>
-                            <div class="mt-0.5 line-clamp-2 text-secondary">Desc</div>
-                            <div class="w-12 h-1 my-6 border-t-2"></div>
-                            <!-- Course time -->
                             <div class="flex items-center leading-5 text-md text-secondary">
                                 <mat-icon
                                     class="icon-size-5 text-hint"

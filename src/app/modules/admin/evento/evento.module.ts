@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
-import { PresentacionComponent } from 'app/modules/admin/presentacion/presentacion.component';
-import { PresentacionAddComponent } from 'app/modules/admin/presentacion/presentacion.component';
+import { EventoComponent } from 'app/modules/admin/evento/evento.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,31 +16,17 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
-import { FuseAlertModule } from '@fuse/components/alert';
 
-const presentacionRoutes: Route[] = [
+const eventoRoutes: Route[] = [
     {
         path     : '',
-        component: PresentacionComponent
-    },
-    {
-        path     : 'create',
-        component: PresentacionAddComponent
-      },
-      {
-        path     : 'edit/:id',
-        component: PresentacionAddComponent
-      },
-      {
-        path     : 'detail/:id',
-        component: PresentacionAddComponent
-      }
+        component: EventoComponent
+    }
 ];
 
 @NgModule({
     declarations: [
-        PresentacionComponent,
-        PresentacionAddComponent,
+        EventoComponent
     ],
     imports     : [
         MatButtonModule,
@@ -59,10 +44,9 @@ const presentacionRoutes: Route[] = [
         MatTableModule,
         MatTooltipModule,
         SharedModule,
-        FuseAlertModule,
-        RouterModule.forChild(presentacionRoutes)
+        RouterModule.forChild(eventoRoutes)
     ]
 })
-export class PresentacionModule
+export class EventoModule
 {
 }

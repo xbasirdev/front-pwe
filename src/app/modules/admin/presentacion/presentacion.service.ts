@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
+import { AppSettings } from '../../../core/settings/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,34 @@ export class PresentacionService {
     const httpOptions = {
       headers: new HttpHeaders({})
     };
-    return this.httpClient.get(`http://127.0.0.1:8300/api/presentacionDep`, httpOptions);
+    return this.httpClient.get(`${AppSettings.API_GATEWAY}presentacionDep/`, httpOptions);
+  }
+
+  public getPresentacion(id): any { 
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.get(`${AppSettings.API_GATEWAY}presentacionDep/${id}`, httpOptions);
+  }
+
+  public savePresentacion(parameters): any { 
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.post(`${AppSettings.API_GATEWAY}presentacionDep/`, parameters, httpOptions);
+  }
+
+  public updatePresentacion(id, parameters): any { 
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.patch(`${AppSettings.API_GATEWAY}presentacionDep/${id}`, parameters, httpOptions);
+  }
+
+  public deletePresentacion(id): any { 
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.delete(`${AppSettings.API_GATEWAY}presentacionDep/${id}`, httpOptions);
   }
 }
