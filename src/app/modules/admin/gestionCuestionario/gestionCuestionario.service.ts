@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
+import { AppSettings } from '../../../core/settings/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,20 @@ export class GestionCuestionarioService {
     const httpOptions = {
       headers: new HttpHeaders({})
     };
-    return this.httpClient.get(`http://127.0.0.1:8300/api/cuestionario`, httpOptions);
+    return this.httpClient.get(`${AppSettings.API_GATEWAY}cuestionario`, httpOptions);
+  }
+
+  public getGestionCuestionario(id): any { 
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.get(`${AppSettings.API_GATEWAY}cuestionario/${id}`, httpOptions);
+  }
+
+  public saveGestionCuestionarios(parameters): any { 
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.post(`${AppSettings.API_GATEWAY}cuestionario`, parameters, httpOptions);
   }
 }

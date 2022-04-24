@@ -1,10 +1,10 @@
-<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden bg-card dark:bg-transparent">
+<div class="absolute inset-0 flex flex-col min-w-0 bg-card dark:bg-transparent">
 
     <!-- Header -->
-    <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b">
+    <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-4 px-6 md:px-8 border-b">
 
         <!-- Title -->
-        <div class="text-4xl font-extrabold tracking-tight"> <mat-icon [svgIcon]="'heroicons_outline:clipboard-copy'"></mat-icon>Gestionar Cuestionarios</div>
+        <div class="text-4xl font-extrabold tracking-tight"><mat-icon [svgIcon]="'heroicons_outline:clipboard-copy'"></mat-icon> Gestionar Cuestionarios</div>
         <!-- Actions -->
         <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
             <!-- Search -->
@@ -12,16 +12,14 @@
                 <mat-icon
                     matPrefix
                     [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                <input
-                    matInput
-                    [autocomplete]="'off'"
-                    [placeholder]="'Buscar cuestionario'">
+                <input matInput [autocomplete]="'off'" [placeholder]="'Buscar Cuestionario'" (keyup)="applyFilter($event)">
             </mat-form-field>
+
             <!-- Add product button -->
             <button
+                [routerLink]="[ './create']"
                 class="ml-4"
                 mat-flat-button
-                [routerLink]="[ './graph/1']"
                 [color]="'primary'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Crear</span>
@@ -29,181 +27,71 @@
         </div>
     </div>
 
+    <fuse-alert
+        class="p-4"
+        *ngIf="showAlert"
+        [appearance]="'outline'"
+        [showIcon]="false"
+        [type]="alert.type">
+        {{alert.message}}
+    </fuse-alert>
+
     <!-- Main -->
     <div class="flex flex-auto overflow-hidden">
-
-        <!-- Products list -->
-        <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden">
-
-
-
-            <ng-template>
-                <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">There are no products!</div>
-            </ng-template>
-
+        <div class="content-card w-full min-w-320 table-fixed bg-transparent overflow-hidden">
+            <div *ngIf="cuestionariosCount === 0">
+                <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">No hay cuestionarios ni encuestas</div>
+            </div>
+            <div class="mat-elevation-z8">
+              <table class="w-full min-w-320 bg-transparent overflow-hidden" mat-table [dataSource]="cuestionarios" matSort>
+                <ng-container matColumnDef="{{column}}" *ngFor="let column of cuestionariosTableColumns">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear class="bg-gray-50 dark:bg-black dark:bg-opacity-5 capitalize"> {{ column }} </th>
+                  <td mat-cell *matCellDef="let cuestionario" style="text-align: left;">
+                    <span *ngIf='column == "nombre"'>
+                      {{cuestionario.nombre}}
+                    </span>
+                    <span *ngIf='column == "descripcion"'>
+                        {{cuestionario.descripcion}}
+                    </span>
+                    <span *ngIf='column == "tipo"'>
+                        {{cuestionario.tipo}}
+                    </span>
+                    <span *ngIf='column == "fecha inicio"'>
+                        {{cuestionario.fecha_inicio}}
+                    </span>
+                    <span *ngIf='column == "fecha fin"'>
+                        {{cuestionario.fecha_fin}}
+                    </span>
+                    <span *ngIf='column == "acciones"'>
+                    <button
+                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                        (click)="details(cuestionario.id)">
+                        <mat-icon class="icon-size-5">remove_red_eye</mat-icon>
+                    </button>
+                    <button
+                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                        (click)="toggleDetails(cuestionario.id)">
+                        <mat-icon class="icon-size-5">insert_chart</mat-icon>
+                    </button>
+                    <button
+                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                        (click)="edit(cuestionario.id)">
+                        <mat-icon class="icon-size-5">edit</mat-icon>
+                    </button>
+                    <button
+                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                        (click)="delete(cuestionario.id)">
+                        <mat-icon class="icon-size-5">delete</mat-icon>
+                    </button>
+                    </span>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="cuestionariosTableColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: cuestionariosTableColumns;">
+                </tr>
+              </table>
+              <mat-paginator [pageSizeOptions]="[5, 10]"></mat-paginator>
+            </div>
         </div>
-
-        <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden">
-
-            <ng-container *ngIf="cuestionariosCount > 0">
-
-                <!-- Table wrapper -->
-                <div
-                    class="overflow-x-auto sm:overflow-y-auto"
-                    cdkScrollable>
-
-                    <!-- Table -->
-                    <table
-                        class="w-full min-w-320 table-fixed bg-transparent"
-                        [ngClass]="{'pointer-events-none': isLoading}"
-                        mat-table
-                        matSort
-                        [matSortActive]="'name'"
-                        [matSortDisableClear]="true"
-                        [matSortDirection]="'asc'"
-                        [multiTemplateDataRows]="true"
-                        [dataSource]="cuestionarios"
-                        [trackBy]="trackByFn">
-
-                        <!-- Name -->
-                        <ng-container matColumnDef="nombre">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Nombre
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let cuestionario">
-                                {{cuestionario.nombre}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="descripcion">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Descripcion
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let cuestionario">
-                                {{cuestionario.descripcion}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="tipo">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Tipo
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let cuestionario">
-                                {{cuestionario.tipo}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="objetivo">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Objetivo
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let cuestionario">
-                                Egresados Informatica
-                            </td>
-                        </ng-container>
-                        
-
-                        <ng-container matColumnDef="opciones">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                style="min-width: 400px;">
-                                Opciones
-                            </th>
-                            <td class="pr-8" mat-cell *matCellDef="let cuestionario" style="min-width: 400px;">
-                                <button mat-flat-button [color]="'primary'" style="margin: 5px">
-                                    Aplicar
-                                </button>
-                                <button mat-flat-button [color]="'primary'"  style="margin: 5px">
-                                    Finalizar Reclutamiento
-                                </button>
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="acciones">
-                            <th
-                                class="w-24 pr-8 bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef>
-                                Acciones
-                            </th>
-                            <td class="pr-8" mat-cell *matCellDef="let cuestionario">
-                                <div>
-                                    <button
-                                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(cuestionario.id)">
-                                        <mat-icon class="icon-size-5">remove_red_eye</mat-icon>
-                                    </button>
-                                    <button
-                                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(cuestionario.id)">
-                                        <mat-icon class="icon-size-5">insert_chart</mat-icon>
-                                    </button>
-                                    <button
-                                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(cuestionario.id)">
-                                        <mat-icon class="icon-size-5">edit</mat-icon>
-                                    </button>
-                                    <button
-                                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(cuestionario.id)">
-                                        <mat-icon class="icon-size-5">delete</mat-icon>
-                                    </button>
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <tr
-                            class="shadow"
-                            mat-header-row
-                            *matHeaderRowDef="cuestionariosTableColumns; sticky: true"></tr>
-                        <tr
-                            class="h-18 hover:bg-hover"
-                            mat-row
-                            *matRowDef="let cuestionario; columns: cuestionariosTableColumns;"></tr>
-                    </table>
-                    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                                    showFirstLastButtons 
-                                    aria-label="Select page of periodic elements">
-                    </mat-paginator>
-                </div>
-
-            </ng-container>
-        </div>
-
     </div>
-
 </div>

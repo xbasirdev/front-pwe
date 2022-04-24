@@ -1,0 +1,121 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+        <div class="flex-1 min-w-0">
+            <!-- Breadcrumbs -->
+            <div class="flex flex-wrap items-center font-medium">
+                <div>
+                    <a class="whitespace-nowrap text-primary-500"  (click)="listGestionCuestionarioRoute()">Gestion cuestionarios</a>
+                </div>
+                <div class="flex items-center ml-1 whitespace-nowrap">
+                    <mat-icon
+                        class="icon-size-5 text-secondary"
+                        [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
+                    <a *ngIf="action === 'Add'" class="ml-1 text-primary-500">Crear</a>
+                    <a *ngIf="action === 'Detail'" class="ml-1 text-primary-500">Detalle</a>
+                    <a *ngIf="action === 'Edit'" class="ml-1 text-primary-500">Editar</a>
+                </div>
+            </div>
+            <!-- Title -->
+            <div class="mt-2">
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10">
+                    <mat-icon [svgIcon]="'heroicons_outline:support'"></mat-icon> 
+                        <span *ngIf="action === 'Add'">Crear Cuestionario</span>
+                        <span *ngIf="action === 'Detail'">Detalles Cuestionario</span>
+                        <span *ngIf="action === 'Edit'">Editar Cuestionario</span>
+                </h2>
+            </div>
+        </div>
+    </div>
+    <!-- Alert -->
+    <fuse-alert
+        class="p-4"
+        *ngIf="showAlert"
+        [appearance]="'outline'"
+        [showIcon]="false"
+        [type]="alert.type">
+        {{alert.message}}
+    </fuse-alert>
+
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p">
+        <div class="max-w-full">
+            <form class="grid grid-cols-2 gap-4 mt-8 p-8 pb-4 bg-card rounded-2xl shadow">
+                <div class="flex flex-col gt-xs:flex-row">
+                    <mat-form-field
+                        [ngClass]="formFieldHelpers"
+                        class="flex-auto gt-xs:pr-3">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput [(ngModel)]="cuestionario.nombre" name="nombre" value="{{cuestionario.nombre}}"
+                        [disabled]="action === 'Detail'">
+                    </mat-form-field>
+                    <mat-form-field
+                        [ngClass]="formFieldHelpers"
+                        class="flex-auto gt-xs:pl-3">
+                        <mat-label>Descripcion</mat-label>
+                        <textarea cdkTextareaAutosize matInput [(ngModel)]="cuestionario.descripcion" name="descripcion" value="{{cuestionario.descripcion}}"
+                        [disabled]="action === 'Detail'"></textarea>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Tipo</mat-label>
+                        <select matNativeControl required>
+                          <option value="encuesta">Encuesta</option>
+                          <option value="cuestionario">Cuestionario</option>
+                        </select>
+                      </mat-form-field>
+                      <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-select
+                            [value]="'all'">
+                            <mat-option [value]="'all'">All</mat-option>
+                            <ng-container>
+                                <mat-option [value]="'all'">all</mat-option>
+                            </ng-container>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col gt-md:flex-row" style="max-height: 120px;">
+                    <mat-form-field
+                        [ngClass]="formFieldHelpers"
+                        class="flex-auto gt-md:pl-3">
+                        <mat-label>Privacidad</mat-label>
+                        <input matInput [(ngModel)]="cuestionario.privacidad" name="lugar" value="{{cuestionario.privacidad}}"
+                        [disabled]="action === 'Detail'">
+                        <mat-icon
+                            class="icon-size-5"
+                            matSuffix
+                            [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                    </mat-form-field>
+                    <mat-form-field aclass="flex-auto gt-md:pl-3">
+                        <mat-label>Fecha Inicio</mat-label>
+                        <input matInput type="date" placeholder="Fecha Inicio" [(ngModel)]="cuestionario.fecha_inicio" name="fecha" value="{{cuestionario.fecha_inicio}}"
+                        [disabled]="action === 'Detail'">
+                    </mat-form-field>
+                    <mat-form-field aclass="flex-auto gt-md:pl-3">
+                        <mat-label>Fecha Fin</mat-label>
+                        <input matInput type="date" placeholder="Fecha Fin" [(ngModel)]="cuestionario.fecha_fin" name="fecha" value="{{cuestionario.fecha_fin}}"
+                        [disabled]="action === 'Detail'">
+                    </mat-form-field>
+                </div>
+            </form>
+        </div>
+        <div style="margin-top: 10px; width: 100%; text-align: right;">
+            <button
+                *ngIf="action === 'Add'"
+                (click)="savePresentacion()"
+                mat-flat-button
+                [color]="'primary'">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">Guardar</span>
+            </button>
+            <button
+                *ngIf="action === 'Edit'"
+                (click)="updatePresentacion()"
+                mat-flat-button
+                [color]="'primary'">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">Editar</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
-import { GestionCuestionarioComponent } from 'app/modules/admin/gestionCuestionario/gestionCuestionario.component';
+import { GestionCuestionarioAddComponent, GestionCuestionarioComponent } from 'app/modules/admin/gestionCuestionario/gestionCuestionario.component';
 import { CuestionarioGraphComponent } from 'app/modules/admin/gestionCuestionario/gestionCuestionario.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -29,6 +29,10 @@ const cuestionarioRoutes: Route[] = [
         component: CuestionarioGraphComponent
     },
     {
+        path     : 'create',
+        component: GestionCuestionarioAddComponent
+    },
+    {
         path     : 'edit/:id',
         component: CuestionarioGraphComponent
     },
@@ -41,7 +45,8 @@ const cuestionarioRoutes: Route[] = [
 @NgModule({
     declarations: [
         GestionCuestionarioComponent,
-        CuestionarioGraphComponent
+        CuestionarioGraphComponent,
+        GestionCuestionarioAddComponent
     ],
     imports     : [
         MatButtonModule,

@@ -25,17 +25,17 @@ const presentacionRoutes: Route[] = [
         component: PresentacionComponent
     },
     {
-        path     : 'create',
-        component: PresentacionAddComponent
-      },
-      {
-        path     : 'edit/:id',
-        component: PresentacionAddComponent
-      },
-      {
-        path     : 'detail/:id',
-        component: PresentacionAddComponent
-      }
+      path     : 'create',
+      component: PresentacionAddComponent
+    },
+    {
+      path     : 'edit/:id',
+      component: PresentacionAddComponent
+    },
+    {
+      path     : 'detail/:id',
+      component: PresentacionAddComponent
+    }
 ];
 
 @NgModule({

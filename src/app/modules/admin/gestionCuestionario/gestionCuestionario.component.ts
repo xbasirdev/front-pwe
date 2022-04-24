@@ -1,6 +1,14 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef, ViewChild } from '@angular/core';
 import { GestionCuestionarioService  } from './gestionCuestionario.service';
+import { CarreraService  } from './../carrera/carrera.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { FuseAlertType } from '@fuse/components/alert';
+import { Cuestionario } from './cuestionario.model';
+import * as moment from 'moment';
+import { AppSettings } from '../../../core/settings/constants';
 import { ApexOptions } from 'ng-apexcharts';
 import {
     ApexAxisChartSeries,
@@ -31,11 +39,12 @@ fill: ApexFill;
     styleUrls    : ['./gestionCuestionario.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
+
 export class GestionCuestionarioComponent implements OnInit
 {
     public cuestionarios;
     public cuestionariosCount;
-    public cuestionariosTableColumns: string[] = ['nombre', 'descripcion', 'tipo', 'objetivo', 'acciones'];
+    public cuestionariosTableColumns: string[] = ['nombre', 'descripcion', 'tipo', 'fecha inicio', 'fecha fin','acciones'];
 
     constructor(
         public cuestionarioService: GestionCuestionarioService,
@@ -43,12 +52,37 @@ export class GestionCuestionarioComponent implements OnInit
      
     }
 
+    showAlert: boolean = false;
+    alert: { type: FuseAlertType, message: string } = {
+        type   : 'success',
+        message: ''
+    };
+
+    @ViewChild(MatPaginator, { static: true })
+    paginator: MatPaginator;
+
+    @ViewChild(MatSort, { static: true })
+    sort: MatSort;
+
+    @ViewChild('filter', { static: true })
+    filter: ElementRef;
+
     ngOnInit(): void {
+        this.getList();
+    }
+
+    getList(): void {
         this.cuestionarioService.getGestionCuestionarios().subscribe((res) => {
-            this.cuestionarios = res['data'];
-            this.cuestionariosCount = this.cuestionarios.length
-            console.log(this.cuestionarios)
+          this.cuestionariosCount = res['data'].length;
+          this.cuestionarios = new MatTableDataSource<any>(res['data']);
+          this.cuestionarios.paginator = this.paginator;
+          this.cuestionarios.sort = this.sort;
         })
+    }
+
+    applyFilter(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.cuestionarios.filter = filterValue.trim().toLowerCase();
     }
 }
 
@@ -595,4 +629,137 @@ export class CuestionarioGraphComponent implements OnInit
         console.log("entra")
         this.route.navigate(['/cuestionario']);
     }   
+}
+
+@Component({
+    selector     : 'gestionCuestionario-add',
+    templateUrl  : './gestionCuestionario.add.component.html',
+    styleUrls    : ['./gestionCuestionario.component.scss'],
+    encapsulation: ViewEncapsulation.None
+})
+export class GestionCuestionarioAddComponent implements OnInit
+{
+
+  public action: string = ''; 
+  public srcResult = ''; 
+  formFieldHelpers: string[] = [''];
+
+  
+  public cuestionario: Cuestionario = {    
+    id: null,
+    nombre: '',
+    user_id: 1,
+    descripcion: '',
+    tipo: '',
+    privacidad: '',
+    objetivo: [],
+  };
+
+  public imageShow: string = '';
+
+  showAlert: boolean = false;
+  alert: { type: FuseAlertType, message: string } = {
+      type   : 'success',
+      message: ''
+  };
+
+  constructor(
+      public gestionCuestionarioService: GestionCuestionarioService,
+      public carreraService: CarreraService,
+      private route: Router,
+      private router: ActivatedRoute, 
+  ){
+    
+  }
+
+  ngOnInit(): void {
+    if(this.router.snapshot.routeConfig.path !== 'create'){
+
+      if(this.router.snapshot.routeConfig.path === 'edit/:id') {
+        this.action = 'Edit';
+      }
+
+      if(this.router.snapshot.routeConfig.path === 'detail/:id') {
+        this.action = 'Detail';
+      }
+      this.getPresentacion(this.router.snapshot.params.id);
+    }
+    else {
+      this.action = 'Add';
+    }
+
+    this.carreraService.getCarreras().subscribe((res) => {
+        console.log(res)
+    });
+  }
+
+  getPresentacion(id): void {
+    this.gestionCuestionarioService.getGestionCuestionario(id).subscribe((res) => {
+      
+    }), (error) => {
+      console.log(error);
+      this.alert = {
+        type   : 'error',
+        message: 'No se encontro la presentacion Deportiva'
+      };
+      this.showAlert = true;
+    };
+  }
+
+  listGestionCuestionarioRoute(): void {
+      this.route.navigate(['/gestionCuestionario']);
+  } 
+  
+  generateFinalForm(): any {
+      /*
+    const finalData = new FormData();
+    if(this.presentacion.img){
+      finalData.append('img', this.presentacion.img);
+    }
+    Object.keys(this.presentacion).forEach(key => {
+      finalData.append(key, this.presentacion[key]);
+    })
+    return finalData;*/
+  }
+
+  saveCuestionario(): void {
+    const finalForm = this.generateFinalForm();
+    this.gestionCuestionarioService.saveGestionCuestionarios(finalForm).subscribe((res) => {
+      this.alert = {
+        type   : 'success',
+        message: 'Se guardo correctamente el registro'
+      };
+      this.showAlert = true;
+      this.route.navigate(['/gestionCuestionario']);
+    }, (error) => {
+      console.log(error);
+      this.alert = {
+        type   : 'error',
+        message: 'No se pudo guardar el registro'
+      };
+      this.showAlert = true;
+    });
+  }
+
+  /*
+  updatePresentacion(): void {
+    const finalUpdateForm = this.generateFinalForm();
+    console.log(finalUpdateForm);
+    console.log(this.presentacion);
+    this.presentacionService.updatePresentacion(this.presentacion.id, this.presentacion).subscribe((res) => {
+      this.alert = {
+        type   : 'success',
+        message: 'Se edito correctamente el registro'
+      };
+      this.showAlert = true;
+      this.route.navigate(['/presentacion']);
+    }, (error) => {
+      console.log(error);
+      this.alert = {
+        type   : 'error',
+        message: 'No se pudo editar el registro'
+      };
+      this.showAlert = true;
+    });
+  }*/
 }
