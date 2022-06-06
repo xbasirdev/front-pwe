@@ -6,29 +6,20 @@
             <!-- Breadcrumbs -->
             <div class="flex flex-wrap items-center font-medium">
                 <div>
-                    <a class="whitespace-nowrap text-primary-500" (click)="listEgresadosRoute()">Egresados</a>
+                    <a class="whitespace-nowrap text-primary-500" (click)="listBancoRoute()">Egresados</a>
                 </div>
                 <div class="flex items-center ml-1 whitespace-nowrap">
                     <mat-icon
                         class="icon-size-5 text-secondary"
                         [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
-                    <a class="ml-1 text-primary-500">Registrar</a>
+                    <a class="ml-1 text-primary-500">Perfil</a>
                 </div>
             </div>
             <!-- Title -->
             <div class="mt-2">
                 <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
-                    <mat-icon [svgIcon]="'heroicons_outline:user-group'"></mat-icon> Registrar Egresado
+                    <mat-icon [svgIcon]="'heroicons_outline:user-group'"></mat-icon> Perfil Egresado - Xavier Alexandro Basir Jeffrey
                 </h2>
-                <div style="width: 100%; text-align: right; margin-top: -40px;">
-                    <button
-                        [routerLink]="[ './create']"
-                        mat-flat-button
-                        [color]="'primary'">
-                        <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                        <span class="ml-2 mr-1">Importar Egresados</span>
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -41,31 +32,31 @@
                         [ngClass]="formFieldHelpers"
                         class="flex-auto gt-xs:pr-3">
                         <mat-label>Nombres</mat-label>
-                        <input matInput>
+                        <input matInput disabled value="Xavier Alexandro">
                     </mat-form-field>
                     <mat-form-field
                         [ngClass]="formFieldHelpers"
                         class="flex-auto gt-xs:pr-3">
                         <mat-label>Apellidos</mat-label>
-                        <input matInput>
+                        <input matInput disabled value="Basir Jeffrey">
                     </mat-form-field>
                     <mat-form-field
                         [ngClass]="formFieldHelpers"
                         class="flex-auto gt-xs:pr-3">
                         <mat-label>Cedula de identidad</mat-label>
-                        <input matInput>
+                        <input matInput disabled value="V26262004">
                     </mat-form-field>
                     <mat-form-field
                         [ngClass]="formFieldHelpers"
                         class="flex-auto gt-xs:pr-3">
                         <mat-label>Periodo Egresado</mat-label>
-                        <input matInput>
+                        <input matInput disabled value="2022-II">
                     </mat-form-field>
                     <mat-form-field
                         [ngClass]="formFieldHelpers"
                         class="flex-auto gt-xs:pr-3">
                         <mat-label>Fecha Egreso</mat-label>
-                        <input matInput>
+                        <input matInput disabled value="23/11/2022">
                     </mat-form-field>
                 </div>
                 <div class="flex flex-col gt-md:flex-row" style="max-height: 120px;">
@@ -73,7 +64,7 @@
                         [ngClass]="formFieldHelpers"
                         class="flex-auto gt-md:pl-3">
                         <mat-label>Correo Institucional</mat-label>
-                        <input matInput type="email">
+                        <input matInput disabled type="email" value="xbasir004@uneg.edu.ve">
                         <mat-icon
                             class="icon-size-5"
                             matSuffix
@@ -83,7 +74,7 @@
                         [ngClass]="formFieldHelpers"
                         class="flex-auto gt-md:pl-3">
                         <mat-label>Correo Personal</mat-label>
-                        <input matInput>
+                        <input matInput value="xavierfiv@gmail.com">
                         <mat-icon
                             class="icon-size-5"
                             matSuffix
@@ -93,7 +84,7 @@
                         [ngClass]="formFieldHelpers"
                         class="flex-auto gt-md:pl-3">
                         <mat-label>Telefono Movil</mat-label>
-                        <input matInput>
+                        <input matInput value="000000">
                         <mat-icon
                             class="icon-size-5"
                             matSuffix
@@ -103,21 +94,16 @@
                         [ngClass]="formFieldHelpers"
                         class="flex-auto gt-md:pl-3">
                         <mat-label>Telefono fijo</mat-label>
-                        <input matInput>
+                        <input matInput value="000111">
                         <mat-icon
                             class="icon-size-5"
                             matSuffix
                             [svgIcon]="'heroicons_solid:phone'"></mat-icon>
                     </mat-form-field>
-                    <mat-form-field
-                        [ngClass]="formFieldHelpers"
-                        class="flex-auto gt-md:pl-3">
-                        <mat-label>Contraseña</mat-label>
-                        <input matInput>
-                        <mat-icon
-                            class="icon-size-5"
-                            matSuffix></mat-icon>
-                    </mat-form-field>
+                    <div style="margin-top: 30px;">
+                        <button type="button" mat-raised-button>Habilitar Notificaciones</button>
+                        <button type="button" mat-raised-button [color]="'primary'" style="margin-left: 10px;">Cambiar Contrasena</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -127,7 +113,7 @@
                 mat-flat-button
                 [color]="'primary'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                <span class="ml-2 mr-1">Registrar</span>
+                <span class="ml-2 mr-1">Actualizar</span>
             </button>
         </div>
     </div>

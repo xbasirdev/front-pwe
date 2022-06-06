@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
-import { CuestionarioComponent } from 'app/modules/admin/cuestionario/cuestionario.component';
-import { CuestionarioAddComponent } from 'app/modules/admin/cuestionario/cuestionario.component';
-import { CuestionarioAnswerComponent } from 'app/modules/admin/cuestionario/cuestionario.component';
+import { BancoComponent } from 'app/modules/admin/banco/banco.component';
+import { BancoAddComponent } from 'app/modules/admin/banco/banco.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,38 +17,30 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatRadioModule } from '@angular/material/radio';
 
-
-const cuestionarioRoutes: Route[] = [
+const bancoRoutes: Route[] = [
     {
         path     : '',
-        component: CuestionarioComponent
+        component: BancoComponent
     },
     {
         path     : 'create',
-        component: CuestionarioAddComponent
+        component: BancoAddComponent
       },
       {
         path     : 'edit/:id',
-        component: CuestionarioAddComponent
-      },
-      {
-        path     : 'responder/:id',
-        component: CuestionarioAnswerComponent
+        component: BancoAddComponent
       },
       {
         path     : 'detail/:id',
-        component: CuestionarioAddComponent
+        component: BancoAddComponent
       }
 ];
 
 @NgModule({
     declarations: [
-        CuestionarioComponent,
-        CuestionarioAddComponent,
-        CuestionarioAnswerComponent
+        BancoComponent,
+        BancoAddComponent,
     ],
     imports     : [
         MatButtonModule,
@@ -67,11 +58,9 @@ const cuestionarioRoutes: Route[] = [
         MatTableModule,
         MatTooltipModule,
         SharedModule,
-        MatExpansionModule,
-        MatRadioModule,
-        RouterModule.forChild(cuestionarioRoutes)
+        RouterModule.forChild(bancoRoutes)
     ]
 })
-export class CuestionarioModule
+export class BancoModule
 {
 }

@@ -4,8 +4,15 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
+import { AppSettings } from '../../core/settings/constants';
 
 @Injectable()
+
+
+@Injectable({
+  providedIn: 'root'
+})
+
 export class AuthService
 {
     private _authenticated: boolean = false;
@@ -74,9 +81,10 @@ export class AuthService
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post('api/auth/sign-in', credentials).pipe(
+        return this._httpClient.post(`${AppSettings.API_GATEWAY}auth/login`, credentials).pipe(
             switchMap((response: any) => {
 
+                console.log(response)
                 // Store the access token in the local storage
                 this.accessToken = response.access_token;
 

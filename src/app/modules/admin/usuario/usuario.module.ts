@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
-import { CuestionarioComponent } from 'app/modules/admin/cuestionario/cuestionario.component';
-import { CuestionarioAddComponent } from 'app/modules/admin/cuestionario/cuestionario.component';
-import { CuestionarioAnswerComponent } from 'app/modules/admin/cuestionario/cuestionario.component';
+import { UsuarioComponent } from 'app/modules/admin/usuario/usuario.component';
+import { UsuarioAddComponent } from 'app/modules/admin/usuario/usuario.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,38 +17,34 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatRadioModule } from '@angular/material/radio';
 
-
-const cuestionarioRoutes: Route[] = [
+const usuarioRoutes: Route[] = [
     {
         path     : '',
-        component: CuestionarioComponent
+        component: UsuarioComponent
     },
     {
         path     : 'create',
-        component: CuestionarioAddComponent
+        component: UsuarioAddComponent
       },
       {
         path     : 'edit/:id',
-        component: CuestionarioAddComponent
-      },
-      {
-        path     : 'responder/:id',
-        component: CuestionarioAnswerComponent
+        component: UsuarioAddComponent
       },
       {
         path     : 'detail/:id',
-        component: CuestionarioAddComponent
+        component: UsuarioAddComponent
+      },
+      {
+        path     : 'perfil/:id',
+        component: UsuarioAddComponent
       }
 ];
 
 @NgModule({
     declarations: [
-        CuestionarioComponent,
-        CuestionarioAddComponent,
-        CuestionarioAnswerComponent
+        UsuarioComponent,
+        UsuarioAddComponent,
     ],
     imports     : [
         MatButtonModule,
@@ -67,11 +62,9 @@ const cuestionarioRoutes: Route[] = [
         MatTableModule,
         MatTooltipModule,
         SharedModule,
-        MatExpansionModule,
-        MatRadioModule,
-        RouterModule.forChild(cuestionarioRoutes)
+        RouterModule.forChild(usuarioRoutes)
     ]
 })
-export class CuestionarioModule
+export class UsuarioModule
 {
 }

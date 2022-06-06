@@ -1,13 +1,13 @@
 /* tslint:disable:max-line-length */
 import { FuseNavigationItem } from '@fuse/components/navigation';
-
+console.log("define el menu")
 export const defaultNavigation: FuseNavigationItem[] = [
     {
         id   : 'usuarios',
         title: 'Usuarios',
         type : 'basic',
         icon : 'heroicons_outline:user',
-        link : '/usuarios'
+        link : '/usuario'
     },
     {
         id   : 'egresados',
@@ -21,7 +21,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Banco de Preguntas',
         type : 'basic',
         icon : 'heroicons_outline:question-mark-circle',
-        link : '/egresado'
+        link : '/banco'
     },
     {
         id   : 'gestion_cuestionarios',

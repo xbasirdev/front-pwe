@@ -1,0 +1,109 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+        <div class="flex-1 min-w-0">
+            <!-- Breadcrumbs -->
+            <div class="flex flex-wrap items-center font-medium">
+                <div>
+                    <a class="whitespace-nowrap text-primary-500"  (click)="listCuestionariosRoute()">Cuestionarios y Encuestas</a>
+                </div>
+                <div class="flex items-center ml-1 whitespace-nowrap">
+                    <mat-icon
+                        class="icon-size-5 text-secondary"
+                        [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
+                    <a class="ml-1 text-primary-500">Responder Encuesta</a>
+                </div>
+            </div>
+            <!-- Title -->
+            <div class="mt-2">
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+                    <mat-icon [svgIcon]="'heroicons_outline:support'"></mat-icon> ¿Que tecnologias de desarrollo usaste a lo largo de la carrera?
+                </h2>
+            </div>
+        </div>
+    </div>
+    <div class="flex-auto p-6 sm:p">
+        <div class="max-w-full">
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        1- Primer lenguaje?
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        Respuesta texto
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <mat-form-field
+                        [ngClass]="formFieldHelpers"
+                        class="flex-auto gt-xs:pr-3" style="width: 80%">
+                        <mat-label>Respuesta</mat-label>
+                    <input matInput>
+                    </mat-form-field>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        2 - Lenguaje favorito
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        Respuesta texto
+                    </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <mat-form-field
+                    [ngClass]="formFieldHelpers"
+                    class="flex-auto gt-xs:pr-3" style="width: 80%">
+                    <mat-label>Respuesta</mat-label>
+                    <input matInput>
+                    </mat-form-field>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        3 - Lenguajes en general
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        Respuesta seleccion multiple
+                    </mat-panel-description>
+                    </mat-expansion-panel-header>
+                     <mat-checkbox style="margin: 4px" class="example-margin">C++</mat-checkbox>
+                     <mat-checkbox style="margin: 4px" class="example-margin">Java</mat-checkbox>
+                     <mat-checkbox style="margin: 4px" class="example-margin">Pascal</mat-checkbox>
+                     <mat-checkbox style="margin: 4px" class="example-margin">JavaScript</mat-checkbox>
+                     <mat-checkbox style="margin: 4px" class="example-margin">PHP</mat-checkbox>
+                     <mat-checkbox style="margin: 4px" class="example-margin">Go</mat-checkbox>
+                     <mat-checkbox style="margin: 4px" class="example-margin">Matlab</mat-checkbox>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        4 - ¿Has usado alguno de estos lenguajes en tu campo laboral?
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        Respuesta seleccion simple
+                    </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <mat-radio-group aria-label="Seleccione una opcion">
+                        <mat-radio-button value="1" style="margin: 4px">Si</mat-radio-button>
+                        <mat-radio-button value="2" style="margin: 4px">No</mat-radio-button>
+                    </mat-radio-group>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+        <div style="margin-top: 10px; width: 100%; text-align: right;">
+            <button
+                mat-flat-button
+                [color]="'primary'">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">Completar cuestionario</span>
+            </button>
+        </div>
+    </div>
+</div>

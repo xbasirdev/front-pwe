@@ -62,10 +62,18 @@
                             <span>Datos</span>
                             <div style="position: absolute; margin-left: 50px; margin-top: -30px;">
                                 <button
+                                [routerLink]="[ './create']"
                                 mat-flat-button
                                 [color]="'primary'">
-                                <mat-icon [svgIcon]="'heroicons_outline:clipboard'"></mat-icon>
-                                <span class="ml-2 mr-1">Ver datos especificos</span>
+                                <mat-icon [svgIcon]="'heroicons_outline:chart-square-bar'"></mat-icon>
+                                <span class="ml-2 mr-1">Exportar Datos</span>
+                            </button>
+                            <button
+                                [routerLink]="[ './create']"
+                                mat-flat-button
+                                [color]="'primary'">
+                                <mat-icon [svgIcon]="'heroicons_outline:chart-square-bar'"></mat-icon>
+                                <span class="ml-2 mr-1">Exportar Respuestas</span>
                             </button>
                             </div>
                         </div>
