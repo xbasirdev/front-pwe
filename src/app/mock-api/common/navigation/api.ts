@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 import { FuseNavigationItem } from '@fuse/components/navigation';
 import { FuseMockApiService } from '@fuse/lib/mock-api';
-import { compactNavigation, defaultNavigation, futuristicNavigation, horizontalNavigation } from 'app/mock-api/common/navigation/data';
+import { compactNavigation, egresadoNavigation, adminNavigation, noneNavigation } from 'app/mock-api/common/navigation/data';
+import { AuthService } from 'app/core/auth/auth.service';
 
 @Injectable({
     providedIn: 'root'
@@ -10,14 +11,13 @@ import { compactNavigation, defaultNavigation, futuristicNavigation, horizontalN
 export class NavigationMockApi
 {
     private readonly _compactNavigation: FuseNavigationItem[] = compactNavigation;
-    private readonly _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
-    private readonly _futuristicNavigation: FuseNavigationItem[] = futuristicNavigation;
-    private readonly _horizontalNavigation: FuseNavigationItem[] = horizontalNavigation;
-
+    private readonly _egresadoNavigation: FuseNavigationItem[] = egresadoNavigation;
+    private readonly _adminNavigation: FuseNavigationItem[] = adminNavigation;
+    private readonly _noneNavigation: FuseNavigationItem[] = noneNavigation;
     /**
      * Constructor
      */
-    constructor(private _fuseMockApiService: FuseMockApiService)
+    constructor(private _fuseMockApiService: FuseMockApiService, private _authService: AuthService)
     {
         // Register Mock API handlers
         this.registerHandlers();
@@ -39,46 +39,62 @@ export class NavigationMockApi
             .onGet('api/common/navigation')
             .reply(() => {
 
-                // Fill compact navigation children using the default navigation
-                this._compactNavigation.forEach((compactNavItem) => {
-                    this._defaultNavigation.forEach((defaultNavItem) => {
-                        if ( defaultNavItem.id === compactNavItem.id )
-                        {
-                            compactNavItem.children = cloneDeep(defaultNavItem.children);
-                        }
+                console.log(this._authService.accessToken);  
+                console.log(this._authService.accessUsername);  
+                console.log(this._authService.accessEmail);  
+                console.log(this._authService.accessRole);  
+                if(this._authService.accessRole === '1'){
+                    console.log("entra uno")
+                    this._compactNavigation.forEach((compactNavItem) => {
+                        this._adminNavigation.forEach((defaultNavItem) => {
+                            if ( defaultNavItem.id === compactNavItem.id )
+                            {
+                                compactNavItem.children = cloneDeep(defaultNavItem.children);
+                            }
+                        });
                     });
-                });
-
-                // Fill futuristic navigation children using the default navigation
-                this._futuristicNavigation.forEach((futuristicNavItem) => {
-                    this._defaultNavigation.forEach((defaultNavItem) => {
-                        if ( defaultNavItem.id === futuristicNavItem.id )
+                    return [
+                        200,
                         {
-                            futuristicNavItem.children = cloneDeep(defaultNavItem.children);
+                            compact   : cloneDeep(this._compactNavigation),
+                            default   : cloneDeep(this._adminNavigation)
                         }
+                    ];
+                }else if(this._authService.accessRole === '2'){
+                    console.log("entra dos")
+                    this._compactNavigation.forEach((compactNavItem) => {
+                        this._egresadoNavigation.forEach((defaultNavItem) => {
+                            if ( defaultNavItem.id === compactNavItem.id )
+                            {
+                                compactNavItem.children = cloneDeep(defaultNavItem.children);
+                            }
+                        });
                     });
-                });
-
-                // Fill horizontal navigation children using the default navigation
-                this._horizontalNavigation.forEach((horizontalNavItem) => {
-                    this._defaultNavigation.forEach((defaultNavItem) => {
-                        if ( defaultNavItem.id === horizontalNavItem.id )
+                    return [
+                        200,
                         {
-                            horizontalNavItem.children = cloneDeep(defaultNavItem.children);
+                            compact   : cloneDeep(this._compactNavigation),
+                            default   : cloneDeep(this._egresadoNavigation)
                         }
+                    ];
+                }else {
+                    console.log("entra ninguno")
+                    this._compactNavigation.forEach((compactNavItem) => {
+                        this._noneNavigation.forEach((defaultNavItem) => {
+                            if ( defaultNavItem.id === compactNavItem.id )
+                            {
+                                compactNavItem.children = cloneDeep(defaultNavItem.children);
+                            }
+                        });
                     });
-                });
-
-                // Return the response
-                return [
-                    200,
-                    {
-                        compact   : cloneDeep(this._compactNavigation),
-                        default   : cloneDeep(this._defaultNavigation),
-                        futuristic: cloneDeep(this._futuristicNavigation),
-                        horizontal: cloneDeep(this._horizontalNavigation)
-                    }
-                ];
+                    return [
+                        200,
+                        {
+                            compact   : cloneDeep(this._compactNavigation),
+                            default   : cloneDeep(this._noneNavigation)
+                        }
+                    ];
+                }
             });
     }
 }

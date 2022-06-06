@@ -34,9 +34,39 @@ export class AuthService
     /**
      * Setter & getter for access token
      */
+    set accessUsername(user)
+    {
+        localStorage.setItem('username', user);
+    }
+
+    set accessEmail(email)
+    {
+        localStorage.setItem('email', email);
+    }
+
+    set accessRole(role: string)
+    {
+        localStorage.setItem('role', role);
+    }
+
     set accessToken(token: string)
     {
         localStorage.setItem('access_token', token);
+    }
+
+    get accessUsername(): string
+    {
+        return localStorage.getItem('username') ?? '';
+    }
+
+    get accessEmail(): string
+    {
+        return localStorage.getItem('email') ?? '';
+    }
+
+    get accessRole(): string
+    {
+        return localStorage.getItem('role') ?? '';
     }
 
     get accessToken(): string
@@ -88,6 +118,12 @@ export class AuthService
                 // Store the access token in the local storage
                 this.accessToken = response.access_token;
 
+                this.accessUsername = response.user.name;
+
+                this.accessEmail = response.user.email;
+
+                this.accessRole = response.role.role_id;
+
                 // Set the authenticated flag to true
                 this._authenticated = true;
 
@@ -106,7 +142,7 @@ export class AuthService
     signInUsingToken(): Observable<any>
     {
         // Renew token
-        return this._httpClient.post('api/auth/refresh-access-token', {
+        return this._httpClient.post(`${AppSettings.API_GATEWAY}auth/refresh`, {
             access_token: this.accessToken
         }).pipe(
             catchError(() => {
@@ -138,6 +174,9 @@ export class AuthService
     {
         // Remove the access token from the local storage
         localStorage.removeItem('access_token');
+        localStorage.removeItem('role');
+        localStorage.removeItem('username');
+        localStorage.removeItem('email');
 
         // Set the authenticated flag to false
         this._authenticated = false;
