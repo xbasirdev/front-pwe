@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FuseNavigationService } from '@fuse/components/navigation';
 import { InitialData } from 'app/app.types';
+import { AuthService } from 'app/core/auth/auth.service';
 
 @Component({
     selector     : 'classy-layout',
@@ -16,6 +17,8 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
     data: InitialData;
     isScreenSmall: boolean;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    username: string;
+    email: string;
 
     /**
      * Constructor
@@ -24,7 +27,8 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
         private _activatedRoute: ActivatedRoute,
         private _router: Router,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private _fuseNavigationService: FuseNavigationService
+        private _fuseNavigationService: FuseNavigationService,
+        private _authService: AuthService,
     )
     {
     }
@@ -50,6 +54,8 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+        this.username = this._authService.accessUsername;
+        this.email = this._authService.accessEmail;
         // Subscribe to the resolved route mock-api
         this._activatedRoute.data.subscribe((data: Data) => {
             this.data = data.initialData;
