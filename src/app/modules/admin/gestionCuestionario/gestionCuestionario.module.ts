@@ -34,11 +34,11 @@ const cuestionarioRoutes: Route[] = [
     },
     {
         path     : 'edit/:id',
-        component: CuestionarioGraphComponent
+        component: GestionCuestionarioAddComponent
     },
     {
         path     : 'detail/:id',
-        component: CuestionarioGraphComponent
+        component: GestionCuestionarioAddComponent
     }
 ];
 

@@ -56,13 +56,20 @@
                     <span *ngIf='column == "tipo"'>
                         {{cuestionario.tipo}}
                     </span>
-                    <span *ngIf='column == "fecha inicio"'>
-                        {{cuestionario.fecha_inicio}}
-                    </span>
-                    <span *ngIf='column == "fecha fin"'>
-                        {{cuestionario.fecha_fin}}
+                    <span *ngIf='column == "privacidad"'>
+                        <ng-container *ngIf='cuestionario.privacidad == "publico_fecha"'>
+                            &nbsp;&nbsp;Fechas
+                        </ng-container> 
+                        <ng-container *ngIf='cuestionario.privacidad != "publico_fecha"'>
+                            &nbsp;&nbsp;{{cuestionario.privacidad}}
+                        </ng-container> 
                     </span>
                     <span *ngIf='column == "acciones"'>
+                    <button
+                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                        (click)="details(cuestionario.id)">
+                        <mat-icon class="icon-size-5">live_help</mat-icon>
+                    </button>
                     <button
                         class="min-w-10 min-h-7 h-7 px-2 leading-6"
                         (click)="details(cuestionario.id)">

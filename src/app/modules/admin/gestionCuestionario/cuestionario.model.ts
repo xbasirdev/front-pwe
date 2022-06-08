@@ -6,6 +6,6 @@ export class Cuestionario {
     descripcion: string;
     tipo: string;
     objetivo: number[];
-    fecha_inicio?: string;
-    fecha_fin?: string;
+    fecha_inicio?: any;
+    fecha_fin?: any;
 }

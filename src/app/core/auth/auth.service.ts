@@ -39,6 +39,11 @@ export class AuthService
         localStorage.setItem('username', user);
     }
 
+    set accessUserID(user)
+    {
+        localStorage.setItem('userID', user);
+    }
+
     set accessEmail(email)
     {
         localStorage.setItem('email', email);
@@ -57,6 +62,11 @@ export class AuthService
     get accessUsername(): string
     {
         return localStorage.getItem('username') ?? '';
+    }
+
+    get accessUserID(): string
+    {
+        return localStorage.getItem('userID') ?? '';
     }
 
     get accessEmail(): string
@@ -176,6 +186,7 @@ export class AuthService
         localStorage.removeItem('access_token');
         localStorage.removeItem('role');
         localStorage.removeItem('username');
+        localStorage.removeItem('userID');
         localStorage.removeItem('email');
 
         // Set the authenticated flag to false

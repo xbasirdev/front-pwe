@@ -30,7 +30,6 @@ export class CuestionarioComponent implements OnInit
             console.log(this.cuestionarios)
         })
     }
-
     
     filterByCategory(event): void {
       console.log("entra")

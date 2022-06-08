@@ -39,10 +39,6 @@ export class NavigationMockApi
             .onGet('api/common/navigation')
             .reply(() => {
 
-                console.log(this._authService.accessToken);  
-                console.log(this._authService.accessUsername);  
-                console.log(this._authService.accessEmail);  
-                console.log(this._authService.accessRole);  
                 if(this._authService.accessRole === '1'){
                     console.log("entra uno")
                     this._compactNavigation.forEach((compactNavItem) => {

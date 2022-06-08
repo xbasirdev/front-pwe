@@ -18,6 +18,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
     isScreenSmall: boolean;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     username: string;
+    userID: string;
     email: string;
 
     /**
@@ -55,6 +56,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         this.username = this._authService.accessUsername;
+        this.userID= this._authService.accessUserID;
         this.email = this._authService.accessEmail;
         // Subscribe to the resolved route mock-api
         this._activatedRoute.data.subscribe((data: Data) => {
