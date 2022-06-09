@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 import { BancoComponent } from 'app/modules/admin/banco/banco.component';
 import { BancoAddComponent } from 'app/modules/admin/banco/banco.component';
-import { BancoQuestionsComponent } from 'app/modules/admin/banco/banco.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,10 +34,6 @@ const bancoRoutes: Route[] = [
       {
         path     : 'detail/:id',
         component: BancoAddComponent
-      },
-      {
-        path     : 'preguntas/:id',
-        component: BancoQuestionsComponent
       }
 ];
 
@@ -46,7 +41,6 @@ const bancoRoutes: Route[] = [
     declarations: [
         BancoComponent,
         BancoAddComponent,
-        BancoQuestionsComponent,
     ],
     imports     : [
         MatButtonModule,

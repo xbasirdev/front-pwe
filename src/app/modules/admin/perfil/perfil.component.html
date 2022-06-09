@@ -15,8 +15,7 @@
                 <input
                     matInput
                     [autocomplete]="'off'"
-                    [placeholder]="'Buscar banco'"
-                    (keyup)="applyFilter($event)">
+                    [placeholder]="'Buscar banco'">
             </mat-form-field>
             <!-- Add product button -->
             <button
@@ -25,7 +24,7 @@
                 mat-flat-button
                 [color]="'primary'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                <span class="ml-2 mr-1">Crear</span>
+                <span class="ml-2 mr-1">Agregar</span>
             </button>
         </div>
     </div>
@@ -57,7 +56,7 @@
                         {{banco.descripcion}}
                     </span>
                     <span *ngIf='column == "opciones"'>
-                        <button mat-flat-button [color]="'primary'" style="margin: 5px" (click)="gestionarPreguntasBanco(banco.id)">
+                        <button mat-flat-button [color]="'primary'" style="margin: 5px">
                             Gestionar preguntas
                         </button>
                     </span>

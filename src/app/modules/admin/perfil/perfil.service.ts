@@ -27,14 +27,14 @@ export class BancoService {
     const httpOptions = {
       headers: new HttpHeaders({})
     };
-    return this.httpClient.post(`${AppSettings.API_GATEWAY}banco/`, parameters, httpOptions);
+    return this.httpClient.post(`${AppSettings.API_GENERAL}banco/`, parameters, httpOptions);
   }
 
   public updateBanco(id, parameters): any { 
     const httpOptions = {
       headers: new HttpHeaders({})
     };
-    return this.httpClient.patch(`${AppSettings.API_GATEWAY}banco/${id}`, parameters, httpOptions);
+    return this.httpClient.patch(`${AppSettings.API_GENERAL}banco/${id}`, parameters, httpOptions);
   }
 
   public deleteBanco(id): any { 
