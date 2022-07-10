@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
-import { GradoComponent } from 'app/modules/admin/grado/grado.component';
-import { GradoAddComponent } from 'app/modules/admin/grado/grado.component';
+import { VerificacionAddComponent, VerificacionComponent } from 'app/modules/admin/verificacion/verificacion.component';
+import { CuestionarioGraphComponent } from 'app/modules/admin/verificacion/verificacion.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,31 +17,38 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
+import { NgApexchartsModule } from "ng-apexcharts";
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatRadioModule } from '@angular/material/radio';
 
-const gradoRoutes: Route[] = [
+const cuestionarioRoutes: Route[] = [
     {
         path     : '',
-        component: GradoComponent
+        component: VerificacionComponent
     },
     {
-      path     : 'create',
-      component: GradoAddComponent
+        path     : 'graph/:id',
+        component: CuestionarioGraphComponent
     },
     {
-      path     : 'edit/:id',
-      component: GradoAddComponent
+        path     : 'create',
+        component: VerificacionAddComponent
     },
     {
-      path     : 'detail/:id',
-      component: GradoAddComponent
+        path     : 'edit/:id',
+        component: VerificacionAddComponent
+    },
+    {
+        path     : 'detail/:id',
+        component: VerificacionAddComponent
     }
 ];
 
 @NgModule({
     declarations: [
-        GradoComponent,
-        GradoAddComponent,
-
+        VerificacionComponent,
+        CuestionarioGraphComponent,
+        VerificacionAddComponent
     ],
     imports     : [
         MatButtonModule,
@@ -59,9 +66,12 @@ const gradoRoutes: Route[] = [
         MatTableModule,
         MatTooltipModule,
         SharedModule,
-        RouterModule.forChild(gradoRoutes)
+        MatExpansionModule,
+        NgApexchartsModule,
+        MatRadioModule,
+        RouterModule.forChild(cuestionarioRoutes)
     ]
 })
-export class GradoModule
+export class VerificacionModule
 {
 }

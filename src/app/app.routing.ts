@@ -81,6 +81,7 @@ export const appRoutes: Route[] = [
             {path: 'banco', loadChildren: () => import('app/modules/admin/banco/banco.module').then(m => m.BancoModule)},
             {path: 'cuestionario', loadChildren: () => import('app/modules/admin/cuestionario/cuestionario.module').then(m => m.CuestionarioModule)},
             {path: 'gestionCuestionario', loadChildren: () => import('app/modules/admin/gestionCuestionario/gestionCuestionario.module').then(m => m.GestionCuestionarioModule)},
+            {path: 'verificacion', loadChildren: () => import('app/modules/admin/verificacion/verificacion.module').then(m => m.VerificacionModule)},
             {path: 'evento', loadChildren: () => import('app/modules/admin/evento/evento.module').then(m => m.EventoModule)},
             {path: 'grado', loadChildren: () => import('app/modules/admin/grado/grado.module').then(m => m.GradoModule)},
             {path: 'extension', loadChildren: () => import('app/modules/admin/extension/extension.module').then(m => m.ExtensionModule)},

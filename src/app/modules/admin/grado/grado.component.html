@@ -19,6 +19,7 @@
             </mat-form-field>
             <!-- Add product button -->
             <button
+                [routerLink]="[ './create']"
                 class="ml-4"
                 mat-flat-button
                 [color]="'primary'">
@@ -28,140 +29,61 @@
         </div>
     </div>
 
+    <fuse-alert
+        class="p-4"
+        *ngIf="showAlert"
+        [appearance]="'outline'"
+        [showIcon]="false"
+        [type]="alert.type">
+        {{alert.message}}
+    </fuse-alert>
+
     <!-- Main -->
     <div class="flex flex-auto overflow-hidden">
-
-        <!-- Products list -->
-        <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden">
-
-
-
-            <ng-template>
-                <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">There are no products!</div>
-            </ng-template>
-
+        <div class="content-card w-full min-w-320 table-fixed bg-transparent overflow-hidden">
+            <div *ngIf="gradosCount === 0">
+                <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">No hay grados registrados</div>
+            </div>
+            <div class="mat-elevation-z8">
+                <table class="w-full min-w-320 bg-transparent overflow-hidden" mat-table [dataSource]="grados" matSort>
+                <ng-container matColumnDef="{{column}}" *ngFor="let column of gradosTableColumns">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear class="bg-gray-50 dark:bg-black dark:bg-opacity-5 capitalize"> {{ column }} </th>
+                    <td mat-cell *matCellDef="let grado" style="text-align: left;">
+                    <span *ngIf='column == "titulo"'>
+                        {{grado.titulo}}
+                    </span>
+                    <span *ngIf='column == "descripcion"'>
+                        {{grado.descripcion}}
+                    </span>
+                    <span *ngIf='column == "fecha"'>
+                        {{grado.fecha | date :'shortDate'}}
+                    </span>
+                    <span *ngIf='column == "acciones"'>
+                        <button
+                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                        (click)="details(grado.id)">
+                        <mat-icon class="icon-size-5">remove_red_eye</mat-icon>
+                    </button>
+                    <button
+                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                        (click)="edit(grado.id)">
+                        <mat-icon class="icon-size-5">edit</mat-icon>
+                    </button>
+                    <button
+                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                        (click)="delete(grado.id)">
+                        <mat-icon class="icon-size-5">delete</mat-icon>
+                    </button>
+                    </span>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="gradosTableColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: gradosTableColumns;">
+                </tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10]"></mat-paginator>
+            </div>
         </div>
-
-        <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden">
-
-            <ng-container *ngIf="gradosCount > 0">
-
-                <!-- Table wrapper -->
-                <div
-                    class="overflow-x-auto sm:overflow-y-auto"
-                    cdkScrollable>
-
-                    <!-- Table -->
-                    <table
-                        class="w-full min-w-320 table-fixed bg-transparent"
-                        [ngClass]="{'pointer-events-none': isLoading}"
-                        mat-table
-                        matSort
-                        [matSortActive]="'name'"
-                        [matSortDisableClear]="true"
-                        [matSortDirection]="'asc'"
-                        [multiTemplateDataRows]="true"
-                        [dataSource]="grados"
-                        [trackBy]="trackByFn">
-
-                        <!-- Name -->
-                        <ng-container matColumnDef="titulo">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Titulo
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let grado">
-                                {{grado.titulo}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="descripcion">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Descripcion
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let grado">
-                                {{grado.descripcion}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="fecha">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Fecha
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let grado">
-                                {{grado.fecha}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="acciones">
-                            <th
-                                class="w-24 pr-8 bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef>
-                                Acciones
-                            </th>
-                            <td class="pr-8" mat-cell *matCellDef="let grado">
-                                <div>
-                                    <button
-                                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(grado.id)">
-                                        <mat-icon class="icon-size-5">remove_red_eye</mat-icon>
-                                    </button>
-                                    <button
-                                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(grado.id)">
-                                        <mat-icon class="icon-size-5">edit</mat-icon>
-                                    </button>
-                                    <button
-                                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(grado.id)">
-                                        <mat-icon class="icon-size-5">delete</mat-icon>
-                                    </button>
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <tr
-                            class="shadow"
-                            mat-header-row
-                            *matHeaderRowDef="gradosTableColumns; sticky: true"></tr>
-                        <tr
-                            class="h-18 hover:bg-hover"
-                            mat-row
-                            *matRowDef="let grado; columns: gradosTableColumns;"></tr>
-                    </table>
-                    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                                    showFirstLastButtons 
-                                    aria-label="Select page of periodic elements">
-                    </mat-paginator>
-                </div>
-
-            </ng-container>
-        </div>
-
     </div>
 
 </div>

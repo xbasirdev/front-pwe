@@ -25,6 +25,14 @@
                         <span *ngIf="action === 'Detail'">Detalles Cuestionario</span>
                         <span *ngIf="action === 'Edit'">Editar Cuestionario</span>
                 </h2>
+                <button
+                *ngIf="action === 'Detail'"
+                (click)="saveCuestionario()"
+                mat-flat-button
+                [color]="'primary'">
+                <mat-icon [svgIcon]="'heroicons_outline:mail'"></mat-icon>
+                <span class="ml-2 mr-1">Enviar cuestionario por correo</span>
+            </button>
             </div>
         </div>
     </div>
