@@ -38,7 +38,8 @@ export class NavigationMockApi
         this._fuseMockApiService
             .onGet('api/common/navigation')
             .reply(() => {
-
+                console.log("se define")
+                console.log(this._authService.accessRole)
                 if(this._authService.accessRole === '1'){
                     console.log("entra uno")
                     this._compactNavigation.forEach((compactNavItem) => {

@@ -15,7 +15,8 @@
                 <input
                     matInput
                     [autocomplete]="'off'"
-                    [placeholder]="'Buscar grado'">
+                    [placeholder]="'Buscar grado'"
+                    (keyup)="applyFilter($event)">
             </mat-form-field>
             <!-- Add product button -->
             <button

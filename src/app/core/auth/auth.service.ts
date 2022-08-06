@@ -123,7 +123,7 @@ export class AuthService
 
         return this._httpClient.post(`${AppSettings.API_GATEWAY}auth/login`, credentials).pipe(
             switchMap((response: any) => {
-
+                console.log("al hacer login")
                 console.log(response)
                 // Store the access token in the local storage
                 this.accessToken = response.access_token;
@@ -132,7 +132,7 @@ export class AuthService
 
                 this.accessEmail = response.user.email;
 
-                this.accessRole = response.role.role_id;
+                this.accessRole = response.role[0].id;
 
                 // Set the authenticated flag to true
                 this._authenticated = true;

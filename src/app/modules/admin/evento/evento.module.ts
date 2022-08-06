@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
-import { EventoComponent } from 'app/modules/admin/evento/evento.component';
+import { EventoComponent, EventoAddComponent } from 'app/modules/admin/evento/evento.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,12 +21,25 @@ const eventoRoutes: Route[] = [
     {
         path     : '',
         component: EventoComponent
+    },
+    {
+        path     : 'create',
+        component: EventoAddComponent
+    },
+    {
+        path     : 'edit/:id',
+        component: EventoAddComponent
+    },
+    {
+        path     : 'detail/:id',
+        component: EventoAddComponent
     }
 ];
 
 @NgModule({
     declarations: [
-        EventoComponent
+        EventoComponent,
+        EventoAddComponent
     ],
     imports     : [
         MatButtonModule,
