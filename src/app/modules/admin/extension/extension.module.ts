@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
-import { ExtensionComponent } from 'app/modules/admin/extension/extension.component';
+import { ExtensionComponent, ExtensionAddComponent } from 'app/modules/admin/extension/extension.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,12 +21,24 @@ const extensionRoutes: Route[] = [
     {
         path     : '',
         component: ExtensionComponent
+    },
+    {
+        path     : 'create',
+        component: ExtensionAddComponent
+    },
+    {
+        path     : 'edit/:id',
+        component: ExtensionAddComponent
+    },
+    {
+        path     : 'detail/:id',
+        component: ExtensionAddComponent
     }
 ];
 
 @NgModule({
     declarations: [
-        ExtensionComponent
+        ExtensionComponent, ExtensionAddComponent
     ],
     imports     : [
         MatButtonModule,

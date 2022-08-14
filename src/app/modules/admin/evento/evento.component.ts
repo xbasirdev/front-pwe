@@ -206,8 +206,6 @@ export class EventoAddComponent implements OnInit
 
   updateEvento(): void {
     const finalUpdateForm = this.generateFinalForm();
-    console.log(finalUpdateForm);
-    console.log(this.evento);
     this.eventoService.updateEvento(this.evento.id, this.evento).subscribe((res) => {
       this.alert = {
         type   : 'success',
