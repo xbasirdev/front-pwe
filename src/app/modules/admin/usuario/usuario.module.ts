@@ -38,6 +38,14 @@ const usuarioRoutes: Route[] = [
       {
         path     : 'perfil/:id',
         component: UsuarioAddComponent
+      },
+      {
+        path     : 'export',
+        component: UsuarioAddComponent
+      },
+      {
+        path     : 'import',
+        component: UsuarioAddComponent
       }
 ];
 

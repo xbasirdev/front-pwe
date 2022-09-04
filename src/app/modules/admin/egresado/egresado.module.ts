@@ -28,6 +28,14 @@ const egresadoRoutes: Route[] = [
         component: EgresadoAddComponent
       },
       {
+        path     : 'export',
+        component: EgresadoAddComponent
+      },
+      {
+        path     : 'import',
+        component: EgresadoAddComponent
+      },
+      {
         path     : 'edit/:id',
         component: EgresadoAddComponent
       },

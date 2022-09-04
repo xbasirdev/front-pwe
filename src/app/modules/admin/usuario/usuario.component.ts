@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UsuarioService  } from './usuario.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { saveAs } from 'file-saver';
+import {formatDate} from '@angular/common';
 
 @Component({
     selector     : 'usuario',
@@ -28,6 +30,24 @@ export class UsuarioComponent implements OnInit
             console.log(this.usuarios)
         })
     }
+    ExportUsuariosOption(type): void{
+      this.usuarioService.exportUsuarios({'base_format':type, 'act_on':'administrator'}).subscribe((res) => {      
+        const blob = new Blob([res.body], { type: res.headers.get('content-type') });
+        let date = formatDate(new Date(), 'yyyyMMddhsm', 'en');
+        const fileName ="usuarios-"+date+".xlsx";
+        const file = new File([blob], fileName, { type: res.headers.get('content-type') });
+        saveAs(file);
+      })
+    }
+
+    ImportUsuariosOption(): void{
+      this.usuarioService.importUsuarios({'base_format':'xlsx', 'act_on':'administrator'}).subscribe((res) => {
+        console.log(res)
+        this.usuarios = res['data'];
+        this.usuarios = this.usuarios.length
+        console.log(this.usuarios)
+      })
+  }
 }
 
 

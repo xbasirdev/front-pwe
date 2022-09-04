@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { EgresadoService  } from './egresado.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { saveAs } from 'file-saver';
+import {formatDate} from '@angular/common';
+
 
 @Component({
     selector     : 'egresado',
@@ -28,6 +31,25 @@ export class EgresadoComponent implements OnInit
             console.log(this.egresados)
         })
     }
+    ExportEgresadosOption(type): void{
+      this.egresadoService.exportEgresados({'base_format':type, 'act_on':'graduate'}).subscribe((res) => {      
+        const blob = new Blob([res.body], { type: res.headers.get('content-type') });
+        let date = formatDate(new Date(), 'yyyyMMddhsm', 'en');
+        const fileName ="egresados-"+date+".xlsx";
+        const file = new File([blob], fileName, { type: res.headers.get('content-type') });
+        saveAs(file);
+      })
+    }
+
+    ImportEgresadosOption(): void{
+      this.egresadoService.importEgresados({'base_format':'xlsx', 'act_on':'graduate'}).subscribe((res) => {
+        console.log(res)
+        this.egresados = res['data'];
+        this.egresadosCount = this.egresados.length
+        console.log(this.egresados)
+      })
+  }
+
 }
 
 
@@ -86,5 +108,5 @@ export class EgresadoAddComponent implements OnInit
     listEgresadosRoute(): void {
         console.log("entra")
         this.route.navigate(['/egresado']);
-    }  
+    }
 }

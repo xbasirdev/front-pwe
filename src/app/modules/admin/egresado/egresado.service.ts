@@ -14,4 +14,17 @@ export class EgresadoService {
     };
     return this.httpClient.get(`http://127.0.0.1:8300/api/egresado`, httpOptions);
   }
+
+  public exportEgresados(parameters): any { 
+    const httpOptions = {
+      headers: new HttpHeaders(),
+     };
+    return this.httpClient.post(`http://127.0.0.1:8300/api/user/export`, parameters, {responseType:'arraybuffer', observe: 'response'});
+  }
+  public importEgresados(parameters): any { 
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.post(`http://127.0.0.1:8300/api/user/import`,parameters, httpOptions);
+  }
 }
