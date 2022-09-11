@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>Importar Egresados</h2>
+<mat-dialog-content>
+    <div class="flex-auto p-6 ">
+        <div class="max-w-full grid grid-cols-1 gap-4 overflow-hidden">
+            <div class="flex flex-col gt-xs:flex-row">
+                <div style="margin-top: 20px;">                        
+                    <label id="radio-group-label mb-2">Acciones sobre los egresados:</label>
+                    <mat-radio-group role="radiogroup" style="margin-top: 20px;" class="mat-radio-group flex flex-col"
+                        aria-labelledby="example-radio-group-label" [(ngModel)]="actionG">
+                        <mat-radio-button *ngFor="let type of types" [value]="type.name">
+                            {{type.value}}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                   
+                    <fuse-alert
+                        class="p-4"
+                        *ngIf="showAlert"
+                        [appearance]="'outline'"
+                        [showIcon]="false"
+                        [type]="alert.type">
+                        {{alert.message}}
+                    </fuse-alert>
+                    <div  class="mt-4">
+                        <div class="flex">
+                            <input #file (change)="uploadFile($event)" type="file" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="display: none;">
+                        </div>
+                    </div>            
+                </div>
+            </div>
+            <div class="flex flex-col gt-xs:flex-row">
+                <div style="margin-top: 20px;">  
+                    <b>Tenga en cuenta al momento de importar que:</b>
+                    <ul style="margin-top: 5px;">
+                        <li>-El archivo con los egresados a importar debe ser de formato csv, xls o xlsx.</li>
+                        <li>-Puede exportar los egresados para tener una referencia de la distribucion de columnas del archivo que debe importar.</li>
+                        <li>-Las columnas nombres, apellidos, cedula, telefono, correo, periodo_de_egreso, carrera son requeridas</li>
+                    </ul>   
+                </div>
+            </div>
+        </div>
+    </div>
+    <mat-dialog-actions>
+        <button mat-button mat-dialog-close>Cancelar</button>
+        <button mat-button  (click)="actionG.length > 0 ? file.click(): alertMessage()" cdkFocusInitial>Importar</button>
+    </mat-dialog-actions>
+</mat-dialog-content>

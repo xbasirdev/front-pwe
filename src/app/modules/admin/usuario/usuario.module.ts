@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 import { UsuarioComponent } from 'app/modules/admin/usuario/usuario.component';
 import { UsuarioAddComponent } from 'app/modules/admin/usuario/usuario.component';
+import { UsuarioImportComponent } from 'app/modules/admin/usuario/usuario.component';
+import { UsuarioExportComponent } from 'app/modules/admin/usuario/usuario.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +19,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatRadioModule } from '@angular/material/radio';
 
 const usuarioRoutes: Route[] = [
     {
@@ -53,6 +57,11 @@ const usuarioRoutes: Route[] = [
     declarations: [
         UsuarioComponent,
         UsuarioAddComponent,
+        UsuarioImportComponent,
+        UsuarioExportComponent,
+    ],
+    entryComponents: [
+      MatDialogModule
     ],
     imports     : [
         MatButtonModule,
@@ -69,7 +78,9 @@ const usuarioRoutes: Route[] = [
         MatSlideToggleModule,
         MatTableModule,
         MatTooltipModule,
+        MatDialogModule,
         SharedModule,
+        MatRadioModule,
         RouterModule.forChild(usuarioRoutes)
     ]
 })

@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 import { EgresadoComponent } from 'app/modules/admin/egresado/egresado.component';
 import { EgresadoAddComponent } from 'app/modules/admin/egresado/egresado.component';
+import { EgresadoImportComponent } from 'app/modules/admin/egresado/egresado.component';
+import { EgresadoExportComponent } from 'app/modules/admin/egresado/egresado.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +19,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatRadioModule } from '@angular/material/radio';
+
 
 const egresadoRoutes: Route[] = [
     {
@@ -53,6 +58,11 @@ const egresadoRoutes: Route[] = [
     declarations: [
         EgresadoComponent,
         EgresadoAddComponent,
+        EgresadoImportComponent,
+        EgresadoExportComponent,
+    ],
+    entryComponents: [
+      MatDialogModule
     ],
     imports     : [
         MatButtonModule,
@@ -69,9 +79,12 @@ const egresadoRoutes: Route[] = [
         MatSlideToggleModule,
         MatTableModule,
         MatTooltipModule,
+        MatDialogModule,
         SharedModule,
+        MatRadioModule,
         RouterModule.forChild(egresadoRoutes)
-    ]
+    ],
+    
 })
 export class EgresadoModule
 {

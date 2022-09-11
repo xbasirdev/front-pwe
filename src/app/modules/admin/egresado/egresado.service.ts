@@ -17,7 +17,7 @@ export class EgresadoService {
 
   public exportEgresados(parameters): any { 
     const httpOptions = {
-      headers: new HttpHeaders(),
+      headers: new HttpHeaders({}),
      };
     return this.httpClient.post(`http://127.0.0.1:8300/api/user/export`, parameters, {responseType:'arraybuffer', observe: 'response'});
   }

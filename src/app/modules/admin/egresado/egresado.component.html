@@ -25,14 +25,14 @@
                 [color]="'primary'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Agregar</span>
-            </button>
-            <button [color]="'primary'" class="ml-4" mat-raised-button (click)="ExportEgresadosOption('xlsx')">
-                <mat-icon svgIcon="heroicons_outline:arrow-sm-down"></mat-icon>
-                <span class="ml-2 mr-1">Exportar Egresados</span>
-            </button>
-            <button [color]="'primary'" class="ml-4" mat-raised-button (click)="ImportEgresadosOption()">
+            </button>            
+            <button [color]="'primary'" class="ml-4" mat-raised-button (click)="openImportDialog()">
                 <mat-icon svgIcon="heroicons_outline:arrow-sm-up"></mat-icon>
                 <span class="ml-2 mr-1">Importar Egresados</span>
+            </button>
+            <button [color]="'primary'" class="ml-4" mat-raised-button (click)="openExportDialog()">
+                <mat-icon svgIcon="heroicons_outline:arrow-sm-down"></mat-icon>
+                <span class="ml-2 mr-1">Exportar Egresados</span>
             </button>
         </div>
     </div>
