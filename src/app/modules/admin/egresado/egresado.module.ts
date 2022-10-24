@@ -22,7 +22,7 @@ import { SharedModule } from 'app/shared/shared.module';
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatRadioModule } from '@angular/material/radio';
 import { ChangePasswordModule } from '../../auth/change-password/change-password.module';
-import { ChangePasswordComponent } from '../../auth/change-password/change-password.component';
+import { FuseAlertModule } from '@fuse/components/alert';
 
 
 const egresadoRoutes: Route[] = [
@@ -86,7 +86,7 @@ const egresadoRoutes: Route[] = [
         SharedModule,
         MatRadioModule,
         ChangePasswordModule,
-        //ChangePasswordComponent,
+        FuseAlertModule,
         RouterModule.forChild(egresadoRoutes)
     ],
     

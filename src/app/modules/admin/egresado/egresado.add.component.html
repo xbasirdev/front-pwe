@@ -8,17 +8,20 @@
                 <div>
                     <a class="whitespace-nowrap text-primary-500" (click)="listEgresadosRoute()">Egresados</a>
                 </div>
-                <div class="flex items-center ml-1 whitespace-nowrap">
+                <div class="flex items-center ml-1 whitespace-nowrap" >
                     <mat-icon
                         class="icon-size-5 text-secondary"
                         [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
-                    <a class="ml-1 text-primary-500">Registrar</a>
+                    <span class="ml-1 text-primary-500" *ngIf="action === 'Edit'" >Actualizar egresado : {{egresado.nombres}}  {{egresado.apellidos}}</span>
+                    <span class="ml-1 text-primary-500" *ngIf="action != 'Edit'" >Registrar Egresado</span>
                 </div>
             </div>
             <!-- Title -->
             <div class="mt-2">
                 <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
-                    <mat-icon [svgIcon]="'heroicons_outline:user-group'"></mat-icon> Registrar Egresado
+                    <mat-icon [svgIcon]="'heroicons_outline:user-group'"></mat-icon> 
+                    <b *ngIf="action === 'Edit'" > Actualizar egresado: {{egresado.nombres}}  {{egresado.apellidos}}</b>
+                    <b *ngIf="action != 'Edit'" > Registrar Egresado</b>
                 </h2>
             </div>
         </div>

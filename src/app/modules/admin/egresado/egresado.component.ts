@@ -125,7 +125,7 @@ export class EgresadoComponent implements OnInit
 export class EgresadoAddComponent implements OnInit
 {
     @ViewChild('registerUserFormNgForm') registerUserNgForm: NgForm;
-    registerUserForm: FormGroup;
+    public registerUserForm: FormGroup;
     public action = ''; 
     public showNotification = true;
     public srcResult = ''; 
@@ -148,10 +148,22 @@ export class EgresadoAddComponent implements OnInit
         }
       }
     };
+    public formBuilderGroup = {
+      nombres:['', Validators.required],
+      apellidos:['', Validators.required],
+      cedula:['', Validators.required],
+      periodo_egreso:['', Validators.required],
+      correo:['', [Validators.required,Validators.email]],
+      correo_personal:["",[Validators.email]],
+      password:['', Validators.required],
+      password_confirm:['', Validators.required],
+      fecha_egreso:[''],
+      telefono:[""]
+    };
     
   
-    showAlert: boolean = false;
-    alert: { type: FuseAlertType, message: string } = {
+    public showAlert: boolean = false;
+    public alert: { type: FuseAlertType, message: string } = {
         type   : 'success',
         message: ''
     };
@@ -169,19 +181,6 @@ export class EgresadoAddComponent implements OnInit
 
     ngOnInit(): void {
 
-        let formBuilderGroup = {
-          nombres:['', Validators.required],
-          apellidos:['', Validators.required],
-          cedula:['', Validators.required],
-          periodo_egreso:['', Validators.required],
-          correo:['', [Validators.required,Validators.email]],
-          correo_personal:["",[Validators.email]],
-          password:['', Validators.required],
-          password_confirm:['', Validators.required],
-          fecha_egreso:[''],
-          telefono:[""]
-        };
-
         if(this.router.snapshot.routeConfig.path !== 'create'){
 
           if(this.router.snapshot.routeConfig.path === 'edit/:id') {
@@ -190,18 +189,14 @@ export class EgresadoAddComponent implements OnInit
     
           if(this.router.snapshot.routeConfig.path === 'detail/:id') {
             this.action = 'Detail';
+            this.registerUserForm.disable();
           }
-          this.getEgresado(this.router.snapshot.params.id);
-
-           // Create the form
-          formBuilderGroup.password = [""];
-          formBuilderGroup.password_confirm = [""];
-          this.registerUserForm = this._formBuilder.group(formBuilderGroup);
+          this.getEgresado(this.router.snapshot.params.id);         
 
         }
         else {
           this.action = 'Add';
-          this.registerUserForm = this._formBuilder.group(formBuilderGroup, {
+          this.registerUserForm = this._formBuilder.group(this.formBuilderGroup, {
               validators: FuseValidators.mustMatch('password', 'password_confirm')
             }
           );
@@ -234,6 +229,12 @@ export class EgresadoAddComponent implements OnInit
           this.showNotification = false;
         }        
         this.egresado.egresado.fecha_egreso = moment(this.egresado.egresado.fecha_egreso).format("YYYY-MM-DDTHH:mm");
+        this.formBuilderGroup.password = [""];
+        this.formBuilderGroup.password_confirm = [""];
+        this.registerUserForm = this._formBuilder.group(this.formBuilderGroup);
+        if(this.action = 'Detail'){
+          this.registerUserForm.disable();
+        }
       }), (error) => {
         console.log(error);
         this.alert = {

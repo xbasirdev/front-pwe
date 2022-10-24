@@ -1,6 +1,15 @@
 <h2 mat-dialog-title>Exportar Egresados</h2>
 <!-- Alert -->
-
+<fuse-alert
+class="mt-8 -mb-4"
+*ngIf="showAlert"
+[appearance]="'outline'"
+[showIcon]="false"
+[type]="alert.type"
+[@shake]="alert.type === 'error'">
+{{alert.message}}
+</fuse-alert>
+<div class="flex-auto p-6 ">
 <label id="radio-group-label mb-2">Selecciona el formato a exportar</label>
 <mat-radio-group role="radiogroup" style="margin-top: 20px;" class="mat-radio-group flex flex-col"
     aria-labelledby="radio-group-label"
@@ -9,14 +18,8 @@
       .{{type}}
     </mat-radio-button>
 </mat-radio-group>
-<fuse-alert
-  class="p-4"
-  *ngIf="showAlert"
-  [appearance]="'outline'"
-  [showIcon]="false"
-  [type]="alert.type">
-  {{alert.message}}
-</fuse-alert>
+</div>
+
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancelar</button>
   <button mat-button (click)="ExportEgresadosOption()" cdkFocusInitial>Exportar</button>

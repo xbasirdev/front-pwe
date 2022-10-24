@@ -24,15 +24,15 @@
                 mat-flat-button
                 [color]="'primary'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                <span class="ml-2 mr-1">Agregar</span>
+                <span class="ml-2 mr-1">Crear</span>
             </button>
             <button [color]="'primary'" class="ml-4" mat-raised-button (click)="openImportDialog()">
                 <mat-icon svgIcon="heroicons_outline:arrow-sm-up"></mat-icon>
-                <span class="ml-2 mr-1">Importar Usuarios</span>
+                <span class="ml-2 mr-1">Importar</span>
             </button>
             <button [color]="'primary'" class="ml-4" mat-raised-button (click)="openExportDialog()">
                 <mat-icon svgIcon="heroicons_outline:arrow-sm-down"></mat-icon>
-                <span class="ml-2 mr-1">Exportar Usuarios</span>
+                <span class="ml-2 mr-1">Exportar</span>
             </button>
         </div>
     </div>
@@ -46,7 +46,7 @@
 
 
             <ng-template>
-                <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">There are no products!</div>
+                <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">No hay usuarios registrados</div>
             </ng-template>
 
         </div>
@@ -72,70 +72,37 @@
                         [multiTemplateDataRows]="true"
                         [dataSource]="usuarios"
                         [trackBy]="trackByFn">
-
-                        <!-- Name -->
-                        <ng-container matColumnDef="nombres">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Nombre
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let usuario">
+                        <ng-container matColumnDef="{{column}}" *ngFor="let column of usuariosTableColumns">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear class="bg-gray-50 dark:bg-black dark:bg-opacity-5 capitalize"> {{ column }} </th>
+                            <td mat-cell *matCellDef="let usuario" style="text-align: left;">
+                            <span *ngIf='column == "nombres"'>
                                 {{usuario.nombres}} {{usuario.apellidos}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="correo">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Correo
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let usuario">
+                            </span>
+                            <span *ngIf='column == "cedula"'>
+                                {{usuario.cedula}}
+                            </span>
+                            <span *ngIf='column == "correo"'>
                                 {{usuario.correo}}
-                            </td>
+                            </span>
+                        <span *ngIf='column == "acciones"'>
+                                <button
+                                    class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                                    (click)="details(usuario.cedula)">
+                                    <mat-icon class="icon-size-5">remove_red_eye</mat-icon>
+                                </button>
+                                <button
+                                    class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                                    (click)="edit(usuario.cedula)">
+                                    <mat-icon class="icon-size-5">edit</mat-icon>
+                                </button>
+                                <button
+                                    class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                                    (click)="delete(usuario.cedula)">
+                                    <mat-icon class="icon-size-5">delete</mat-icon>
+                                </button>
+                        </span>
+                        </td>
                         </ng-container>
-
-                        <ng-container matColumnDef="acciones">
-                            <th
-                                class="w-24 pr-8 bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef>
-                                Acciones
-                            </th>
-                            <td class="pr-8" mat-cell *matCellDef="let usuario">
-                                <div>
-                                    <button
-                                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(usuario.id)">
-                                        <mat-icon class="icon-size-5">remove_red_eye</mat-icon>
-                                    </button>
-                                    <button
-                                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(usuario.id)">
-                                        <mat-icon class="icon-size-5">edit</mat-icon>
-                                    </button>
-                                    <button
-                                        class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(usuario.id)">
-                                        <mat-icon class="icon-size-5">delete</mat-icon>
-                                    </button>
-                                </div>
-                            </td>
-                        </ng-container>
-
                         <tr
                             class="shadow"
                             mat-header-row
