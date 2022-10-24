@@ -182,7 +182,7 @@ export class EgresadoAddComponent implements OnInit
     ngOnInit(): void {
 
         if(this.router.snapshot.routeConfig.path !== 'create'){
-
+          this.getEgresado(this.router.snapshot.params.id); 
           if(this.router.snapshot.routeConfig.path === 'edit/:id') {
             this.action = 'Edit';
           }
@@ -190,8 +190,7 @@ export class EgresadoAddComponent implements OnInit
           if(this.router.snapshot.routeConfig.path === 'detail/:id') {
             this.action = 'Detail';
             this.registerUserForm.disable();
-          }
-          this.getEgresado(this.router.snapshot.params.id);         
+          }        
 
         }
         else {
@@ -232,7 +231,7 @@ export class EgresadoAddComponent implements OnInit
         this.formBuilderGroup.password = [""];
         this.formBuilderGroup.password_confirm = [""];
         this.registerUserForm = this._formBuilder.group(this.formBuilderGroup);
-        if(this.action = 'Detail'){
+        if(this.action == 'Detail'){
           this.registerUserForm.disable();
         }
       }), (error) => {

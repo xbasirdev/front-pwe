@@ -191,7 +191,7 @@ export class UsuarioAddComponent implements OnInit
         this.formBuilderGroup.password = [""];
         this.formBuilderGroup.password_confirm = [""];
         this.registerUserForm = this._formBuilder.group(this.formBuilderGroup);
-        if(this.action = 'Detail'){
+        if(this.action == 'Detail'){
           this.registerUserForm.disable();
         }
       }), (error) => {
