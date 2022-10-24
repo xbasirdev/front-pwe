@@ -1,38 +1,75 @@
-import { Component, OnInit, ViewEncapsulation, Inject } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Inject, Input,ElementRef, ViewChild  } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 import { EgresadoService  } from './egresado.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { saveAs } from 'file-saver';
 import {formatDate} from '@angular/common';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import * as moment from 'moment';
+import { Egresado } from './egresado.model';
 import { FuseAlertType } from '@fuse/components/alert';
-
+import { AuthResetPasswordComponent } from 'app/modules/auth/reset-password/reset-password.component';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FuseAnimations } from '@fuse/animations';
+import { AuthService } from 'app/core/auth/auth.service';
+import { FuseValidators } from '@fuse/validators';
+import { ChangePasswordComponent } from 'app/modules/auth/change-password/change-password.component';
 
 @Component({
     selector     : 'egresado',
     templateUrl  : './egresado.component.html',
     styleUrls    : ['./egresado.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    animations   : FuseAnimations
 })
 export class EgresadoComponent implements OnInit
 {
     public egresados;
     public egresadosCount;
-    public egresadosTableColumns: string[] = ['titulo', 'descripcion', 'deporte', 'lugar', 'fecha', 'acciones'];
+    public egresadosTableColumns: string[] = ['nombres', 'cedula', 'carrera', 'egreso', 'acciones'];
+    showAlert: boolean = false;
+    alert: { type: FuseAlertType, message: string } = {
+        type   : 'success',
+        message: ''
+    };
+
+    @ViewChild(MatPaginator, { static: true })
+    paginator: MatPaginator;
+
+    @ViewChild(MatSort, { static: true })
+    sort: MatSort;
+
+    @ViewChild('filter', { static: true })
+    filter: ElementRef;
 
     constructor(
-        public egresadoService: EgresadoService,public dialog: MatDialog
+        public egresadoService: EgresadoService, 
+        public dialog: MatDialog,
+        private route: Router,
+        private router: ActivatedRoute
     ){
      
     }
 
     ngOnInit(): void {
-        this.egresadoService.getEgresados().subscribe((res) => {
-            console.log(res)
-            this.egresados = res['data'];
-            this.egresadosCount = this.egresados.length
-            console.log(this.egresados)
-        })
+      this.getList();
     }
+
+    getList(): void {
+      this.egresadoService.getEgresados().subscribe((res) => {
+        this.egresadosCount = res['data'].length;
+        this.egresados = new MatTableDataSource<any>(res['data']);
+        this.egresados.paginator = this.paginator;
+        this.egresados.sort = this.sort;
+    })
+  }
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.egresados.filter = filterValue.trim().toLowerCase();
+  }
 
      
     openExportDialog() {
@@ -48,6 +85,33 @@ export class EgresadoComponent implements OnInit
         console.log(`Dialog result: ${result}`);
       });
     }
+
+    
+    delete(cedula:string): void {
+      this.egresadoService.deleteEgresado(cedula).subscribe((res) => {
+        this.alert = {
+          type   : 'success',
+          message: 'Se borro correctamente el registro'
+        };
+        this.showAlert = true;
+        this.getList();
+      }, (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se pudo borrar el registro'
+        };
+        this.showAlert = true;
+      });
+    }
+
+    edit(cedula:string): void {
+      this.route.navigate(['/egresado/edit/' + cedula])
+    }
+
+    details(cedula:string): void {
+      this.route.navigate(['/egresado/detail/' + cedula])
+    }
 }
 
 
@@ -55,54 +119,205 @@ export class EgresadoComponent implements OnInit
     selector     : 'egresado-add',
     templateUrl  : './egresado.add.component.html',
     styleUrls    : ['./egresado.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    animations   : FuseAnimations
 })
 export class EgresadoAddComponent implements OnInit
 {
-
+    @ViewChild('registerUserFormNgForm') registerUserNgForm: NgForm;
+    registerUserForm: FormGroup;
     public action = ''; 
+    public showNotification = true;
     public srcResult = ''; 
     public formFieldHelpers = "";
+    public egresado: Egresado = {
+      nombres: '',
+      apellidos: "",
+      cedula: '',
+      correo: '',
+      telefono: '',
+      egresado:{
+        fecha_egreso: '',
+        modo_registro: '',
+        notificacion: false,
+        periodo_egreso: '',
+        correo: '',
+        carrera : { 
+            nombre: '',
+            estado: '',
+        }
+      }
+    };
+    
+  
+    showAlert: boolean = false;
+    alert: { type: FuseAlertType, message: string } = {
+        type   : 'success',
+        message: ''
+    };
 
     constructor(
         public egresadoService: EgresadoService,
+        public dialog: MatDialog,
         private route: Router,
         private router: ActivatedRoute, 
+        private _authService: AuthService, 
+        private _formBuilder: FormBuilder,
     ){
      
     }
 
     ngOnInit(): void {
-        console.log("pantalla correcta")
-        if(this.router.snapshot.routeConfig.path !== 'egresado/create'){
 
-            if(this.router.snapshot.routeConfig.path === 'egresado/edit/:id') {
-              this.action = 'Edit';
-            }
-      
-            if(this.router.snapshot.routeConfig.path === 'egresado/detail/:id') {
-              this.action = 'Detail';
-            }
+        let formBuilderGroup = {
+          nombres:['', Validators.required],
+          apellidos:['', Validators.required],
+          cedula:['', Validators.required],
+          periodo_egreso:['', Validators.required],
+          correo:['', [Validators.required,Validators.email]],
+          correo_personal:["",[Validators.email]],
+          password:['', Validators.required],
+          password_confirm:['', Validators.required],
+          fecha_egreso:[''],
+          telefono:[""]
+        };
+
+        if(this.router.snapshot.routeConfig.path !== 'create'){
+
+          if(this.router.snapshot.routeConfig.path === 'edit/:id') {
+            this.action = 'Edit';
           }
-          else {
-            this.action = 'Add';
+    
+          if(this.router.snapshot.routeConfig.path === 'detail/:id') {
+            this.action = 'Detail';
           }
+          this.getEgresado(this.router.snapshot.params.id);
+
+           // Create the form
+          formBuilderGroup.password = [""];
+          formBuilderGroup.password_confirm = [""];
+          this.registerUserForm = this._formBuilder.group(formBuilderGroup);
+
+        }
+        else {
+          this.action = 'Add';
+          this.registerUserForm = this._formBuilder.group(formBuilderGroup, {
+              validators: FuseValidators.mustMatch('password', 'password_confirm')
+            }
+          );
+        }
+        
     }
 
-    onFileSelected(): void {
-        const inputNode: any = document.querySelector('#file');      
-        if (typeof (FileReader) !== 'undefined') {
-          const reader = new FileReader();      
-          reader.onload = (e: any) => {
-            this.srcResult = e.target.result;
-          };      
-          reader.readAsArrayBuffer(inputNode.files[0]);
-        }
+   
+
+    changeNotificationStatus( status: boolean): void{
+      let id =  this.router.snapshot.paramMap.get('id') ?? this._authService.accessEmail; 
+      this.egresadoService.updateNotificationStatus({"status": status, "id":id}).subscribe((res) => {
+        status = !status;
+        this.showNotification = status;
+        
+      }), (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se encontro el egresado'
+        };
+        this.showAlert = true;
+      };
+    }
+
+    getEgresado(cedula: string): void {
+      this.egresadoService.getEgresado(cedula).subscribe((res) => {
+        this.egresado = res['data'];
+        if(!this.egresado.egresado.notificacion){
+          this.showNotification = false;
+        }        
+        this.egresado.egresado.fecha_egreso = moment(this.egresado.egresado.fecha_egreso).format("YYYY-MM-DDTHH:mm");
+      }), (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se encontro el egresado'
+        };
+        this.showAlert = true;
+      };
     }
 
     listEgresadosRoute(): void {
-        console.log("entra")
+      this.route.navigate(['/egresado']);
+    }
+
+    saveEgresado(): void {
+      // Do nothing if the form is invalid
+      if ( this.registerUserForm.invalid )
+      {
+          return;
+      }
+
+      // Disable the form
+      this.registerUserForm.disable();
+
+      // Hide the alert
+      this.showAlert = false;
+
+      this.egresadoService.saveEgresado(this.registerUserForm.value).subscribe((res) => {
+        this.alert = {
+          type   : 'success',
+          message: 'Se guardo correctamente el registro'
+        };
+        this.showAlert = true;
         this.route.navigate(['/egresado']);
+      }, (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se pudo guardar el registro'
+        };
+        this.showAlert = true;
+        
+        // Re-enable the form
+        this.registerUserForm.enable();
+
+        // Reset the form
+        this.registerUserNgForm.resetForm();
+      });
+    }
+  
+    updateEgresado(): void {
+      // Do nothing if the form is invalid
+      console.log(this.registerUserForm.invalid);
+      if ( this.registerUserForm.invalid )
+      {
+          return;
+      }
+
+      // Disable the form
+      this.registerUserForm.disable();
+
+      // Hide the alert
+      this.showAlert = false;
+      this.egresadoService.updateEgresado(this.egresado.cedula, this.registerUserForm.value).subscribe((res) => {
+        this.alert = {
+          type   : 'success',
+          message: 'Se edito correctamente el registro'
+        };
+        this.showAlert = true;
+        this.route.navigate(['/egresado']);
+      }, (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se pudo editar el registro'
+        };
+        this.showAlert = true;
+         
+        // Re-enable the form
+        this.registerUserForm.enable();
+
+        // Reset the form
+        this.registerUserNgForm.resetForm();
+      });
     }
 }
 
@@ -113,6 +328,8 @@ export class EgresadoAddComponent implements OnInit
  @Component({
   selector: 'importar-egresado',
   templateUrl: 'egresado.import.component.html',
+  styleUrls    : ['./egresado.component.scss'],
+  animations   : FuseAnimations
 })
 
 export class EgresadoImportComponent {
@@ -207,6 +424,8 @@ export class EgresadoImportComponent {
  @Component({
   selector: 'exportar-egresado',
   templateUrl: 'egresado.export.component.html',
+  styleUrls    : ['./egresado.component.scss'],
+  animations   : FuseAnimations
 })
 
 export class EgresadoExportComponent {
@@ -251,5 +470,6 @@ export class EgresadoExportComponent {
       });
   }
 }
+
 
 export interface DialogData {}

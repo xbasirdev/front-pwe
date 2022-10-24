@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
+import { AppSettings } from '../../../core/settings/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -12,19 +13,56 @@ export class EgresadoService {
     const httpOptions = {
       headers: new HttpHeaders({})
     };
-    return this.httpClient.get(`http://127.0.0.1:8300/api/egresado`, httpOptions);
+    return this.httpClient.get(`${AppSettings.API_GATEWAY}egresado`, httpOptions);
   }
+
+  public getEgresado(id): any {
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.get(`${AppSettings.API_GATEWAY}egresado/${id}`, httpOptions);
+  }
+
+  public saveEgresado(parameters): any {
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.post(`${AppSettings.API_GENERAL}egresado/`, parameters, httpOptions);
+  }
+
+  public updateEgresado(id, parameters): any {
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.patch(`${AppSettings.API_GENERAL}egresado/${id}`, parameters, httpOptions);
+  }
+
+  public deleteEgresado(id): any {
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.delete(`${AppSettings.API_GATEWAY}egresado/${id}`, httpOptions);
+  }
+
 
   public exportEgresados(parameters): any { 
     const httpOptions = {
       headers: new HttpHeaders({}),
      };
-    return this.httpClient.post(`http://127.0.0.1:8300/api/user/export`, parameters, {responseType:'arraybuffer', observe: 'response'});
+    return this.httpClient.post(`${AppSettings.API_GATEWAY}user/export`, parameters, {responseType:'arraybuffer', observe: 'response'});
   }
+
   public importEgresados(parameters): any { 
     const httpOptions = {
       headers: new HttpHeaders({})
     };
-    return this.httpClient.post(`http://127.0.0.1:8300/api/user/import`,parameters, httpOptions);
+    return this.httpClient.post(`${AppSettings.API_GATEWAY}user/import`,parameters, httpOptions);
+  }
+
+  public updateNotificationStatus(parameters): any { 
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.post(`${AppSettings.API_GATEWAY}egresado/change-notification-status`,parameters, httpOptions);
   }
 }

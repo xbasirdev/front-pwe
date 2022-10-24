@@ -24,15 +24,15 @@
                 mat-flat-button
                 [color]="'primary'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                <span class="ml-2 mr-1">Agregar</span>
+                <span class="ml-2 mr-1">Crear</span>
             </button>            
             <button [color]="'primary'" class="ml-4" mat-raised-button (click)="openImportDialog()">
                 <mat-icon svgIcon="heroicons_outline:arrow-sm-up"></mat-icon>
-                <span class="ml-2 mr-1">Importar Egresados</span>
+                <span class="ml-2 mr-1">Importar</span>
             </button>
             <button [color]="'primary'" class="ml-4" mat-raised-button (click)="openExportDialog()">
                 <mat-icon svgIcon="heroicons_outline:arrow-sm-down"></mat-icon>
-                <span class="ml-2 mr-1">Exportar Egresados</span>
+                <span class="ml-2 mr-1">Exportar</span>
             </button>
         </div>
     </div>
@@ -73,117 +73,38 @@
                         [dataSource]="egresados"
                         [trackBy]="trackByFn">
 
-                        <!-- Name -->
-                        <ng-container matColumnDef="titulo">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Nombres
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let egresado">
-                                {{egresado.nombres}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="descripcion">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Apellidos
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let egresado">
-                                {{egresado.apellidos}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="deporte">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Cedula
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let egresado">
+                        <ng-container matColumnDef="{{column}}" *ngFor="let column of egresadosTableColumns">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear class="bg-gray-50 dark:bg-black dark:bg-opacity-5 capitalize"> {{ column }} </th>
+                            <td mat-cell *matCellDef="let egresado" style="text-align: left;">
+                            <span *ngIf='column == "nombres"'>
+                                {{egresado.nombres}} {{egresado.apellidos}}
+                            </span>
+                            <span *ngIf='column == "cedula"'>
                                 {{egresado.cedula}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="lugar">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Carrera
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let egresado">
-                                Ingenieria en informatica
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="fecha">
-                            <th
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef
-                                mat-sort-header
-                                disableClear>
-                                Egreso
-                            </th>
-                            <td
-                                class="pr-8 truncate"
-                                mat-cell
-                                *matCellDef="let egresado">
-                                {{egresado.periodo_egreso}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="acciones">
-                            <th
-                                class="w-24 pr-8 bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                                mat-header-cell
-                                *matHeaderCellDef>
-                                Acciones
-                            </th>
-                            <td class="pr-8" mat-cell *matCellDef="let egresado">
-                                <div>
+                            </span>
+                            <span *ngIf='column == "carrera" && egresado.egresado && egresado.egresado.carrera '>
+                                {{egresado.egresado.carrera.nombre}}
+                            </span>
+                            <span *ngIf='column == "egreso" && egresado.egresado'>
+                                {{egresado.egresado.periodo_egreso}}
+                            </span>
+                                <span *ngIf='column == "acciones"'>
                                     <button
                                         class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(egresado.id)">
+                                        (click)="details(egresado.cedula)">
                                         <mat-icon class="icon-size-5">remove_red_eye</mat-icon>
                                     </button>
                                     <button
                                         class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(egresado.id)">
+                                        (click)="edit(egresado.cedula)">
                                         <mat-icon class="icon-size-5">edit</mat-icon>
                                     </button>
                                     <button
                                         class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                        (click)="toggleDetails(egresado.id)">
+                                        (click)="delete(egresado.cedula)">
                                         <mat-icon class="icon-size-5">delete</mat-icon>
                                     </button>
-                                </div>
+                                </span>
                             </td>
                         </ng-container>
 
@@ -198,7 +119,7 @@
                     </table>
                     <mat-paginator [pageSizeOptions]="[5, 10, 20]"
                                     showFirstLastButtons 
-                                    aria-label="Select page of periodic elements">
+                                    aria-label="Seleccione la página de elementos periódicos">
                     </mat-paginator>
                 </div>
 

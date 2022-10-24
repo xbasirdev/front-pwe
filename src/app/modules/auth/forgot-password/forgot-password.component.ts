@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { LocationStrategy, Location} from '@angular/common';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { FuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector     : 'auth-forgot-password',
@@ -26,8 +28,10 @@ export class AuthForgotPasswordComponent implements OnInit
      * Constructor
      */
     constructor(
-        private _authService: AuthService,
-        private _formBuilder: FormBuilder
+        private _formBuilder: FormBuilder,
+        private _forgotPassword: AuthService,
+        private route: Router,
+        private locationStrategy: LocationStrategy
     )
     {
     }
@@ -67,9 +71,10 @@ export class AuthForgotPasswordComponent implements OnInit
 
         // Hide the alert
         this.showAlert = false;
+        let url = location.origin + this.locationStrategy.getBaseHref() + 'reset-password';
 
         // Forgot password
-        this._authService.forgotPassword(this.forgotPasswordForm.get('email').value)
+        this._forgotPassword.forgotPassword({"url":url,"email": this.forgotPasswordForm.get('email').value})
             .pipe(
                 finalize(() => {
 
@@ -89,7 +94,7 @@ export class AuthForgotPasswordComponent implements OnInit
                     // Set the alert
                     this.alert = {
                         type   : 'success',
-                        message: 'Password reset sent! You\'ll receive an email if you are registered on our system.'
+                        message: 'Se ha enviado el restablecimiento de la contraseña. Recibirás un correo electrónico si estás registrado en nuestro sistema.'
                     };
                 },
                 (response) => {
@@ -97,7 +102,7 @@ export class AuthForgotPasswordComponent implements OnInit
                     // Set the alert
                     this.alert = {
                         type   : 'error',
-                        message: 'Email does not found! Are you sure you are already a member?'
+                        message: '¡El correo electrónico no se encuentra! ¿Está seguro de que ya es miembro?'
                     };
                 }
             );

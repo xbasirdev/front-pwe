@@ -21,6 +21,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatRadioModule } from '@angular/material/radio';
+import { ChangePasswordModule } from '../../auth/change-password/change-password.module';
+import { ChangePasswordComponent } from '../../auth/change-password/change-password.component';
 
 
 const egresadoRoutes: Route[] = [
@@ -62,7 +64,8 @@ const egresadoRoutes: Route[] = [
         EgresadoExportComponent,
     ],
     entryComponents: [
-      MatDialogModule
+      MatDialogModule,      
+      
     ],
     imports     : [
         MatButtonModule,
@@ -82,10 +85,13 @@ const egresadoRoutes: Route[] = [
         MatDialogModule,
         SharedModule,
         MatRadioModule,
+        ChangePasswordModule,
+        //ChangePasswordComponent,
         RouterModule.forChild(egresadoRoutes)
     ],
     
 })
+
 export class EgresadoModule
 {
 }

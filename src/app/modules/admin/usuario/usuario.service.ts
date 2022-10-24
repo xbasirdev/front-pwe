@@ -12,7 +12,7 @@ export class UsuarioService {
     const httpOptions = {
       headers: new HttpHeaders({})
     };
-    return this.httpClient.get(`http://127.0.0.1:8300/api/egresado`, httpOptions);
+    return this.httpClient.get(`http://127.0.0.1:8300/api/user`, httpOptions);
   }  
   public exportUsuarios(parameters): any { 
     const httpOptions = {

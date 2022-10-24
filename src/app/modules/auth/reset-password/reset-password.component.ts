@@ -5,6 +5,8 @@ import { FuseAnimations } from '@fuse/animations';
 import { FuseValidators } from '@fuse/validators';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { ActivatedRoute } from '@angular/router';
+
 
 @Component({
     selector     : 'auth-reset-password',
@@ -28,7 +30,8 @@ export class AuthResetPasswordComponent implements OnInit
      */
     constructor(
         private _authService: AuthService,
-        private _formBuilder: FormBuilder
+        private _formBuilder: FormBuilder,
+        private route: ActivatedRoute
     )
     {
     }
@@ -75,7 +78,13 @@ export class AuthResetPasswordComponent implements OnInit
         this.showAlert = false;
 
         // Send the request to the server
-        this._authService.resetPassword(this.resetPasswordForm.get('password').value)
+        let data = {
+            'password' : this.resetPasswordForm.get('password').value,
+            'password_confirmation' : this.resetPasswordForm.get('passwordConfirm').value,
+            "token_reset": this.route.snapshot.paramMap.get('token')
+        };
+
+        this._authService.resetPassword(data)
             .pipe(
                 finalize(() => {
 
@@ -95,7 +104,7 @@ export class AuthResetPasswordComponent implements OnInit
                     // Set the alert
                     this.alert = {
                         type   : 'success',
-                        message: 'Your password has been reset.'
+                        message: 'Tu contraseña ha sido restablecida.'
                     };
                 },
                 (response) => {
@@ -103,7 +112,7 @@ export class AuthResetPasswordComponent implements OnInit
                     // Set the alert
                     this.alert = {
                         type   : 'error',
-                        message: 'Something went wrong, please try again.'
+                        message: response.error[0],
                     };
                 }
             );

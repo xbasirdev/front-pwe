@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthUtils } from 'app/core/auth/auth.utils';
@@ -26,6 +26,7 @@ export class AuthService
     )
     {
     }
+    
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -91,21 +92,21 @@ export class AuthService
     /**
      * Forgot password
      *
-     * @param email
+     * @param parameters
      */
-    forgotPassword(email: string): Observable<any>
+    forgotPassword(parameters): any 
     {
-        return this._httpClient.post('api/auth/forgot-password', email);
+         return this._httpClient.post(`${AppSettings.API_GATEWAY}auth/forgot-password/`, parameters);
     }
 
     /**
      * Reset password
      *
-     * @param password
+     * @param parameters
      */
-    resetPassword(password: string): Observable<any>
+    resetPassword(parameters): any 
     {
-        return this._httpClient.post('api/auth/reset-password', password);
+        return this._httpClient.post(`${AppSettings.API_GATEWAY}auth/reset-password`, parameters);
     }
 
     /**
@@ -188,7 +189,7 @@ export class AuthService
         localStorage.removeItem('username');
         localStorage.removeItem('userID');
         localStorage.removeItem('email');
-
+        
         // Set the authenticated flag to false
         this._authenticated = false;
 
@@ -199,12 +200,25 @@ export class AuthService
     /**
      * Sign up
      *
-     * @param user
+     * @param parameters
      */
-    signUp(user: { name: string, email: string, password: string, company: string }): Observable<any>
+    signUp(parameters): any
     {
-        return this._httpClient.post('api/auth/sign-up', user);
+        return this._httpClient.post(`${AppSettings.API_GATEWAY}auth/sign-up`, parameters);
     }
+
+    /**
+     * Change Password
+     *
+     * @param parameters
+     */
+     changePassword(parameters): any
+     {
+        const httpOptions = {
+            headers: new HttpHeaders({})
+        };
+        return this._httpClient.post(`${AppSettings.API_GATEWAY}auth/change-password`, parameters, httpOptions);
+     }
 
     /**
      * Unlock session

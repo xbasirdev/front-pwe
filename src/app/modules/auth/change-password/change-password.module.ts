@@ -9,32 +9,42 @@ import { FuseCardModule } from '@fuse/components/card';
 import { CommonModule } from '@angular/common'
 import { FuseAlertModule } from '@fuse/components/alert';
 import { SharedModule } from 'app/shared/shared.module';
-import { AuthResetPasswordComponent } from 'app/modules/auth/reset-password/reset-password.component';
-import { authResetPasswordRoutes } from 'app/modules/auth/reset-password/reset-password.routing';
+import { ChangePasswordComponent } from 'app/modules/auth/change-password/change-password.component';
+import { ChangePasswordDialogComponent } from 'app/modules/auth/change-password/change-password.component';
+import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @NgModule({
     declarations: [
-        AuthResetPasswordComponent
+        ChangePasswordComponent,
+        ChangePasswordDialogComponent
     ],
     imports     : [
         CommonModule,
-        RouterModule.forChild(authResetPasswordRoutes),
         MatButtonModule,
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
+        MatDialogModule,
         MatProgressSpinnerModule,
         FuseCardModule,
         FuseAlertModule,
         SharedModule
     ],
     entryComponents: [
-        AuthResetPasswordComponent
+        MatDialogModule,
+        //ChangePasswordComponent,
+          
+    ],
+    providers: [
+            { provide: MAT_DIALOG_DATA, useValue: {} },
+            { provide: MatDialogRef, useValue: {} }
     ],
     exports: [
-        AuthResetPasswordComponent,
+       ChangePasswordComponent,
     ]
 })
-export class AuthResetPasswordModule
+export class ChangePasswordModule
 {
 }
+
+
