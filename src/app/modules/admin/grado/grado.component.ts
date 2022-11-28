@@ -19,6 +19,7 @@ export class GradoComponent implements OnInit
     public grados;
     public gradosCount;
     public gradosTableColumns: string[] = ['titulo', 'descripcion', 'fecha', 'acciones'];
+    public roleId = localStorage.getItem('role') ?? '';
     showAlert: boolean = false;
     alert: { type: FuseAlertType, message: string } = {
         type   : 'success',
@@ -40,7 +41,7 @@ export class GradoComponent implements OnInit
         private route: Router,
         private router: ActivatedRoute
     ){
-     
+
     }
 
     ngOnInit(): void {
@@ -97,12 +98,12 @@ export class GradoComponent implements OnInit
 export class GradoAddComponent implements OnInit
 {
 
-  public action: string = ''; 
-  public srcResult = ''; 
+  public action: string = '';
+  public srcResult = '';
   formFieldHelpers: string[] = [''];
 
-  
-  public grado: Grado = {    
+
+  public grado: Grado = {
     id: null,
     titulo: '',
     user_id: 1,
@@ -120,9 +121,9 @@ export class GradoAddComponent implements OnInit
   constructor(
       public gradoService: GradoService,
       private route: Router,
-      private router: ActivatedRoute, 
+      private router: ActivatedRoute,
   ){
-    
+
   }
 
   ngOnInit(): void {
@@ -158,8 +159,8 @@ export class GradoAddComponent implements OnInit
 
   listGradoesRoute(): void {
       this.route.navigate(['/grado']);
-  } 
-  
+  }
+
   generateFinalForm(): any {
     const finalData = new FormData();
     Object.keys(this.grado).forEach(key => {

@@ -41,6 +41,8 @@ export class ExtensionComponent implements OnInit
     @ViewChild('filter', { static: true })
     filter: ElementRef;
 
+    public roleId = localStorage.getItem('role') ?? '';
+
     constructor(
         public extensionService: ExtensionService,
         public carreraService: CarreraService,

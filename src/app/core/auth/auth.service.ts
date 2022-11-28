@@ -26,7 +26,7 @@ export class AuthService
     )
     {
     }
-    
+
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -94,7 +94,7 @@ export class AuthService
      *
      * @param parameters
      */
-    forgotPassword(parameters): any 
+    forgotPassword(parameters): any
     {
          return this._httpClient.post(`${AppSettings.API_GATEWAY}auth/forgot-password/`, parameters);
     }
@@ -104,7 +104,7 @@ export class AuthService
      *
      * @param parameters
      */
-    resetPassword(parameters): any 
+    resetPassword(parameters): any
     {
         return this._httpClient.post(`${AppSettings.API_GATEWAY}auth/reset-password`, parameters);
     }
@@ -130,6 +130,8 @@ export class AuthService
                 this.accessToken = response.access_token;
 
                 this.accessUsername = response.user.name;
+
+                this.accessUserID = response.user.id;
 
                 this.accessEmail = response.user.email;
 
@@ -189,7 +191,7 @@ export class AuthService
         localStorage.removeItem('username');
         localStorage.removeItem('userID');
         localStorage.removeItem('email');
-        
+
         // Set the authenticated flag to false
         this._authenticated = false;
 

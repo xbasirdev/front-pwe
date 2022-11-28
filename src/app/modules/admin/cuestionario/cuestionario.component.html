@@ -18,7 +18,7 @@
                     [placeholder]="'Buscar cuestionario'">
             </mat-form-field>
             <!-- Add product button -->
-            <button
+            <button *ngIf="roleId == '1'"
                 [routerLink]="[ './detail/1']"
                 class="ml-4"
                 mat-flat-button
@@ -94,8 +94,7 @@
                         <div class="flex flex-col w-full mt-auto">
                             <!-- Course launch button -->
                             <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
-                                <button
-                                    mat-stroked-button>
+                                <button *ngIf="roleId == '2'"                                    mat-stroked-button>
                                     <span class="inline-flex items-center">
 
                                         <ng-container>
@@ -149,7 +148,7 @@
                         <div class="flex flex-col w-full mt-auto">
                             <!-- Course launch button -->
                             <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
-                                <button
+                                <button *ngIf="roleId == '2'"
                                     mat-stroked-button>
                                     <span class="inline-flex items-center">
 

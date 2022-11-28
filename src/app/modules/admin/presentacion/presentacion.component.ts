@@ -21,6 +21,7 @@ export class PresentacionComponent implements OnInit
     public presentacionesCount;
     public presentacionesTableColumns: string[] = ['titulo', 'descripcion', 'deporte', 'lugar', 'fecha', 'acciones'];
     showAlert: boolean = false;
+    public roleId = localStorage.getItem('role') ?? '';
     alert: { type: FuseAlertType, message: string } = {
         type   : 'success',
         message: ''
@@ -38,9 +39,9 @@ export class PresentacionComponent implements OnInit
     constructor(
         public presentacionService: PresentacionService,
         private route: Router,
-        private router: ActivatedRoute, 
+        private router: ActivatedRoute,
     ){
-     
+
     }
 
     ngOnInit(): void {
@@ -98,12 +99,12 @@ export class PresentacionComponent implements OnInit
 export class PresentacionAddComponent implements OnInit
 {
 
-  public action: string = ''; 
-  public srcResult = ''; 
+  public action: string = '';
+  public srcResult = '';
   formFieldHelpers: string[] = [''];
 
-  
-  public presentacion: Presentacion = {    
+
+  public presentacion: Presentacion = {
     id: null,
     titulo: '',
     user_id: 1,
@@ -123,9 +124,9 @@ export class PresentacionAddComponent implements OnInit
   constructor(
       public presentacionService: PresentacionService,
       private route: Router,
-      private router: ActivatedRoute, 
+      private router: ActivatedRoute,
   ){
-    
+
   }
 
   ngOnInit(): void {
@@ -168,8 +169,8 @@ export class PresentacionAddComponent implements OnInit
 
   listPresentacionesRoute(): void {
       this.route.navigate(['/presentacion']);
-  } 
-  
+  }
+
   generateFinalForm(): any {
     const finalData = new FormData();
     if(this.presentacion.img){
@@ -180,7 +181,7 @@ export class PresentacionAddComponent implements OnInit
     })
     return finalData;
   }
-  
+
   removerImagen(): void {
     this.presentacion.img = null;
     this.presentacion.imagen = '';

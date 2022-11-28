@@ -56,7 +56,9 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         this.username = this._authService.accessUsername;
+        console.log(this.username)
         this.userID= this._authService.accessUserID;
+        console.log(this.userID)
         this.email = this._authService.accessEmail;
         // Subscribe to the resolved route mock-api
         this._activatedRoute.data.subscribe((data: Data) => {

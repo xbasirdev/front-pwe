@@ -19,7 +19,7 @@
                     (keyup)="applyFilter($event)">
             </mat-form-field>
             <!-- Add product button -->
-            <button
+            <button *ngIf="roleId == '1'"
                 class="ml-4"
                 [routerLink]="[ './create']"
                 mat-flat-button
@@ -27,6 +27,14 @@
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Crear</span>
             </button>
+            <button *ngIf="roleId == '1'"
+            class="ml-4"
+            [routerLink]="[ './aplicacion']"
+            mat-flat-button
+            [color]="'primary'">
+            <mat-icon [svgIcon]="'heroicons_outline:user'"></mat-icon>
+            <span class="ml-2 mr-1">Aplicaciones</span>
+        </button>
         </div>
     </div>
 
@@ -68,9 +76,15 @@
                     <span *ngIf='column == "contacto"'>
                         {{trabajo.contacto}}
                     </span>
-                    <span *ngIf='column == "opciones"'>
-                        <button mat-flat-button [color]="'primary'" style="margin: 5px">
+                    <span *ngIf='column == "opciones"' >
+                        <button *ngIf="!trabajo.aplicacion && roleId == '2'" mat-flat-button [color]="'primary'" style="margin: 5px" (click)="postulate(trabajo.id)">
                             Aplicar
+                        </button>
+                        <button *ngIf="trabajo.aplicacion && roleId == '2'" mat-flat-button [color]="'primary'" style="margin: 5px" disabled>
+                            Ya aplicaste
+                        </button>
+                        <button *ngIf="roleId == '1'" mat-flat-button [color]="'primary'" style="margin: 5px" disabled>
+                            No puedes aplicar
                         </button>
                     </span>
                     <span *ngIf='column == "acciones"'>
@@ -79,12 +93,12 @@
                         (click)="details(trabajo.id)">
                         <mat-icon class="icon-size-5">remove_red_eye</mat-icon>
                     </button>
-                    <button
+                    <button *ngIf="roleId == '1'"
                         class="min-w-10 min-h-7 h-7 px-2 leading-6"
                         (click)="edit(trabajo.id)">
                         <mat-icon class="icon-size-5">edit</mat-icon>
                     </button>
-                    <button
+                    <button *ngIf="roleId == '1'"
                         class="min-w-10 min-h-7 h-7 px-2 leading-6"
                         (click)="delete(trabajo.id)">
                         <mat-icon class="icon-size-5">delete</mat-icon>

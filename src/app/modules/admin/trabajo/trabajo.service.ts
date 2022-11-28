@@ -42,4 +42,18 @@ export class TrabajoService {
     };
     return this.httpClient.delete(`${AppSettings.API_GATEWAY}bolsaTrabajo/${id}`, httpOptions);
   }
+
+  public getTrabajoEgresadoAll(): any {
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.get(`${AppSettings.API_GATEWAY}bolsaEgresado`, httpOptions);
+  }
+
+  public saveAplicacion(parameters): any {
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.post(`${AppSettings.API_GENERAL}bolsaEgresado/`, parameters, httpOptions);
+  }
 }

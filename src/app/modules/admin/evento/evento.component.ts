@@ -20,6 +20,7 @@ export class EventoComponent implements OnInit
     public eventos;
     public eventosCount;
     public eventosTableColumns: string[] = ['titulo', 'descripcion', 'carreras', 'lugar', 'acciones'];
+    public roleId = localStorage.getItem('role') ?? '';
     showAlert: boolean = false;
     alert: { type: FuseAlertType, message: string } = {
         type   : 'success',

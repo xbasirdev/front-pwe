@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
-import { TrabajoComponent, TrabajoAddComponent } from 'app/modules/admin/trabajo/trabajo.component';
+import { TrabajoComponent, TrabajoAddComponent, TrabajoAplicacionComponent } from 'app/modules/admin/trabajo/trabajo.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,6 +27,10 @@ const trabajoRoutes: Route[] = [
         component: TrabajoAddComponent
     },
     {
+        path     : 'aplicacion',
+        component: TrabajoAplicacionComponent
+    },
+    {
         path     : 'edit/:id',
         component: TrabajoAddComponent
     },
@@ -38,7 +42,7 @@ const trabajoRoutes: Route[] = [
 
 @NgModule({
     declarations: [
-        TrabajoComponent, TrabajoAddComponent
+        TrabajoComponent, TrabajoAddComponent, TrabajoAplicacionComponent
     ],
     imports     : [
         MatButtonModule,
