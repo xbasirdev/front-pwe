@@ -1,17 +1,18 @@
 <!-- Main -->
 <div class="flex-auto p-6 sm:p">
-    <fuse-alert
-    class="mt-8 -mb-4"
-    *ngIf="showAlert"
-    [appearance]="'outline'"
-    [showIcon]="false"
-    [type]="alert.type"
-    [@shake]="alert.type === 'error'">
-    {{alert.message}}
-</fuse-alert>
+
     <div class="max-w-full">
         <form class="grid grid-cols-2 gap-4 mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden"
             [formGroup]="registerUserForm" #registerUserFormNgForm="ngForm">
+            <fuse-alert
+                class="mt-8 -mb-4"
+                *ngIf="showAlert"
+                [appearance]="'outline'"
+                [showIcon]="false"
+                [type]="alert.type"
+                [@shake]="alert.type === 'error'">
+                {{alert.message}}
+            </fuse-alert>
             <div class="flex flex-col gt-xs:flex-row">
                 <mat-form-field [ngClass]="formFieldHelpers" class="flex-auto gt-xs:pr-3">
                     <mat-label>Nombres</mat-label>
@@ -56,7 +57,7 @@
                         name="correo_personal" type="email">
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                     <mat-error
-                        *ngIf="user.role !=='administrator' && registerUserForm.get('correo_personal').hasError('email')">
+                        *ngIf="user.role !=='administrator' && action !=='profile' && registerUserForm.get('correo_personal').hasError('email')">
                         Por favor inserte un correo electronico valido
                     </mat-error>
                 </mat-form-field>
@@ -66,11 +67,11 @@
                 <input matInput [(ngModel)]="user.egresado.periodo_egreso" [formControlName]="'periodo_egreso'"
                     name="periodo_egreso" placeholder="2022-1">
                 <mat-error
-                    *ngIf="user.role !=='administrator' && registerUserForm.get('periodo_egreso').hasError('required')">
+                    *ngIf="user.role !=='administrator' && action !=='profile' && registerUserForm.get('periodo_egreso').hasError('required')">
                     Se requiere el periodo de egreso
                 </mat-error>
                 <mat-error
-                    *ngIf="user.role !=='administrator' && registerUserForm.get('periodo_egreso').hasError('pattern')">
+                    *ngIf="user.role !=='administrator' && action !=='profile' && registerUserForm.get('periodo_egreso').hasError('pattern')">
                     El periodo de egreso es incorrecto
                 </mat-error>
 
@@ -112,7 +113,7 @@
                         <mat-option [value]="''">Seleccione una carrera</mat-option>
                         <mat-option [value]="carrera.id" *ngFor="let carrera of carreras">{{carrera.nombre}}</mat-option>
                     </mat-select>
-                    <mat-error *ngIf="user.role !=='administrator' && registerUserForm.get('carrera').hasError('required')">
+                    <mat-error *ngIf="user.role !=='administrator' && action !=='profile' && registerUserForm.get('carrera').hasError('required')">
                         Se requiere seleccionar una carrera
                     </mat-error>
                 </mat-form-field>

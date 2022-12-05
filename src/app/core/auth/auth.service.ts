@@ -59,6 +59,11 @@ export class AuthService
     {
         localStorage.setItem('access_token', token);
     }
+    
+    set accessUserCedula(cedula:string)
+    {
+        localStorage.setItem('cedula', cedula);   
+    }
 
     get accessUsername(): string
     {
@@ -83,6 +88,10 @@ export class AuthService
     get accessToken(): string
     {
         return localStorage.getItem('access_token') ?? '';
+    }
+
+    get accessUserCedula(): string{
+        return localStorage.getItem('cedula') ?? '';
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -134,6 +143,8 @@ export class AuthService
                 this.accessUserID = response.user.id;
 
                 this.accessEmail = response.user.email;
+
+                this.accessUserCedula = response.user.cedula;
 
                 this.accessRole = response.role[0].id;
 
@@ -191,6 +202,7 @@ export class AuthService
         localStorage.removeItem('username');
         localStorage.removeItem('userID');
         localStorage.removeItem('email');
+        localStorage.removeItem('cedula');
 
         // Set the authenticated flag to false
         this._authenticated = false;

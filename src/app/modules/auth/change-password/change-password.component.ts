@@ -70,11 +70,11 @@ import { ActivatedRoute, Router, ParamMap  } from '@angular/router';
            return;
        }
 
-       let id = this.data ?? this._authService.accessEmail;
+       let id = this.data ?? this._authService.accessUserCedula;
 
        // Hide the alert
        this.showAlert = false;
-       //let id = this.route.snapshot.params.id ?? this._authService.accessEmail;
+       //let id = this.route.snapshot.params.id ?? this._authService.accessCedula;
        
 
       let data = {

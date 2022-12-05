@@ -25,7 +25,7 @@ export class PerfilComponent implements OnInit
   }
 
   ngOnInit(): void {
-    this.cedula = this._authService.accessUserID    
+    this.cedula = this._authService.accessUserCedula    
   }
 
 

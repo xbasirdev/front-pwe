@@ -49,7 +49,7 @@ export class UserComponent implements OnInit
 {
     @Input() userData: string;
     @Input() type: string;
-    @Input() returnSuccess: string;
+    @Input() returnSuccess: string="";
     @Input() form: string;
     public date = new FormControl(moment());
     public isOpen = false;
@@ -60,7 +60,19 @@ export class UserComponent implements OnInit
     public showNotification = true;
     public formFieldHelpers: string = "";
     public showAlert: boolean = false;
-    public formBuilderGroup;
+    public formBuilderGroup={
+      nombres:[{value: '', disabled: false}, [Validators.nullValidator]],
+      apellidos:[{value: '', disabled: false}, [Validators.nullValidator]],
+      cedula:[{value: '', disabled: false}, [Validators.nullValidator]],
+      correo:[{value: '', disabled: false}, [Validators.nullValidator]],
+      password:[{value: '', disabled: false}, [Validators.nullValidator]],
+      password_confirm:[{value: '', disabled: false}, [Validators.nullValidator]],
+      telefono:[{value: '', disabled: false}, [Validators.nullValidator]],
+      periodo_egreso:[{value: '', disabled: false}, [Validators.nullValidator]],
+      correo_personal:[{value: '', disabled: false}, [Validators.nullValidator]],
+      fecha_egreso:[{value: '', disabled: false}, [Validators.nullValidator]],
+      carrera:[{value: '', disabled: false, onlySelf: true}, [Validators.nullValidator]],
+    };
     public carreras: [];
 
     public alert: { type: FuseAlertType, message: string } = {
@@ -96,19 +108,7 @@ export class UserComponent implements OnInit
       public carreraService: CarreraService,
       ){
         this.registerUserForm = this._formBuilder.group(
-          {
-            nombres:[ new FormControl({value: '', disabled: false}, Validators.nullValidator)],
-            apellidos:[ new FormControl({value: '', disabled: false}, Validators.nullValidator)],
-            cedula:[ new FormControl({value: '', disabled: false}, Validators.nullValidator)],
-            correo:[ new FormControl({value: '', disabled: false}, Validators.nullValidator)],
-            password:[ new FormControl({value: '', disabled: false}, Validators.nullValidator)],
-            password_confirm:[ new FormControl({value: '', disabled: false}, Validators.nullValidator)],
-            telefono:[ new FormControl({value: '', disabled: false}, Validators.nullValidator)],
-            periodo_egreso:[ new FormControl({value: '', disabled: false}, Validators.nullValidator)],
-            correo_personal:[ new FormControl({value: '', disabled: false}, Validators.nullValidator)],
-            fecha_egreso:[ new FormControl({value: '', disabled: false}, Validators.nullValidator)],
-            carrera:[ new FormControl({value: '', disabled: false, onlySelf: true}, Validators.nullValidator)],
-          }
+          this.formBuilderGroup
         );
     }
 
@@ -153,31 +153,32 @@ export class UserComponent implements OnInit
         this.getUser();  
       }   
  
+      this.formBuilderGroup.nombres=[{value: this.user.nombres, disabled: disabled}, [Validators.required]];
+      this.formBuilderGroup.apellidos=[{value: this.user.apellidos, disabled: disabled}, [Validators.required]];
+      this.formBuilderGroup.cedula=[{value: this.user.cedula, disabled: disabled}, [Validators.required, Validators.pattern("[VvEe]-[0-9]{6,}$")]];
+      this.formBuilderGroup.correo=[{value: this.user.correo, disabled: disabled}, [Validators.required,Validators.email]];
+      this.formBuilderGroup.telefono=[{value: this.user.telefono, disabled: false }, [Validators.nullValidator, Validators.pattern("0(2(12|3[4589]|4[0-9]|[5-8][1-9]|9[1-5])|(4(12|14|16|24|26)))-?[0-9]{7}")]];
       
-      this.formBuilderGroup = {
-        nombres:[{value: this.user.nombres, disabled: disabled}, Validators.required],
-        apellidos:[{value: this.user.apellidos, disabled: disabled}, Validators.required],
-        cedula:[{value: this.user.cedula, disabled: disabled}, [Validators.required, Validators.pattern("[VvEe]-[0-9]{6,}$")]],
-        correo:[{value: this.user.correo, disabled: disabled}, [Validators.required,Validators.email]],
-        telefono:[{value: this.user.telefono, disabled: false }, [Validators.nullValidator, Validators.pattern("0(2(12|3[4589]|4[0-9]|[5-8][1-9]|9[1-5])|(4(12|14|16|24|26)))-?[0-9]{7}")]],
-      }
 
-      if(this.action == "Edit" || this.profile){
+      if(this.action == "Edit" || this.action == "Profile"){
         this.formBuilderGroup.password= [{value: "", disabled: false }, [Validators.nullValidator]];
         this.formBuilderGroup.password_confirm= [{value: "", disabled: false }, [Validators.nullValidator]];
       } 
       
-      if(this.action == "Add" || !this.profile){
-        this.formBuilderGroup.password=[{value: "", disabled: false }, Validators.required];
-        this.formBuilderGroup.password_confirm=[{value: "", disabled: false }, Validators.required];
+      if(this.action == "Add"){
+        this.formBuilderGroup.password=[{value: "", disabled: false }, [Validators.required]];
+        this.formBuilderGroup.password_confirm=[{value: "", disabled: false }, [Validators.required]];
       }
 
-      if(this.form != "administrator" || !this.profile){
-        this.formBuilderGroup.carrera=[{value: this.user.egresado.carrera_id, disabled: disabled }, [Validators.required]];
+      if(this.form == "graduate"){
+        this.formBuilderGroup.carrera=[{value: this.user.egresado.carrera_id, disabled: disabled, onlySelf: true }, [Validators.required]];
         this.formBuilderGroup.periodo_egreso=[{value: this.user.egresado.periodo_egreso, disabled: disabled}, [Validators.required, Validators.pattern("^[12][0-9]{3}[-][1-9]{1}$")]];
         this.formBuilderGroup.correo_personal=[{value: this.user.egresado.correo, disabled: false },[Validators.email]];
         this.formBuilderGroup.fecha_egreso=[{value: moment(this.user.egresado.fecha_egreso).format("YYYY-MM-DDTHH:mm"), disabled: disabled} ];
       }
+      console.log(this.formBuilderGroup);
+      console.log(this.form);
+      console.log(this.action);
 
       this.registerUserForm = this._formBuilder.group(this.formBuilderGroup, validatorMust);
   }
@@ -206,7 +207,7 @@ export class UserComponent implements OnInit
     }), (error) => {
       this.alert = {
         type   : 'error',
-        message: 'No se encontro el user'
+        message: 'No se encontro el usuario'
       };
       this.showAlert = true;
     };
@@ -240,6 +241,8 @@ export class UserComponent implements OnInit
   }
 
   updateUser(): void {
+    console.log(this.form);
+    console.log(this.registerUserForm);
     if ( this.registerUserForm.invalid ){
       this.registerUserForm.markAllAsTouched();
       return;
@@ -292,6 +295,11 @@ export class UserComponent implements OnInit
   changeRole( status: boolean, rol:string): void{
     let id:string = this.userData;
     this.userService.updateRole(id).subscribe((res) => {
+      this.alert = {
+        type   : 'success',
+        message: 'Rol actualizado'
+      };
+      this.showAlert = true; 
       if(this.returnSuccess!=="" ){
         this.route.navigate([this.returnSuccess]);
       }     
