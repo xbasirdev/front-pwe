@@ -97,7 +97,6 @@ export class UserMenuComponent implements OnInit, OnDestroy
     }
 
     perfilRoute(): void {
-        console.log(this.user)
-        this._router.navigate(['egresado/perfil/' + this.user.id]);
+        this._router.navigate(['/perfil/view-perfil']);
     }
 }

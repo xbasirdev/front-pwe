@@ -22,7 +22,7 @@ import { SharedModule } from 'app/shared/shared.module';
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatRadioModule } from '@angular/material/radio';
 import { FuseAlertModule } from '@fuse/components/alert';
-import { ChangePasswordModule } from '../../auth/change-password/change-password.module';
+import { UserModule } from '../user/user.module';
 
 const usuarioRoutes: Route[] = [
     {
@@ -84,7 +84,7 @@ const usuarioRoutes: Route[] = [
         SharedModule,
         MatRadioModule,
         FuseAlertModule,
-        ChangePasswordModule,
+        UserModule,
         RouterModule.forChild(usuarioRoutes)
     ]
 })

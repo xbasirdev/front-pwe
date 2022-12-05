@@ -16,6 +16,7 @@ import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { AuthService } from 'app/core/auth/auth.service';
 import { FuseValidators } from '@fuse/validators';
 import { ChangePasswordComponent } from 'app/modules/auth/change-password/change-password.component';
+import { User } from '../user/user.model';
 
 @Component({
     selector     : 'usuario',
@@ -85,11 +86,6 @@ export class UsuarioComponent implements OnInit
 
     delete(cedula:string): void {
       this.usuarioService.deleteUsuario(cedula).subscribe((res) => {
-        this.alert = {
-          type   : 'success',
-          message: 'Se borro correctamente el registro'
-        };
-        this.showAlert = true;
         this.getList();
       }, (error) => {
         console.log(error);
@@ -123,166 +119,35 @@ export class UsuarioAddComponent implements OnInit
 
   @ViewChild('registerUserFormNgForm') registerUserNgForm: NgForm;
   public registerUserForm: FormGroup;
-  public action = ''; 
-  public showNotification = true;
-  public srcResult = ''; 
-  public formFieldHelpers = "";
-  public usuario: Usuario = {
-    nombres: '',
-    apellidos: "",
-    cedula: '',
-    correo: '',
-    telefono: '',
-  };
-
-  public formBuilderGroup = {
-    nombres:['', Validators.required],
-    apellidos:['', Validators.required],
-    cedula:['', Validators.required],
-    correo:['', [Validators.required,Validators.email]],
-    password:['', Validators.required],
-    password_confirm:['', Validators.required],
-    telefono:[""]
-  };
-
-  
-
-  public showAlert: boolean = false;
-  public alert: { type: FuseAlertType, message: string } = {
-      type   : 'success',
-      message: ''
-  };
+  public cedula: string = "";
+  public action: string = "";
+  public usuario: User;
 
     constructor(
-        public usuarioService: UsuarioService,
         private route: Router,
-        private router: ActivatedRoute, 
-        public dialog: MatDialog,
-        private _authService: AuthService, 
-        private _formBuilder: FormBuilder,     
+        private router: ActivatedRoute,     
     ){
      
     }
 
     ngOnInit(): void {
-      
-          if(this.router.snapshot.routeConfig.path !== 'create'){
-            this.getUsuario(this.router.snapshot.params.id);
-            if(this.router.snapshot.routeConfig.path === 'edit/:id') {
-              this.action = 'Edit';
-            }
-      
-            if(this.router.snapshot.routeConfig.path === 'detail/:id') {
-              this.action = 'Detail'; 
-            }
-          }
-          else {
-            this.action = 'Add';
-            this.registerUserForm = this._formBuilder.group(this.formBuilderGroup, {
-                validators: FuseValidators.mustMatch('password', 'password_confirm')
-              }
-            );
-          }
-    }
-
-    getUsuario(cedula: string): void {
-      this.usuarioService.getUsuario(cedula).subscribe((res) => {
-        this.usuario = res['data'];
-        this.formBuilderGroup.password = [""];
-        this.formBuilderGroup.password_confirm = [""];
-        this.registerUserForm = this._formBuilder.group(this.formBuilderGroup);
-        if(this.action == 'Detail'){
-          this.registerUserForm.disable();
+      this.cedula = this.router.snapshot.params.id;
+          
+      if(this.router.snapshot.routeConfig.path === 'create'){
+        this.action = 'Add';
+      }else{
+        if(this.router.snapshot.routeConfig.path === 'edit/:id') {
+          this.action = 'Edit';
         }
-      }), (error) => {
-        console.log(error);
-        this.alert = {
-          type   : 'error',
-          message: 'No se encontro el usuario'
-        };
-        this.showAlert = true;
-      };
-    }
-
-    listusuariosRoute(): void {
-      this.route.navigate(['/usuario']);
-    }
-
-    saveUsuario(): void {
-      // Do nothing if the form is invalid
-      if ( this.registerUserForm.invalid )
-      {
-          return;
-      }
-
-      // Disable the form
-      this.registerUserForm.disable();
-
-      // Hide the alert
-      this.showAlert = false;
-
-      this.usuarioService.saveUsuario(this.registerUserForm.value).subscribe((res) => {
-        this.alert = {
-          type   : 'success',
-          message: 'Se guardo correctamente el registro'
-        };
-        this.showAlert = true;
-        this.route.navigate(['/usuario']);
-      }, (error) => {
-        console.log(error);
-        this.alert = {
-          type   : 'error',
-          message: 'No se pudo guardar el registro'
-        };
-        this.showAlert = true;
-        
-        // Re-enable the form
-        this.registerUserForm.enable();
-
-        // Reset the form
-        this.registerUserNgForm.resetForm();
-      });
-    }
-  
-    updateUsuario(): void {
-      // Do nothing if the form is invalid
-      console.log(this.registerUserForm.invalid);
-      if ( this.registerUserForm.invalid )
-      {
-          return;
-      }
-
-      // Disable the form
-      this.registerUserForm.disable();
-
-      // Hide the alert
-      this.showAlert = false;
-      this.usuarioService.updateUsuario(this.usuario.cedula, this.registerUserForm.value).subscribe((res) => {
-        this.alert = {
-          type   : 'success',
-          message: 'Se edito correctamente el registro'
-        };
-        this.showAlert = true;
-        this.route.navigate(['/usuario']);
-      }, (error) => {
-        console.log(error);
-        this.alert = {
-          type   : 'error',
-          message: 'No se pudo editar el registro'
-        };
-        this.showAlert = true;
-         
-        // Re-enable the form
-        this.registerUserForm.enable();
-
-        // Reset the form
-        this.registerUserNgForm.resetForm();
-      });
+        if(this.router.snapshot.routeConfig.path === 'detail/:id') {
+          this.action = 'Detail'; 
+        }
+      }  
     }
 
     listUsuariosRoute(): void {
-        this.route.navigate(['/usuario']);
-    }  
+      this.route.navigate(['/usuario']);
+    }
 }
 
 

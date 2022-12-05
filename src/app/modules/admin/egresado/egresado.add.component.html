@@ -12,209 +12,24 @@
                     <mat-icon
                         class="icon-size-5 text-secondary"
                         [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
-                    <span class="ml-1 text-primary-500" *ngIf="action === 'Edit'" >Actualizar egresado: {{egresado.nombres}}  {{egresado.apellidos}}</span>
+                    <span class="ml-1 text-primary-500" *ngIf="action === 'Edit'" >Actualizar egresado</span>
                     <span class="ml-1 text-primary-500" *ngIf="action === 'Add'" >Registrar Egresado</span>
-                    <span class="ml-1 text-primary-500" *ngIf="action === 'Detail'" >Ver detalles del Egresado: {{egresado.nombres}}  {{egresado.apellidos}}</span>
+                    <span class="ml-1 text-primary-500" *ngIf="action === 'Detail'" >Ver detalles del Egresado</span>
                 </div>
             </div>
             <!-- Title -->
             <div class="mt-2">
                 <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
                     <mat-icon [svgIcon]="'heroicons_outline:user-group'"></mat-icon> 
-                    <b *ngIf="action === 'Edit'" > Actualizar egresado: {{egresado.nombres}}  {{egresado.apellidos}}</b>
+                    <b *ngIf="action === 'Edit'" > Actualizar egresado</b>
                     <b *ngIf="action === 'Add'" > Registrar Egresado</b>
-                    <b *ngIf="action === 'Detail'" > Ver detalles egresado: {{egresado.nombres}}  {{egresado.apellidos}}</b>
+                    <b *ngIf="action === 'Detail'" > Ver detalles egresado</b>
                 </h2>
             </div>
         </div>
     </div>
     <!-- Main -->
-    <div class="flex-auto p-6 sm:p">
-        <div class="max-w-full">
-            <form class="grid grid-cols-2 gap-4 mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden" 
-            [formGroup]="registerUserForm"
-            #registerUserFormNgForm="ngForm">
-                <div class="flex flex-col gt-xs:flex-row">
-                    <mat-form-field
-                        [ngClass]="formFieldHelpers"
-                        class="flex-auto gt-xs:pr-3">
-                        <mat-label>Nombres</mat-label>
-                        <input matInput [(ngModel)]="egresado.nombres"  [formControlName]="'nombres'" name="nombres" value="{{egresado.nombres}}"
-                        [disabled]="action === 'Detail'">
-                    </mat-form-field>
-                     <mat-error *ngIf="registerUserForm.get('nombres').hasError('required')">
-                        Se requiere el nombre del egresado
-                    </mat-error>
-                    <mat-form-field
-                        [ngClass]="formFieldHelpers"
-                        class="flex-auto gt-xs:pr-3">
-                        <mat-label>Apellidos</mat-label>
-                        <input matInput [(ngModel)]="egresado.apellidos"  [formControlName]="'apellidos'" name="apellidos" value="{{egresado.apellidos}}"
-                        [disabled]="action === 'Detail'">
-                    </mat-form-field>
-                     <mat-error *ngIf="registerUserForm.get('apellidos').hasError('required')">
-                        Se requiere el apellido del egresado
-                    </mat-error>
-                    <mat-form-field
-                        [ngClass]="formFieldHelpers"
-                        class="flex-auto gt-xs:pr-3">
-                        <mat-label>Cedula de identidad</mat-label>
-                        <input matInput [(ngModel)]="egresado.cedula"  [formControlName]="'cedula'" name="cedula" value="{{egresado.cedula}}"
-                        [disabled]="action === 'Detail'">
-                    </mat-form-field>
-                     <mat-error *ngIf="registerUserForm.get('cedula').hasError('required')">
-                        Se requiere la cedula de identidad del egresado
-                    </mat-error>
-                    <mat-form-field
-                        [ngClass]="formFieldHelpers"
-                        class="flex-auto gt-xs:pr-3">
-                        <mat-label>Periodo Egresado</mat-label>
-                        <input matInput [(ngModel)]="egresado.egresado.periodo_egreso"  [formControlName]="'periodo_egreso'" name="periodo_egreso" value="{{egresado.egresado.periodo_egreso}}"
-                        [disabled]="action === 'Detail'">
-                    </mat-form-field>
-                     <mat-error *ngIf="registerUserForm.get('periodo_egreso').hasError('required')">
-                        Se requiere el periodo de egreso
-                    </mat-error>
-                    <mat-form-field
-                        [ngClass]="formFieldHelpers"
-                        class="flex-auto gt-xs:pr-3">
-                        <mat-label>Fecha Egreso</mat-label>
-                        <input matInput [(ngModel)]="egresado.egresado.fecha_egreso"  [formControlName]="'fecha_egreso'" name="fecha_egreso" value="{{egresado.egresado.fecha_egreso}}"
-                        [disabled]="action === 'Detail'">
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-col gt-md:flex-row" style="max-height: 120px;">
-                    <mat-form-field
-                        [ngClass]="formFieldHelpers"
-                        class="flex-auto gt-md:pl-3">
-                        <mat-label>Correo Institucional</mat-label>
-                        <input matInput [(ngModel)]="egresado.correo"  [formControlName]="'correo'" name="correo" value="{{egresado.correo}}"
-                        [disabled]="action === 'Detail'" type="email">
-                        <mat-icon
-                            class="icon-size-5"
-                            matSuffix
-                            [svgIcon]="'heroicons_solid:mail'"></mat-icon>
-                    </mat-form-field>
-                    <mat-error *ngIf="registerUserForm.get('correo').hasError('required')">
-                        Se requiere el correo Institucional
-                    </mat-error>
-                    <mat-error *ngIf="registerUserForm.get('correo').hasError('email')">
-                        Por favor inserte un correo electronico valido
-                    </mat-error>
-                    <mat-form-field
-                        [ngClass]="formFieldHelpers"
-                        class="flex-auto gt-md:pl-3">
-                        <mat-label>Correo Personal</mat-label>
-                        <input matInput [(ngModel)]="egresado.egresado.correo"  [formControlName]="'correo_personal'" name="correo_personal" value="{{egresado.egresado.correo}}"
-                        [disabled]="action === 'Detail'" type="email">
-                        <mat-icon
-                            class="icon-size-5"
-                            matSuffix
-                            [svgIcon]="'heroicons_solid:mail'"></mat-icon>
-                    </mat-form-field>
-                    <mat-error *ngIf="registerUserForm.get('correo_personal').hasError('email')">
-                        Por favor inserte un correo electronico valido
-                    </mat-error>
-                    <mat-form-field
-                        [ngClass]="formFieldHelpers"
-                        class="flex-auto gt-md:pl-3">
-                        <mat-label>Telefono Movil</mat-label>
-                        <input matInput [(ngModel)]="egresado.telefono"  [formControlName]="'telefono'" name="telefono" value="{{egresado.telefono}}"
-                        [disabled]="action === 'Detail'">
-                        <mat-icon
-                            class="icon-size-5"
-                            matSuffix
-                            [svgIcon]="'heroicons_solid:phone'"></mat-icon>
-                    </mat-form-field>
-                    <mat-form-field
-                        *ngIf="action === 'Add'"
-                        [ngClass]="formFieldHelpers"
-                        class="flex-auto gt-md:pl-3">
-                        <mat-label>Contraseña</mat-label>
-                        <input
-                            id="password"
-                            matInput [(ngModel)]="egresado.password"  [formControlName]="'password'" name="password" value=""
-                            [disabled]="action === 'Detail'" type="password"
-                            #passwordField>
-                        <button
-                            mat-icon-button
-                            type="button"
-                            (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
-                            matSuffix>
-                            <mat-icon
-                                class="icon-size-5"
-                                *ngIf="passwordField.type === 'password'"
-                                [svgIcon]="'heroicons_solid:eye'"></mat-icon>
-                            <mat-icon
-                                class="icon-size-5"
-                                *ngIf="passwordField.type === 'text'"
-                                [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
-                        </button>
-                    </mat-form-field>
-                     <mat-error *ngIf="registerUserForm.get('password').hasError('required')">
-                        La contraseña es requerida
-                    </mat-error>
-                    <mat-form-field 
-                            *ngIf="action === 'Add'"
-                            [ngClass]="formFieldHelpers"
-                            class="flex-auto gt-md:pl-3">
-                        <mat-label>Confirmar Contraseña</mat-label>
-                        <input
-                            id="password"
-                            matInput [(ngModel)]="egresado.password_confirm"  [formControlName]="'password_confirm'" name="password_confirm"  value=""
-                            [disabled]="action === 'Detail'" type="password"
-                            #passwordConfirmField>
-                        <button
-                            mat-icon-button
-                            type="button"
-                            (click)="passwordConfirmField.type === 'password' ? passwordConfirmField.type = 'text' : passwordConfirmField.type = 'password'"
-                            matSuffix>
-                            <mat-icon
-                                class="icon-size-5"
-                                *ngIf="passwordConfirmField.type === 'password'"
-                                [svgIcon]="'heroicons_solid:eye'"></mat-icon>
-                            <mat-icon
-                                class="icon-size-5"
-                                *ngIf="passwordConfirmField.type === 'text'"
-                                [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
-                        </button>
-                       
-                    </mat-form-field>
-
-                     <mat-error *ngIf="registerUserForm.get('password_confirm').hasError('required')">
-                        Se requiere la confirmación de la contraseña
-                    </mat-error>
-                    <mat-error *ngIf="registerUserForm.get('password_confirm').hasError('mustMatch')">
-                        Las contraseñas deben coincidir
-                    </mat-error>
-                    <div style="margin-top: 30px;"  *ngIf="action === 'Edit'" >
-                        <button  [(ngModel)]="egresado.egresado.notificacion" type="button"  *ngIf="showNotification"  (click)="changeNotificationStatus(true)"  mat-raised-button>Habilitar Notificaciones</button>
-                        <button  [(ngModel)]="egresado.egresado.notificacion" type="button"  [color]="'accent'" *ngIf="!showNotification"   (click)="changeNotificationStatus(false)"  mat-raised-button>Desabilitar Notificaciones</button>
-                        <app-changepassword id="{{egresado.cedula}}"></app-changepassword>
-                        
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div style="margin-top: 10px; width: 100%; text-align: right;">
-            <button
-                *ngIf="action === 'Add'"
-                (click)="saveEgresado()"
-                mat-flat-button
-                [color]="'primary'">
-                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                <span class="ml-2 mr-1">Guardar</span>
-            </button>
-            <button
-                *ngIf="action === 'Edit'"
-                (click)="updateEgresado()"
-                mat-flat-button
-                [color]="'primary'">
-                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                <span class="ml-2 mr-1">Editar</span>
-            </button>
-        </div>
-    </div>
+    <user [userData]="cedula" [returnSuccess] = "'/egresado'" [form]="'graduate'"></user>
 </div>
 
 

@@ -78,6 +78,7 @@ export const appRoutes: Route[] = [
             {path: 'trabajo', loadChildren: () => import('app/modules/admin/trabajo/trabajo.module').then(m => m.TrabajoModule)},
             {path: 'usuario', loadChildren: () => import('app/modules/admin/usuario/usuario.module').then(m => m.UsuarioModule)},
             {path: 'egresado', loadChildren: () => import('app/modules/admin/egresado/egresado.module').then(m => m.EgresadoModule)},
+            {path: 'perfil', loadChildren: () => import('app/modules/admin/perfil/perfil.module').then(m => m.PerfilModule)},
             {path: 'banco', loadChildren: () => import('app/modules/admin/banco/banco.module').then(m => m.BancoModule)},
             {path: 'cuestionario', loadChildren: () => import('app/modules/admin/cuestionario/cuestionario.module').then(m => m.CuestionarioModule)},
             {path: 'gestionCuestionario', loadChildren: () => import('app/modules/admin/gestionCuestionario/gestionCuestionario.module').then(m => m.GestionCuestionarioModule)},

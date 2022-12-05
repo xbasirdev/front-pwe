@@ -42,7 +42,10 @@ import { ActivatedRoute, Router, ParamMap  } from '@angular/router';
         private route: ActivatedRoute,
         private router: Router,
         @Inject(MAT_DIALOG_DATA) private data: DialogData) {
-          
+          this.changePasswordForm = this._formBuilder.group({
+            password       : [''],
+            passwordConfirm: ['']
+          });
       }  
   
     ngOnInit(): void
@@ -68,9 +71,6 @@ import { ActivatedRoute, Router, ParamMap  } from '@angular/router';
        }
 
        let id = this.data ?? this._authService.accessEmail;
-
-       // Disable the form
-       this.changePasswordForm.disable();
 
        // Hide the alert
        this.showAlert = false;
@@ -99,10 +99,8 @@ import { ActivatedRoute, Router, ParamMap  } from '@angular/router';
         this.showAlert = true;
       };
       // Re-enable the form
-      this.changePasswordForm.enable();
+      this.changePasswordForm.reset();
 
-      // Reset the form
-      this.changePasswordNgForm.resetForm();
     }
 
     
