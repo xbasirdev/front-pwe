@@ -185,7 +185,7 @@ export class UsuarioImportComponent {
 
   file: string | ArrayBuffer;
     
-  constructor(  public usuarioService: UsuarioService, @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+  constructor( public usuarioService: UsuarioService, @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
   alertMessage(){
     this.alert = {
@@ -210,35 +210,34 @@ export class UsuarioImportComponent {
       let formModel = new FormData();
       formModel.append("file",fileList[0]);
       formModel.append("action",this.actionG);
-      formModel.append("act_on","graduate");
+      formModel.append("act_on","administrator");
       this.usuarioService.importUsuarios(formModel).subscribe((res) => {
         this.alert = {
           type   : 'success',
-          message: 'usuarios importados correctamente.'
+          message: res.message
         };
         this.showAlert = true;
       }, (error) => {
-        
-        var e = "";
-        if( error.error.error.message != undefined){
-          e = error.error.error.message + " " + (error.error.error.messages[0]??"");
-        }
-        else{
-          if(error.error.error[Object.keys(error.error.error)[0]][0] != undefined){
-            e = error.error.error[Object.keys(error.error.error)[0]][0];
+            var e = "";
+          if( error.error.error.message != undefined){
+            e = error.error.error.message + " " + (error.error.error.message[0]??"");
           }
-          else if( error.error.message != undefined){
-            e = error.error.message;
-          }else{
-            e = error.message;
+          else{
+            if(error.error.error[Object.keys(error.error.error)[0]][0] != undefined){
+              e = error.error.error[Object.keys(error.error.error)[0]][0];
+            }
+            else if( error.error.message != undefined){
+              e = error.error.message;
+            }else{
+              e = error.message;
+            }
           }
-        }
+          this.alert = {
+            type   : 'error',
+            message: e
+          };
+          this.showAlert = true;
         
-        this.alert = {
-          type   : 'error',
-          message: e
-        };
-        this.showAlert = true;
       });
     }
   }
