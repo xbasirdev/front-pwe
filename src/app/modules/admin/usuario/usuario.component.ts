@@ -276,7 +276,7 @@ export class UsuarioExportComponent {
       return;
     }
     
-    this.usuarioService.exportUsuarios({'base_format':this.export_type, 'act_on':'graduate'}).subscribe((res) => {      
+    this.usuarioService.exportUsuarios({'base_format':this.export_type, 'act_on':'administrator'}).subscribe((res) => {      
       const blob = new Blob([res.body], { type: res.headers.get('content-type') });
       let date = formatDate(new Date(), 'yyyyMMddhsm', 'en');
       const fileName ="usuarios-"+date+"."+this.export_type;
