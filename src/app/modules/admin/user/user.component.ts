@@ -157,7 +157,7 @@ export class UserComponent implements OnInit
       this.formBuilderGroup.apellidos=[{value: this.user.apellidos, disabled: disabled}, [Validators.required]];
       this.formBuilderGroup.cedula=[{value: this.user.cedula, disabled: disabled}, [Validators.required, Validators.pattern("[VvEe]-[0-9]{6,}$")]];
       this.formBuilderGroup.correo=[{value: this.user.correo, disabled: disabled}, [Validators.required,Validators.email]];
-      this.formBuilderGroup.telefono=[{value: this.user.telefono, disabled: false }, [Validators.nullValidator, Validators.pattern("0(2(12|3[4589]|4[0-9]|[5-8][1-9]|9[1-5])|(4(12|14|16|24|26)))-?[0-9]{7}")]];
+      this.formBuilderGroup.telefono=[{value: this.user.telefono, disabled: false }, [Validators.nullValidator]];
       
 
       if(this.action == "Edit" || this.action == "Profile"){
@@ -213,12 +213,11 @@ export class UserComponent implements OnInit
     };
   }
 
-  saveUser(): void {
+  saveUser(): void {   
     if ( this.registerUserForm.invalid ){
         this.registerUserForm.markAllAsTouched();
         return;
-    }
-    this.showAlert = false;
+    }    
     this.registerUserForm.addControl('form_type', new FormControl({value: this.form, disabled: false}, Validators.nullValidator));
     let data = this.registerUserForm.value;
     this.userService.saveUser(data).subscribe((res) => {
@@ -231,12 +230,17 @@ export class UserComponent implements OnInit
         this.route.navigate([this.returnSuccess]);
       }    
     }, (error) => {
-      console.log(error);
+      let e= 'No se pudo crear el registro';
+      if(error.error.error[Object.keys(error.error.error)[0]][0] != undefined){
+        e = error.error.error[Object.keys(error.error.error)[0]][0];
+      }
+      this.showAlert = true;
       this.alert = {
         type   : 'error',
-        message: 'No se pudo crear el registro'
+        message: e
       };
-      this.showAlert = true;
+
+      
     });
   }
 
@@ -249,7 +253,7 @@ export class UserComponent implements OnInit
     }
 
     let cedula:string = this.userData;
-    this.showAlert = false;
+    
     this.registerUserForm.addControl('form_type', new FormControl({value: this.form, disabled: false}, Validators.nullValidator));
     let data = this.registerUserForm.value;
     data.form_type = this.form;
@@ -264,10 +268,15 @@ export class UserComponent implements OnInit
         this.route.navigate([this.returnSuccess]);
       }      
     }, (error) => {
+      let e= 'No se pudo actualizar el registro';
+      if(error.error.error[Object.keys(error.error.error)[0]][0] != undefined){
+        e = error.error.error[Object.keys(error.error.error)[0]][0];
+      }
       this.alert = {
         type   : 'error',
-        message: 'No se pudo actualizar los cambios'
+        message: e
       };
+      
       this.showAlert = true;
     });
   }
