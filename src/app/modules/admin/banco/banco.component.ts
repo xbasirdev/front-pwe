@@ -38,9 +38,9 @@ export class BancoComponent implements OnInit
     constructor(
         public bancoService: BancoService,
         private route: Router,
-        private router: ActivatedRoute, 
+        private router: ActivatedRoute,
     ){
-     
+
     }
 
     ngOnInit(): void {
@@ -102,11 +102,11 @@ export class BancoComponent implements OnInit
 export class BancoAddComponent implements OnInit
 {
 
-    public action = ''; 
-    public srcResult = ''; 
+    public action = '';
+    public srcResult = '';
     formFieldHelpers: string[] = [''];
 
-    public banco = {    
+    public banco = {
       id: null,
       nombre: '',
       descripcion: '',
@@ -121,9 +121,9 @@ export class BancoAddComponent implements OnInit
     constructor(
         public bancoService: BancoService,
         private route: Router,
-        private router: ActivatedRoute, 
+        private router: ActivatedRoute,
     ){
-     
+
     }
 
     ngOnInit(): void {
@@ -131,7 +131,7 @@ export class BancoAddComponent implements OnInit
             if(this.router.snapshot.routeConfig.path === 'edit/:id') {
               this.action = 'Edit';
             }
-      
+
             if(this.router.snapshot.routeConfig.path === 'detail/:id') {
               this.action = 'Detail';
             }
@@ -145,7 +145,7 @@ export class BancoAddComponent implements OnInit
     listBancoRoute(): void {
         this.route.navigate(['/banco']);
     }
-    
+
     getBanco(id): void {
     this.bancoService.getBanco(id).subscribe((res) => {
       this.banco = res['data'];
@@ -166,7 +166,7 @@ export class BancoAddComponent implements OnInit
     })
     return finalData;
   }
-  
+
 
   saveBanco(): void {
     const finalForm = this.generateFinalForm();
@@ -218,15 +218,30 @@ export class BancoAddComponent implements OnInit
 export class BancoQuestionsComponent implements OnInit
 {
 
-  public action = ''; 
-  public srcResult = ''; 
+  public action = '';
+  public srcResult = '';
+  public bancoPreguntas;
   formFieldHelpers: string[] = [''];
 
-  public banco = {    
+  public banco = {
     id: null,
     nombre: '',
     descripcion: '',
   };
+
+
+  public bancoPregunta = {
+    id: null,
+    tipoPregunta_id: 1,
+    pregunta: '',
+    preguntaBanco: 1,
+    numPregunta: 0,
+    pregunta_id: null,
+    banco_id: this.router.snapshot.params.id
+  };
+
+  public tipoPreguntas = [];
+
 
   showAlert: boolean = false;
   alert: { type: FuseAlertType, message: string } = {
@@ -237,78 +252,87 @@ export class BancoQuestionsComponent implements OnInit
   constructor(
       public bancoService: BancoService,
       private route: Router,
-      private router: ActivatedRoute, 
+      private router: ActivatedRoute,
   ){
-   
+
   }
 
   ngOnInit(): void {
       this.getBanco(this.router.snapshot.params.id);
+      this.getBancoPreguntas(this.router.snapshot.params.id);
+      this.getTipoPreguntas();
   }
 
   listBancoRoute(): void {
       this.route.navigate(['/banco']);
   }
-  
+
   getBanco(id): void {
-  this.bancoService.getBanco(id).subscribe((res) => {
-    this.banco = res['data'];
-  }), (error) => {
-    console.log(error);
-    this.alert = {
-      type   : 'error',
-      message: 'No se encontro el banco'
+    this.bancoService.getBanco(id).subscribe((res) => {
+      this.banco = res['data'];
+    }), (error) => {
+      console.log(error);
+      this.alert = {
+        type   : 'error',
+        message: 'No se encontro el banco'
+      };
+      this.showAlert = true;
     };
-    this.showAlert = true;
-  };
-}
+  }
 
-generateFinalForm(): any {
-  const finalData = new FormData();
-  Object.keys(this.banco).forEach(key => {
-    finalData.append(key, this.banco[key]);
-  })
-  return finalData;
-}
+  getBancoPreguntas(id): void {
+    this.bancoService.getBancoPreguntas(id).subscribe((res) => {
+      this.bancoPreguntas = res['data'];
+    }), (error) => {
+      console.log(error);
+      this.alert = {
+        type   : 'error',
+        message: 'No se encontron las preguntas'
+      };
+      this.showAlert = true;
+    };
+  }
+
+  getTipoPreguntas(): void {
+    this.bancoService.getTipoPregunta().subscribe((res) => {
+      this.tipoPreguntas = res['data'];
+    }), (error) => {
+      console.log(error);
+      this.alert = {
+        type   : 'error',
+        message: 'No se encontraron los tipos de preguntas'
+      };
+      this.showAlert = true;
+    };
+  }
+
+  generateFinalFormPregunta(): any {
+        const finalData = new FormData();
+        Object.keys(this.bancoPregunta).forEach(key => {
+            finalData.append(key, this.bancoPregunta[key]);
+        })
+        return finalData;
+    }
 
 
-saveBanco(): void {
-  const finalForm = this.generateFinalForm();
-  this.bancoService.saveBanco(finalForm).subscribe((res) => {
-    this.alert = {
-      type   : 'success',
-      message: 'Se guardo correctamente el registro'
-    };
-    this.showAlert = true;
-    this.route.navigate(['/banco']);
-  }, (error) => {
-    console.log(error);
-    this.alert = {
-      type   : 'error',
-      message: 'No se pudo guardar el registro'
-    };
-    this.showAlert = true;
-  });
-}
-
-updateBanco(): void {
-  const finalUpdateForm = this.generateFinalForm();
-  console.log(finalUpdateForm);
-  console.log(this.banco);
-  this.bancoService.updateBanco(this.banco.id, this.banco).subscribe((res) => {
-    this.alert = {
-      type   : 'success',
-      message: 'Se edito correctamente el registro'
-    };
-    this.showAlert = true;
-    this.route.navigate(['/banco']);
-  }, (error) => {
-    console.log(error);
-    this.alert = {
-      type   : 'error',
-      message: 'No se pudo editar el registro'
-    };
-    this.showAlert = true;
-  });
-}
+    savePreguntaBanco(): void {
+        const finalForm = this.generateFinalFormPregunta();
+        this.bancoService.saveBancoPregunta(finalForm).subscribe((res) => {
+            this.alert = {
+            type   : 'success',
+            message: 'Se guardo correctamente el registro'
+            };
+            this.showAlert = true;
+            this.route.navigateByUrl('/banco', { skipLocationChange: true }).then(() => {
+                this.route.navigate(['/banco/preguntas/1']);
+            });
+        }, (error) => {
+            console.log(error);
+            this.alert = {
+            type   : 'error',
+            message: 'No se pudo guardar el registro'
+            };
+            this.showAlert = true;
+        });
+    }
 }

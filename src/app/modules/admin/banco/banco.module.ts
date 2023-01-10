@@ -18,6 +18,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 const bancoRoutes: Route[] = [
     {
@@ -52,6 +53,7 @@ const bancoRoutes: Route[] = [
         MatButtonModule,
         MatCheckboxModule,
         MatFormFieldModule,
+        MatExpansionModule,
         MatIconModule,
         MatInputModule,
         MatMenuModule,

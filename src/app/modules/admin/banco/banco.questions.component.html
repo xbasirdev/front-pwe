@@ -18,8 +18,8 @@
             <!-- Title -->
             <div class="mt-2">
                 <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10">
-                    <mat-icon [svgIcon]="'heroicons_outline:question-mark-circle'"></mat-icon> 
-                        <span>Gestionar Preguntas de Banco</span>
+                    <mat-icon [svgIcon]="'heroicons_outline:question-mark-circle'"></mat-icon>
+                        <span>Gestionar Preguntas de Banco: {{banco.nombre}}</span>
                 </h2>
             </div>
         </div>
@@ -37,33 +37,55 @@
     <!-- Main -->
     <div class="flex-auto p-6 sm:p">
         <div class="max-w-full">
-            <form class="grid grid-cols-2 gap-4 mt-8 p-8 pb-4 bg-card rounded-2xl shadow">
+            <form class="grid grid-cols-2 gap-4 mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
                 <div class="flex flex-col gt-xs:flex-row">
                     <mat-form-field
                         [ngClass]="formFieldHelpers"
                         class="flex-auto gt-xs:pr-3">
-                        <mat-label>Nombre</mat-label>
-                        <input matInput [(ngModel)]="banco.nombre" name="nombre" value="{{banco.nombre}}"
-                        [disabled]="action === 'Detail'">
+                        <mat-label>Titulo</mat-label>
+                        <input matInput [(ngModel)]="bancoPregunta.pregunta" name="pregunta" value="{{bancoPregunta.pregunta}}">
                     </mat-form-field>
-                    <mat-form-field
-                        [ngClass]="formFieldHelpers"
-                        class="flex-auto gt-xs:pl-3">
-                        <mat-label>Descripcion</mat-label>
-                        <textarea cdkTextareaAutosize matInput [(ngModel)]="banco.descripcion" name="descripcion" value="{{banco.descripcion}}"
-                        [disabled]="action === 'Detail'"></textarea>
+                    <mat-form-field class="fuse-mat-no-subscript w-full flex-auto gt-md:pl-3 mb-4">
+                        <mat-label>Tipo de pregunta</mat-label>
+                        <mat-select [(ngModel)]="bancoPregunta.tipoPregunta_id" name="tipoPregunta" value="1">
+                            <ng-container *ngFor="let tipo of tipoPreguntas">
+                                <mat-option [value]="tipo.id">{{tipo.descripcion}}</mat-option>
+                            </ng-container>
+                        </mat-select>
                     </mat-form-field>
+                </div>
+                <div class="flex flex-col gt-md:flex-row" style="max-height: 120px;">
                 </div>
             </form>
         </div>
         <div style="margin-top: 10px; width: 100%; text-align: right;">
             <button
-                (click)="saveBanco()"
+                (click)="savePreguntaBanco()"
                 mat-flat-button
                 [color]="'primary'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Guardar</span>
             </button>
+        </div>
+    </div>
+    <div class="flex-auto p-6 sm:p">
+        <div class="max-w-full">
+            <p style="font-size: 20px; margin-left: 10px; margin-top: -50px;" *ngIf="!bancoPreguntas || bancoPreguntas.length == 0">No hay preguntas en este banco</p>
+            <mat-accordion>
+                <mat-expansion-panel *ngFor="let pregunta of bancoPreguntas; index as i" style="margin-bottom: 0px;">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        {{i}} - {{ pregunta.pregunta }}
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        Tipo: {{ pregunta.descripcion }}
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <p *ngIf="pregunta.nombre == 'seleccion' || pregunta.nombre == 'multiple'">Opciones:</p>
+                    <p *ngIf="pregunta.nombre == 'texto' || pregunta.nombre == 'numerica'">Este tipo de pregunta no tiene opciones</p>
+                    <p *ngIf="pregunta.nombre == 'rango'">Opciones: del 1 al 10</p>
+                </mat-expansion-panel>
+            </mat-accordion>
         </div>
     </div>
 </div>
