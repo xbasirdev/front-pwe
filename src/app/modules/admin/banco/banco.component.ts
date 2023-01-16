@@ -189,8 +189,6 @@ export class BancoAddComponent implements OnInit
 
   updateBanco(): void {
     const finalUpdateForm = this.generateFinalForm();
-    console.log(finalUpdateForm);
-    console.log(this.banco);
     this.bancoService.updateBanco(this.banco.id, this.banco).subscribe((res) => {
       this.alert = {
         type   : 'success',
@@ -221,6 +219,9 @@ export class BancoQuestionsComponent implements OnInit
   public action = '';
   public srcResult = '';
   public bancoPreguntas;
+  public opciones = ['Opción 1', 'Opción 2'];
+  public opciones2 = ['Opción 1', 'Opción 2'];
+  public allOpciones: any;
   formFieldHelpers: string[] = [''];
 
   public banco = {
@@ -237,7 +238,8 @@ export class BancoQuestionsComponent implements OnInit
     preguntaBanco: 1,
     numPregunta: 0,
     pregunta_id: null,
-    banco_id: this.router.snapshot.params.id
+    banco_id: this.router.snapshot.params.id,
+    opciones: []
   };
 
   public tipoPreguntas = [];
@@ -261,6 +263,7 @@ export class BancoQuestionsComponent implements OnInit
       this.getBanco(this.router.snapshot.params.id);
       this.getBancoPreguntas(this.router.snapshot.params.id);
       this.getTipoPreguntas();
+
   }
 
   listBancoRoute(): void {
@@ -283,6 +286,25 @@ export class BancoQuestionsComponent implements OnInit
   getBancoPreguntas(id): void {
     this.bancoService.getBancoPreguntas(id).subscribe((res) => {
       this.bancoPreguntas = res['data'];
+      this.bancoService.getPreguntaOpciones().subscribe((res2) => {
+        this.allOpciones = res2['data'];
+        Object.keys(this.bancoPreguntas).forEach(key => {
+            this.bancoPreguntas[key]['opciones'] = [];
+            Object.keys(this.allOpciones).forEach(key2 => {
+                if(this.bancoPreguntas[key]['pregunta_id'] == this.allOpciones[key2]['pregunta_id']){
+                   this.bancoPreguntas[key]['opciones'][this.bancoPreguntas[key]['opciones'].length] = this.allOpciones[key2]['nombre'];
+                }
+            })
+        });
+      console.log(this.bancoPreguntas)
+      }), (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se encontron las opciones'
+        };
+        this.showAlert = true;
+      };
     }), (error) => {
       console.log(error);
       this.alert = {
@@ -306,8 +328,40 @@ export class BancoQuestionsComponent implements OnInit
     };
   }
 
+  addOption(): any {
+    let optionNum = this.opciones.length + 1;
+    this.opciones[this.opciones.length] = "Opción " + optionNum;
+  }
+
+  deleteOption(num): any{
+    this.opciones.splice(num, 1);
+  }
+
+  deletePregunta(id): any{
+    this.bancoService.deleteBancoPregunta(id).subscribe((res) => {
+        this.alert = {
+          type   : 'success',
+          message: 'Se borro correctamente el registro'
+        };
+        this.showAlert = true;
+        this.route.navigateByUrl('/banco', { skipLocationChange: true }).then(() => {
+            this.route.navigate(['/banco/preguntas/' + this.router.snapshot.params.id]);
+        });
+      }, (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se pudo borrar el registro'
+        };
+        this.showAlert = true;
+      });
+  }
+
   generateFinalFormPregunta(): any {
         const finalData = new FormData();
+        if(this.bancoPregunta['tipoPregunta_id'] == 1 || this.bancoPregunta['tipoPregunta_id'] == 2){
+            this.bancoPregunta['opciones'] = this.opciones2;
+        }
         Object.keys(this.bancoPregunta).forEach(key => {
             finalData.append(key, this.bancoPregunta[key]);
         })
@@ -324,7 +378,7 @@ export class BancoQuestionsComponent implements OnInit
             };
             this.showAlert = true;
             this.route.navigateByUrl('/banco', { skipLocationChange: true }).then(() => {
-                this.route.navigate(['/banco/preguntas/1']);
+                this.route.navigate(['/banco/preguntas/' + this.router.snapshot.params.id]);
             });
         }, (error) => {
             console.log(error);

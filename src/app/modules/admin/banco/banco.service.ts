@@ -30,6 +30,13 @@ export class BancoService {
     return this.httpClient.get(`${AppSettings.API_GENERAL}bancoPregunta/${id}`, httpOptions);
   }
 
+  public getPreguntaOpciones(): any {
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.get(`${AppSettings.API_GENERAL}opcionPregunta`, httpOptions);
+  }
+
   public getTipoPregunta(): any {
     const httpOptions = {
       headers: new HttpHeaders({})
@@ -70,5 +77,12 @@ export class BancoService {
       headers: new HttpHeaders({})
     };
     return this.httpClient.post(`${AppSettings.API_GENERAL}bancoPregunta/`, parameters, httpOptions);
+  }
+
+  public deleteBancoPregunta(id): any {
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.delete(`${AppSettings.API_GENERAL}bancoPregunta/${id}`, httpOptions);
   }
 }

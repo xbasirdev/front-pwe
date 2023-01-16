@@ -37,7 +37,7 @@
     <!-- Main -->
     <div class="flex-auto p-6 sm:p">
         <div class="max-w-full">
-            <form class="grid grid-cols-2 gap-4 mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
+            <div class="grid grid-cols-2 gap-4 mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
                 <div class="flex flex-col gt-xs:flex-row">
                     <mat-form-field
                         [ngClass]="formFieldHelpers"
@@ -45,6 +45,35 @@
                         <mat-label>Titulo</mat-label>
                         <input matInput [(ngModel)]="bancoPregunta.pregunta" name="pregunta" value="{{bancoPregunta.pregunta}}">
                     </mat-form-field>
+                    <span *ngIf="bancoPregunta.tipoPregunta_id == 1 || bancoPregunta.tipoPregunta_id == 2">Opciones de respuesta</span>
+                    <div class="flex flex-col gt-xs:flex-row" *ngIf="bancoPregunta.tipoPregunta_id == 1 || bancoPregunta.tipoPregunta_id == 2">
+                        <mat-form-field
+                        *ngFor="let opcion of opciones; index as i; trackBy:customTrackBy"
+                        [ngClass]="formFieldHelpers"
+                        class="flex-auto gt-xs:pr-3">
+                        <mat-label>Opción {{i + 1}}</mat-label>
+                        <input matInput [(ngModel)]="opciones2[i]">
+                        <button
+                            (click)="deleteOption(i)"
+                            [color]="'red'">
+                            <span class="ml-2 mr-1"><mat-icon
+                                class="icon-size-5 text-secondary"
+                                [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                            </span>
+                        </button>
+                        </mat-form-field>
+                    </div>
+                    <div style="margin-top: 10px; width: 100%; text-align: right;" *ngIf="bancoPregunta.tipoPregunta_id == 1 || bancoPregunta.tipoPregunta_id == 2">
+                        <button
+                            (click)="addOption()"
+                            mat-flat-button
+                            [color]="'primary'">
+                            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                            <span class="ml-2 mr-1">Opción adicional</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex flex-col gt-md:flex-row" style="max-height: 120px; ">
                     <mat-form-field class="fuse-mat-no-subscript w-full flex-auto gt-md:pl-3 mb-4">
                         <mat-label>Tipo de pregunta</mat-label>
                         <mat-select [(ngModel)]="bancoPregunta.tipoPregunta_id" name="tipoPregunta" value="1">
@@ -54,9 +83,7 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="flex flex-col gt-md:flex-row" style="max-height: 120px;">
-                </div>
-            </form>
+            </div>
         </div>
         <div style="margin-top: 10px; width: 100%; text-align: right;">
             <button
@@ -75,15 +102,29 @@
                 <mat-expansion-panel *ngFor="let pregunta of bancoPreguntas; index as i" style="margin-bottom: 0px;">
                     <mat-expansion-panel-header>
                       <mat-panel-title>
-                        {{i}} - {{ pregunta.pregunta }}
+                        {{i + 1}} - {{ pregunta.pregunta }}
                       </mat-panel-title>
                       <mat-panel-description>
-                        Tipo: {{ pregunta.descripcion }}
+                        Tipo: {{ pregunta.descripcion }} {{ pregunta.id }}
+                        <button
+                            style="margin-left: auto; margin-right: 100px;"
+                            (click)="deletePregunta(pregunta.pregunta_id)"
+                            [color]="'red'">
+                            <span class="ml-2 mr-1"><mat-icon
+                                class="icon-size-5 text-secondary"
+                                [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                            </span>
+                        </button>
                       </mat-panel-description>
                     </mat-expansion-panel-header>
                     <p *ngIf="pregunta.nombre == 'seleccion' || pregunta.nombre == 'multiple'">Opciones:</p>
                     <p *ngIf="pregunta.nombre == 'texto' || pregunta.nombre == 'numerica'">Este tipo de pregunta no tiene opciones</p>
                     <p *ngIf="pregunta.nombre == 'rango'">Opciones: del 1 al 10</p>
+                    <ul *ngIf="pregunta.opciones">
+                        <li *ngFor="let opcion of pregunta.opciones">
+                            - {{opcion}}
+                        </li>
+                    </ul>
                 </mat-expansion-panel>
             </mat-accordion>
         </div>
