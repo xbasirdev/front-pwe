@@ -170,17 +170,16 @@ export class UserComponent implements OnInit
         this.formBuilderGroup.password_confirm=[{value: "", disabled: false }, [Validators.required]];
       }
 
-      if(this.form == "graduate"){
+      if(this.form == "graduate"|| this.action == "Profile"){
         this.formBuilderGroup.carrera=[{value: this.user.egresado.carrera_id, disabled: disabled, onlySelf: true }, [Validators.required]];
         this.formBuilderGroup.periodo_egreso=[{value: this.user.egresado.periodo_egreso, disabled: disabled}, [Validators.required, Validators.pattern("^[12][0-9]{3}[-][1-9]{1}$")]];
         this.formBuilderGroup.correo_personal=[{value: this.user.egresado.correo, disabled: false },[Validators.email]];
         this.formBuilderGroup.fecha_egreso=[{value: moment(this.user.egresado.fecha_egreso).format("YYYY-MM-DDTHH:mm"), disabled: disabled} ];
+        
       }
-      console.log(this.formBuilderGroup);
-      console.log(this.form);
-      console.log(this.action);
 
       this.registerUserForm = this._formBuilder.group(this.formBuilderGroup, validatorMust);
+
   }
 
   getUser(): void {
