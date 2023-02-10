@@ -357,7 +357,7 @@ export class BancoQuestionsComponent implements OnInit
       });
   }
 
-  generateFinalFormPregunta(): any {
+    generateFinalFormPregunta(): any {
         const finalData = new FormData();
         if(this.bancoPregunta['tipoPregunta_id'] == 1 || this.bancoPregunta['tipoPregunta_id'] == 2){
             this.bancoPregunta['opciones'] = this.opciones2;

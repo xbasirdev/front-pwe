@@ -8,46 +8,68 @@ import { AppSettings } from '../../../core/settings/constants';
 export class GestionCuestionarioService {
 
   constructor(private httpClient: HttpClient) { }
-  
-  public getGestionCuestionarios(): any { 
+
+  public getGestionCuestionarios(): any {
     const httpOptions = {
       headers: new HttpHeaders({})
     };
     return this.httpClient.get(`${AppSettings.API_GATEWAY}cuestionario`, httpOptions);
   }
 
-  public getGestionCuestionario(id): any { 
+  public getGestionCuestionario(id): any {
     const httpOptions = {
       headers: new HttpHeaders({})
     };
     return this.httpClient.get(`${AppSettings.API_GATEWAY}cuestionario/${id}`, httpOptions);
   }
 
-  public getGestionCuestionarioCarreras(id): any { 
+  public getGestionCuestionarioCarreras(id): any {
     const httpOptions = {
       headers: new HttpHeaders({})
     };
     return this.httpClient.get(`${AppSettings.API_GATEWAY}objetivoCuestionario/${id}`, httpOptions);
   }
 
-  public saveGestionCuestionarios(parameters): any { 
+  public saveGestionCuestionarios(parameters): any {
     const httpOptions = {
       headers: new HttpHeaders({})
     };
     return this.httpClient.post(`${AppSettings.API_GATEWAY}cuestionario`, parameters, httpOptions);
   }
 
-  public updateCuestionario(id, parameters): any { 
+  public updateCuestionario(id, parameters): any {
     const httpOptions = {
       headers: new HttpHeaders({})
     };
     return this.httpClient.patch(`${AppSettings.API_GENERAL}cuestionario/${id}`, parameters, httpOptions);
   }
 
-  public deleteCuestionario(id): any { 
+  public deleteCuestionario(id): any {
     const httpOptions = {
       headers: new HttpHeaders({})
     };
     return this.httpClient.delete(`${AppSettings.API_GATEWAY}cuestionario/${id}`, httpOptions);
+  }
+
+
+  public getPreguntasCuestionario(id): any {
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.get(`${AppSettings.API_GENERAL}cuestionarioPregunta/${id}`, httpOptions);
+  }
+
+  public saveCuestionarioPregunta(parameters): any {
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.post(`${AppSettings.API_GENERAL}cuestionarioPregunta/`, parameters, httpOptions);
+  }
+
+  public deleteCuestionarioPregunta(id): any {
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.delete(`${AppSettings.API_GENERAL}cuestionarioPregunta/${id}`, httpOptions);
   }
 }

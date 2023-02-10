@@ -20,14 +20,14 @@
             <!-- Title -->
             <div class="mt-2">
                 <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10">
-                    <mat-icon [svgIcon]="'heroicons_outline:clipboard-copy'"></mat-icon> 
+                    <mat-icon [svgIcon]="'heroicons_outline:clipboard-copy'"></mat-icon>
                         <span *ngIf="action === 'Add'">Crear Cuestionario</span>
                         <span *ngIf="action === 'Detail'">Detalles Cuestionario</span>
                         <span *ngIf="action === 'Edit'">Editar Cuestionario</span>
                 </h2>
                 <button
                 *ngIf="action === 'Detail'"
-                (click)="saveCuestionario()"
+                (click)="sendCuestionario()"
                 mat-flat-button
                 [color]="'primary'">
                 <mat-icon [svgIcon]="'heroicons_outline:mail'"></mat-icon>

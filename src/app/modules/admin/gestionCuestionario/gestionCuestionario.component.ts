@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef, ViewChild } from '@angular/core';
 import { GestionCuestionarioService  } from './gestionCuestionario.service';
+import { BancoService } from '../banco/banco.service';
 import { CarreraService  } from './../carrera/carrera.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
@@ -49,9 +50,9 @@ export class GestionCuestionarioComponent implements OnInit
     constructor(
         public cuestionarioService: GestionCuestionarioService,
         private route: Router,
-        private router: ActivatedRoute, 
+        private router: ActivatedRoute,
     ){
-     
+
     }
 
     showAlert: boolean = false;
@@ -84,6 +85,10 @@ export class GestionCuestionarioComponent implements OnInit
 
     details(id): void {
       this.route.navigate(['/gestionCuestionario/detail/' + id])
+    }
+
+    questions(id): void {
+        this.route.navigate(['/gestionCuestionario/question/' + id])
     }
 
     delete(id): void {
@@ -124,8 +129,8 @@ export class GestionCuestionarioComponent implements OnInit
 export class CuestionarioGraphComponent implements OnInit
 {
 
-    public action = ''; 
-    public srcResult = ''; 
+    public action = '';
+    public srcResult = '';
     formFieldHelpers: string[] = [''];
     public chartGithubIssues: ApexOptions = {};
     public chartOptions: Partial<ChartOptions>;
@@ -629,7 +634,7 @@ export class CuestionarioGraphComponent implements OnInit
             if(this.router.snapshot.routeConfig.path === 'cuestionario/edit/:id') {
               this.action = 'Edit';
             }
-      
+
             if(this.router.snapshot.routeConfig.path === 'cuestionario/detail/:id') {
               this.action = 'Detail';
             }
@@ -641,14 +646,14 @@ export class CuestionarioGraphComponent implements OnInit
 
     onFileSelected(): void {
         const inputNode: any = document.querySelector('#file');
-      
+
         if (typeof (FileReader) !== 'undefined') {
           const reader = new FileReader();
-      
+
           reader.onload = (e: any) => {
             this.srcResult = e.target.result;
           };
-      
+
           reader.readAsArrayBuffer(inputNode.files[0]);
         }
     }
@@ -656,7 +661,7 @@ export class CuestionarioGraphComponent implements OnInit
     listCuestionariosRoute(): void {
         console.log("entra")
         this.route.navigate(['/cuestionario']);
-    }   
+    }
 }
 
 @Component({
@@ -668,12 +673,12 @@ export class CuestionarioGraphComponent implements OnInit
 export class GestionCuestionarioAddComponent implements OnInit
 {
 
-  public action: string = ''; 
-  public srcResult = ''; 
+  public action: string = '';
+  public srcResult = '';
   formFieldHelpers: string[] = [''];
 
-  
-  public cuestionario: Cuestionario = {    
+
+  public cuestionario: Cuestionario = {
     id: null,
     nombre: '',
     user_id: 1,
@@ -699,9 +704,9 @@ export class GestionCuestionarioAddComponent implements OnInit
       public gestionCuestionarioService: GestionCuestionarioService,
       public carreraService: CarreraService,
       private route: Router,
-      private router: ActivatedRoute, 
+      private router: ActivatedRoute,
   ){
-    
+
   }
 
   ngOnInit(): void {
@@ -747,10 +752,10 @@ export class GestionCuestionarioAddComponent implements OnInit
 
   listGestionCuestionarioRoute(): void {
       this.route.navigate(['/gestionCuestionario']);
-  } 
-  
+  }
+
   generateFinalForm(): any {
-     
+
     if(this.cuestionario.privacidad !== 'publico_fecha'){
       this.cuestionario.fecha_fin = new Date().toLocaleDateString('fr-CA');
       this.cuestionario.fecha_inicio = new Date().toLocaleDateString('fr-CA');
@@ -779,6 +784,10 @@ export class GestionCuestionarioAddComponent implements OnInit
       };
       this.showAlert = true;
     });
+  }
+
+  sendCuestionario(): void {
+    console.log("envio cuestionario");
   }
 
   updateCuestionario(): void {
@@ -830,3 +839,278 @@ export class GestionCuestionarioAddComponent implements OnInit
     });
   }*/
 }
+
+@Component({
+    selector     : 'gestionCuestionario-questions',
+    templateUrl  : './gestionCuestionario.questions.component.html',
+    styleUrls    : ['./gestionCuestionario.component.scss'],
+    encapsulation: ViewEncapsulation.None
+})
+export class GestionCuestionarioQuestionsComponent implements OnInit
+{
+
+  public action: string = '';
+  public srcResult = '';
+  formFieldHelpers: string[] = [''];
+
+  public cuestionarioPreguntas;
+  public opciones = ['Opción 1', 'Opción 2'];
+  public opciones2 = ['Opción 1', 'Opción 2'];
+  public allOpciones: any;
+  public bancos;
+  public showBancos = false;
+  public bancoInit = 1;
+
+  public cuestionario: Cuestionario = {
+    id: null,
+    nombre: '',
+    user_id: 1,
+    descripcion: '',
+    tipo: '',
+    privacidad: '',
+    objetivo: [],
+    fecha_fin: new Date().toLocaleDateString('fr-CA'),
+    fecha_inicio: new Date().toLocaleDateString('fr-CA'),
+  };
+
+  public cuestionarioPregunta = {
+    id: null,
+    tipoPregunta_id: 1,
+    pregunta: '',
+    preguntaBanco: 0,
+    numPregunta: 0,
+    pregunta_id: null,
+    cuestionario_id: this.router.snapshot.params.id,
+    opciones: []
+  };
+
+  public carreras: [];
+
+  public imageShow: string = '';
+  public tipoPreguntas = [];
+
+  showAlert: boolean = false;
+  alert: { type: FuseAlertType, message: string } = {
+      type   : 'success',
+      message: ''
+  };
+
+  constructor(
+      public gestionCuestionarioService: GestionCuestionarioService,
+      public bancoService: BancoService,
+      public carreraService: CarreraService,
+      private route: Router,
+      private router: ActivatedRoute,
+  ){
+
+  }
+
+  ngOnInit(): void {
+      this.getCuestionario(this.router.snapshot.params.id);
+      this.getCuestionarioPreguntas(this.router.snapshot.params.id);
+      this.getTipoPreguntas();
+      this.getBancoList();
+  }
+
+  getCuestionario(id): void {
+    this.gestionCuestionarioService.getGestionCuestionario(id).subscribe((res) => {
+      this.cuestionario = res['data'];
+      this.gestionCuestionarioService.getGestionCuestionarioCarreras(id).subscribe((res2) => {
+        console.log(res2)
+        this.cuestionario.objetivo = res2['data'];
+      });
+    }), (error) => {
+      console.log(error);
+      this.alert = {
+        type   : 'error',
+        message: 'No se encontro el cuestionario'
+      };
+      this.showAlert = true;
+    };
+  }
+
+  getCuestionarioPreguntas(id): void {
+    this.gestionCuestionarioService.getPreguntasCuestionario(id).subscribe((res) => {
+      this.cuestionarioPreguntas = res['data'];
+      this.bancoService.getPreguntaOpciones().subscribe((res2) => {
+        this.allOpciones = res2['data'];
+        console.log("opciones")
+        console.log(this.cuestionarioPreguntas)
+        console.log(this.allOpciones)
+        Object.keys(this.cuestionarioPreguntas).forEach(key => {
+            this.cuestionarioPreguntas[key]['opciones'] = [];
+            Object.keys(this.allOpciones).forEach(key2 => {
+                if(this.cuestionarioPreguntas[key]['id'] == this.allOpciones[key2]['pregunta_id']){
+                   this.cuestionarioPreguntas[key]['opciones'][this.cuestionarioPreguntas[key]['opciones'].length] = this.allOpciones[key2]['nombre'];
+                }
+            })
+        });
+      console.log(this.cuestionarioPreguntas)
+      }), (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se encontron las opciones'
+        };
+        this.showAlert = true;
+      };
+    }), (error) => {
+      console.log(error);
+      this.alert = {
+        type   : 'error',
+        message: 'No se encontro el cuestionario'
+      };
+      this.showAlert = true;
+    };
+  }
+
+  listGestionCuestionarioRoute(): void {
+      this.route.navigate(['/gestionCuestionario']);
+  }
+
+  addOption(): any {
+    let optionNum = this.opciones.length + 1;
+    this.opciones[this.opciones.length] = "Opción " + optionNum;
+  }
+
+  generateFinalForm(): any {
+
+    if(this.cuestionario.privacidad !== 'publico_fecha'){
+      this.cuestionario.fecha_fin = new Date().toLocaleDateString('fr-CA');
+      this.cuestionario.fecha_inicio = new Date().toLocaleDateString('fr-CA');
+    }
+    const finalData = new FormData();
+    Object.keys(this.cuestionario).forEach(key => {
+      finalData.append(key, this.cuestionario[key]);
+    })
+    return finalData;
+  }
+
+  saveCuestionario(): void {
+    const finalForm = this.generateFinalFormPregunta();
+    this.gestionCuestionarioService.saveCuestionarioPregunta(finalForm).subscribe((res) => {
+        this.alert = {
+        type   : 'success',
+        message: 'Se guardo correctamente el registro'
+        };
+        this.showAlert = true;
+        this.route.navigateByUrl('/gestionCuestionario', { skipLocationChange: true }).then(() => {
+            this.route.navigate(['/gestionCuestionario/question/' + this.router.snapshot.params.id]);
+        });
+    }, (error) => {
+        console.log(error);
+        this.alert = {
+        type   : 'error',
+        message: 'No se pudo guardar el registro'
+        };
+        this.showAlert = true;
+    });
+  }
+
+    generateFinalFormPregunta(): any {
+        const finalData = new FormData();
+        if(this.cuestionarioPregunta['tipoPregunta_id'] == 1 || this.cuestionarioPregunta['tipoPregunta_id'] == 2){
+            this.cuestionarioPregunta['opciones'] = this.opciones2;
+        }
+        Object.keys(this.cuestionarioPregunta).forEach(key => {
+            finalData.append(key, this.cuestionarioPregunta[key]);
+        })
+        return finalData;
+    }
+
+  saveCuestionarioBanco(id): void {
+    console.log("preguntas banco")
+    this.bancoService.setCuestionarioBancoPreguntas(id, this.router.snapshot.params.id).subscribe((res) => {
+        this.alert = {
+        type   : 'success',
+        message: 'Se guardo correctamente el registro'
+        };
+        this.showAlert = true;
+        this.route.navigateByUrl('/gestionCuestionario', { skipLocationChange: true }).then(() => {
+            this.route.navigate(['/gestionCuestionario/question/' + this.router.snapshot.params.id]);
+        });
+      }), (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se encontron las preguntas'
+        };
+        this.showAlert = true;
+      };
+  }
+
+  showBancosFunc(): void {
+    this.showBancos = !this.showBancos;
+  }
+
+  deletePregunta(id): any{
+    this.gestionCuestionarioService.deleteCuestionarioPregunta(id).subscribe((res) => {
+        this.alert = {
+          type   : 'success',
+          message: 'Se borro correctamente el registro'
+        };
+        this.showAlert = true;
+        this.route.navigateByUrl('/gestionCuestionario', { skipLocationChange: true }).then(() => {
+            this.route.navigate(['/gestionCuestionario/question/' + this.router.snapshot.params.id]);
+        });
+      }, (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se pudo borrar el registro'
+        };
+        this.showAlert = true;
+      });
+    }
+
+  seleccionarCarreras(): void {
+    this.cuestionario.objetivo = [];
+    Object.keys(this.carreras).forEach(key => {
+      let carrareId = this.carreras[key].id;
+      this.cuestionario.objetivo.push(carrareId)
+    })
+  }
+
+  getTipoPreguntas(): void {
+    this.bancoService.getTipoPregunta().subscribe((res) => {
+      this.tipoPreguntas = res['data'];
+      console.log(this.tipoPreguntas)
+    }), (error) => {
+      console.log(error);
+      this.alert = {
+        type   : 'error',
+        message: 'No se encontraron los tipos de preguntas'
+      };
+      this.showAlert = true;
+    };
+  }
+
+  getBancoList(): void {
+    this.bancoService.getBancos().subscribe((res) => {
+      this.bancos= res['data'];
+    })
+  }
+
+  /*
+  updateCuestionario(): void {
+    const finalUpdateForm = this.generateFinalForm();
+    console.log(finalUpdateForm);
+    console.log(this.cuestionario);
+    this.cuestionarioService.updateCuestionario(this.cuestionario.id, this.cuestionario).subscribe((res) => {
+      this.alert = {
+        type   : 'success',
+        message: 'Se edito correctamente el registro'
+      };
+      this.showAlert = true;
+      this.route.navigate(['/cuestionario']);
+    }, (error) => {
+      console.log(error);
+      this.alert = {
+        type   : 'error',
+        message: 'No se pudo editar el registro'
+      };
+      this.showAlert = true;
+    });
+  }*/
+}
+

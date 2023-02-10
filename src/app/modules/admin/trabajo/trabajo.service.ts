@@ -50,6 +50,13 @@ export class TrabajoService {
     return this.httpClient.get(`${AppSettings.API_GATEWAY}bolsaEgresado`, httpOptions);
   }
 
+  public getEgresadoAll(): any {
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.get(`${AppSettings.API_GATEWAY}egresado`, httpOptions);
+  }
+
   public saveAplicacion(parameters): any {
     const httpOptions = {
       headers: new HttpHeaders({})

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
-import { GestionCuestionarioAddComponent, GestionCuestionarioComponent } from 'app/modules/admin/gestionCuestionario/gestionCuestionario.component';
+import { GestionCuestionarioAddComponent, GestionCuestionarioComponent, GestionCuestionarioQuestionsComponent } from 'app/modules/admin/gestionCuestionario/gestionCuestionario.component';
 import { CuestionarioGraphComponent } from 'app/modules/admin/gestionCuestionario/gestionCuestionario.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -18,6 +18,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
 import { NgApexchartsModule } from "ng-apexcharts";
+import { MatExpansionModule } from '@angular/material/expansion';
 
 const cuestionarioRoutes: Route[] = [
     {
@@ -39,6 +40,10 @@ const cuestionarioRoutes: Route[] = [
     {
         path     : 'detail/:id',
         component: GestionCuestionarioAddComponent
+    },
+    {
+        path     : 'question/:id',
+        component: GestionCuestionarioQuestionsComponent
     }
 ];
 
@@ -46,7 +51,8 @@ const cuestionarioRoutes: Route[] = [
     declarations: [
         GestionCuestionarioComponent,
         CuestionarioGraphComponent,
-        GestionCuestionarioAddComponent
+        GestionCuestionarioAddComponent,
+        GestionCuestionarioQuestionsComponent
     ],
     imports     : [
         MatButtonModule,
@@ -65,6 +71,10 @@ const cuestionarioRoutes: Route[] = [
         MatTooltipModule,
         SharedModule,
         NgApexchartsModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatExpansionModule,
         RouterModule.forChild(cuestionarioRoutes)
     ]
 })

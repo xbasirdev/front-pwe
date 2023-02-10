@@ -12,98 +12,126 @@
                     <mat-icon
                         class="icon-size-5 text-secondary"
                         [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
-                    <a class="ml-1 text-primary-500">Responder Encuesta</a>
+                    <a class="ml-1 text-primary-500">Responder</a>
                 </div>
             </div>
             <!-- Title -->
             <div class="mt-2">
-                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
-                    <mat-icon [svgIcon]="'heroicons_outline:support'"></mat-icon> ¿Que tecnologias de desarrollo usaste a lo largo de la carrera?
+                <h2 *ngIf="cuestionario" class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+                    <mat-icon [svgIcon]="'heroicons_outline:support'"></mat-icon> {{ cuestionario.nombre }}
                 </h2>
             </div>
         </div>
     </div>
-    <div class="flex-auto p-6 sm:p">
+    <div *ngIf="loaded" class="flex-auto p-6 sm:p">
         <div class="max-w-full">
-            <mat-accordion>
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                      <mat-panel-title>
-                        1- Primer lenguaje?
-                      </mat-panel-title>
-                      <mat-panel-description>
-                        Respuesta texto
-                      </mat-panel-description>
-                    </mat-expansion-panel-header>
-                    <mat-form-field
+            <ng-container *ngFor="let pregunta of cuestionarioPreguntas; index as i">
+                <mat-accordion *ngIf="pregunta.nombre == 'texto'">
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                            - {{pregunta.pregunta}}
+                          </mat-panel-title>
+                          <mat-panel-description>
+                            Respuesta texto
+                          </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <mat-form-field
+                            [ngClass]="formFieldHelpers"
+                            class="flex-auto gt-xs:pr-3" style="width: 80%">
+                            <mat-label>Respuesta</mat-label>
+                        <input matInput (input)="setText(i, $event.target.value)">
+                        </mat-form-field>
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <mat-accordion  *ngIf="pregunta.nombre == 'numerica'">
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            - {{pregunta.pregunta}}
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            Respuesta numerica
+                        </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <mat-form-field
                         [ngClass]="formFieldHelpers"
                         class="flex-auto gt-xs:pr-3" style="width: 80%">
                         <mat-label>Respuesta</mat-label>
-                    <input matInput>
-                    </mat-form-field>
-                </mat-expansion-panel>
-            </mat-accordion>
-            <mat-accordion>
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        2 - Lenguaje favorito
-                    </mat-panel-title>
-                    <mat-panel-description>
-                        Respuesta texto
-                    </mat-panel-description>
-                    </mat-expansion-panel-header>
-                    <mat-form-field
-                    [ngClass]="formFieldHelpers"
-                    class="flex-auto gt-xs:pr-3" style="width: 80%">
-                    <mat-label>Respuesta</mat-label>
-                    <input matInput>
-                    </mat-form-field>
-                </mat-expansion-panel>
-            </mat-accordion>
-            <mat-accordion>
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        3 - Lenguajes en general
-                    </mat-panel-title>
-                    <mat-panel-description>
-                        Respuesta seleccion multiple
-                    </mat-panel-description>
-                    </mat-expansion-panel-header>
-                     <mat-checkbox style="margin: 4px" class="example-margin">C++</mat-checkbox>
-                     <mat-checkbox style="margin: 4px" class="example-margin">Java</mat-checkbox>
-                     <mat-checkbox style="margin: 4px" class="example-margin">Pascal</mat-checkbox>
-                     <mat-checkbox style="margin: 4px" class="example-margin">JavaScript</mat-checkbox>
-                     <mat-checkbox style="margin: 4px" class="example-margin">PHP</mat-checkbox>
-                     <mat-checkbox style="margin: 4px" class="example-margin">Go</mat-checkbox>
-                     <mat-checkbox style="margin: 4px" class="example-margin">Matlab</mat-checkbox>
-                </mat-expansion-panel>
-            </mat-accordion>
-            <mat-accordion>
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        4 - ¿Has usado alguno de estos lenguajes en tu campo laboral?
-                    </mat-panel-title>
-                    <mat-panel-description>
-                        Respuesta seleccion simple
-                    </mat-panel-description>
-                    </mat-expansion-panel-header>
-                    <mat-radio-group aria-label="Seleccione una opcion">
-                        <mat-radio-button value="1" style="margin: 4px">Si</mat-radio-button>
-                        <mat-radio-button value="2" style="margin: 4px">No</mat-radio-button>
-                    </mat-radio-group>
-                </mat-expansion-panel>
-            </mat-accordion>
+                        <input matInput type="number" (input)="setNumber(i, $event.target.value)">
+                        </mat-form-field>
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <mat-accordion  *ngIf="pregunta.nombre == 'multiple'">
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            - {{pregunta.pregunta}}
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            Respuesta seleccion multiple
+                        </mat-panel-description>
+                        </mat-expansion-panel-header>
+                         <mat-checkbox *ngFor="let opcion of pregunta.opciones" (click)="setMultiple(i, opcion)" style="margin: 4px" class="example-margin" value="{{opcion}}">{{opcion}}</mat-checkbox>
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <mat-accordion  *ngIf="pregunta.nombre == 'seleccion'">
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            - {{pregunta.pregunta}}
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            Respuesta seleccion simple
+                        </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <mat-radio-group aria-label="Seleccione una opcion">
+                            <mat-radio-button *ngFor="let opcion of pregunta.opciones" (click)="setSimple(i, opcion)" value="{{ opcion }}" style="margin: 4px">{{ opcion }}</mat-radio-button>
+                        </mat-radio-group>
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <mat-accordion  *ngIf="pregunta.nombre == 'rango'">
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            - {{pregunta.pregunta}}
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            Respuesta seleccion simple
+                        </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <mat-radio-group aria-label="Seleccione una opcion">
+                            <mat-radio-button (click)="setSimple(i, '1')" value="1" style="margin: 4px">1</mat-radio-button>
+                            <mat-radio-button (click)="setSimple(i, '2')" value="2" style="margin: 4px">2</mat-radio-button>
+                            <mat-radio-button (click)="setSimple(i, '3')" value="3" style="margin: 4px">3</mat-radio-button>
+                            <mat-radio-button (click)="setSimple(i, '4')" value="4" style="margin: 4px">4</mat-radio-button>
+                            <mat-radio-button (click)="setSimple(i, '5')" value="5" style="margin: 4px">5</mat-radio-button>
+                            <mat-radio-button (click)="setSimple(i, '6')" value="6" style="margin: 4px">6</mat-radio-button>
+                            <mat-radio-button (click)="setSimple(i, '7')" value="7" style="margin: 4px">7</mat-radio-button>
+                            <mat-radio-button (click)="setSimple(i, '8')" value="8" style="margin: 4px">8</mat-radio-button>
+                            <mat-radio-button (click)="setSimple(i, '9')" value="9" style="margin: 4px">9</mat-radio-button>
+                            <mat-radio-button (click)="setSimple(i, '10')" value="10" style="margin: 4px">10</mat-radio-button>
+                        </mat-radio-group>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </ng-container>
         </div>
-        <div style="margin-top: 10px; width: 100%; text-align: right;">
+        <div *ngIf="cuestionarioPreguntas" style="margin-top: 10px; width: 100%; text-align: right;">
             <button
+                *ngIf="cuestionarioPreguntas.length > 0"
+                (click)="answerCuestionario()"
                 mat-flat-button
                 [color]="'primary'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Completar cuestionario</span>
             </button>
+            <button
+            *ngIf="cuestionarioPreguntas.length == 0"
+            mat-flat-button
+            [color]="'primary'" disabled>
+            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+            <span class="ml-2 mr-1">Completar cuestionario</span>
+        </button>
         </div>
     </div>
 </div>

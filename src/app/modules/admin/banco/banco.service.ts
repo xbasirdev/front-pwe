@@ -72,6 +72,13 @@ export class BancoService {
     return this.httpClient.delete(`${AppSettings.API_GATEWAY}banco/${id}`, httpOptions);
   }
 
+  public setCuestionarioBancoPreguntas(id, cuestionario_id): any {
+    const httpOptions = {
+      headers: new HttpHeaders({})
+    };
+    return this.httpClient.post(`${AppSettings.API_GENERAL}bancoPregunta/${id}/${cuestionario_id}`, httpOptions);
+  }
+
   public saveBancoPregunta(parameters): any {
     const httpOptions = {
       headers: new HttpHeaders({})

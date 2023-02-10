@@ -6,7 +6,7 @@
             <!-- Breadcrumbs -->
             <div class="flex flex-wrap items-center font-medium">
                 <div>
-                    <a class="whitespace-nowrap text-primary-500"  (click)="listBancoRoute()">Banco</a>
+                    <a class="whitespace-nowrap text-primary-500"  (click)="listGestionCuestionarioRoute()">Cuestionario</a>
                 </div>
                 <div class="flex items-center ml-1 whitespace-nowrap">
                     <mat-icon
@@ -19,7 +19,7 @@
             <div class="mt-2">
                 <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10">
                     <mat-icon [svgIcon]="'heroicons_outline:question-mark-circle'"></mat-icon>
-                        <span>Gestionar Preguntas de Banco: {{banco.nombre}}</span>
+                        <span>Gestionar Preguntas de Cuestionario: {{cuestionario.nombre}}</span>
                 </h2>
             </div>
         </div>
@@ -35,6 +35,40 @@
     </fuse-alert>
 
     <!-- Main -->
+    <div style="width: 100%; text-align: left; margin-left: 30px; margin-top: 30px;">
+        <button
+            (click)="showBancosFunc()"
+            mat-flat-button
+            [color]="'primary'">
+            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+            <span class="ml-2 mr-1">Asignar preguntas de un banco</span>
+        </button>
+    </div>
+    <div *ngIf="showBancos" class="flex-auto p-6 sm:p">
+        <div class="max-w-full">
+            <div class="grid grid-cols-2 gap-4 mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
+                <div class="flex flex-col gt-md:flex-row" style="max-height: 120px; ">
+                    <mat-form-field class="fuse-mat-no-subscript w-full flex-auto gt-md:pl-3 mb-4">
+                        <mat-label>Banco de preguntas</mat-label>
+                        <mat-select [(ngModel)]="bancoInit" name="banco" value="1">
+                            <ng-container *ngFor="let banco of bancos">
+                                <mat-option [value]="banco.id">{{banco.nombre}}</mat-option>
+                            </ng-container>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div style="margin-top: 30px; width: 100%; text-align: right;">
+                    <button
+                        (click)="saveCuestionarioBanco(bancoInit)"
+                        mat-flat-button
+                        [color]="'primary'">
+                        <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                        <span class="ml-2 mr-1">Asignar preguntas</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="flex-auto p-6 sm:p">
         <div class="max-w-full">
             <div class="grid grid-cols-2 gap-4 mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
@@ -43,10 +77,10 @@
                         [ngClass]="formFieldHelpers"
                         class="flex-auto gt-xs:pr-3">
                         <mat-label>Titulo</mat-label>
-                        <input matInput [(ngModel)]="bancoPregunta.pregunta" name="pregunta" value="{{bancoPregunta.pregunta}}">
+                        <input matInput [(ngModel)]="cuestionarioPregunta.pregunta" name="pregunta" value="{{cuestionarioPregunta.pregunta}}">
                     </mat-form-field>
-                    <span *ngIf="bancoPregunta.tipoPregunta_id == 1 || bancoPregunta.tipoPregunta_id == 2">Opciones de respuesta</span>
-                    <div class="flex flex-col gt-xs:flex-row" *ngIf="bancoPregunta.tipoPregunta_id == 1 || bancoPregunta.tipoPregunta_id == 2">
+                    <span *ngIf="cuestionarioPregunta.tipoPregunta_id == 1 || cuestionarioPregunta.tipoPregunta_id == 2">Opciones de respuesta</span>
+                    <div class="flex flex-col gt-xs:flex-row" *ngIf="cuestionarioPregunta.tipoPregunta_id == 1 || cuestionarioPregunta.tipoPregunta_id == 2">
                         <mat-form-field
                         *ngFor="let opcion of opciones; index as i; trackBy:customTrackBy"
                         [ngClass]="formFieldHelpers"
@@ -63,7 +97,7 @@
                         </button>
                         </mat-form-field>
                     </div>
-                    <div style="margin-top: 10px; width: 100%; text-align: right;" *ngIf="bancoPregunta.tipoPregunta_id == 1 || bancoPregunta.tipoPregunta_id == 2">
+                    <div style="margin-top: 10px; width: 100%; text-align: right;" *ngIf="cuestionarioPregunta.tipoPregunta_id == 1 || cuestionarioPregunta.tipoPregunta_id == 2">
                         <button
                             (click)="addOption()"
                             mat-flat-button
@@ -76,7 +110,7 @@
                 <div class="flex flex-col gt-md:flex-row" style="max-height: 120px; ">
                     <mat-form-field class="fuse-mat-no-subscript w-full flex-auto gt-md:pl-3 mb-4">
                         <mat-label>Tipo de pregunta</mat-label>
-                        <mat-select [(ngModel)]="bancoPregunta.tipoPregunta_id" name="tipoPregunta" value="1">
+                        <mat-select [(ngModel)]="cuestionarioPregunta.tipoPregunta_id" name="tipoPregunta" value="1">
                             <ng-container *ngFor="let tipo of tipoPreguntas">
                                 <mat-option [value]="tipo.id">{{tipo.descripcion}}</mat-option>
                             </ng-container>
@@ -87,19 +121,20 @@
         </div>
         <div style="margin-top: 10px; width: 100%; text-align: right;">
             <button
-                (click)="savePreguntaBanco()"
+                (click)="saveCuestionario()"
                 mat-flat-button
                 [color]="'primary'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                <span class="ml-2 mr-1">Guardar</span>
+                <span class="ml-2 mr-1">Guardar Pregunta</span>
             </button>
         </div>
     </div>
+
     <div class="flex-auto p-6 sm:p">
         <div class="max-w-full">
-            <p style="font-size: 20px; margin-left: 10px; margin-top: -50px;" *ngIf="!bancoPreguntas || bancoPreguntas.length == 0">No hay preguntas en este banco</p>
+            <p style="font-size: 20px; margin-left: 10px; margin-top: -50px;" *ngIf="!cuestionarioPreguntas || cuestionarioPreguntas.length == 0">No hay preguntas en este cuestionario</p>
             <mat-accordion>
-                <mat-expansion-panel *ngFor="let pregunta of bancoPreguntas; index as i" style="margin-bottom: 0px;">
+                <mat-expansion-panel *ngFor="let pregunta of cuestionarioPreguntas; index as i" style="margin-bottom: 0px;">
                     <mat-expansion-panel-header>
                       <mat-panel-title>
                         {{i + 1}} - {{ pregunta.pregunta }}
@@ -108,7 +143,7 @@
                         Tipo: {{ pregunta.descripcion }}
                         <button
                             style="margin-left: auto; margin-right: 100px;"
-                            (click)="deletePregunta(pregunta.pregunta_id)"
+                            (click)="deletePregunta(pregunta.id)"
                             [color]="'red'">
                             <span class="ml-2 mr-1"><mat-icon
                                 class="icon-size-5 text-secondary"

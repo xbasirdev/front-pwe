@@ -54,7 +54,9 @@
                         {{trabajo.trabajo}}
                     </span>
                     <span *ngIf='column == "egresado"'>
-                        {{trabajo.egresado_id}}
+                        <button  mat-flat-button [color]="'primary'" style="margin: 5px" (click)="redirectEgresado(trabajo.egresado_id)">
+                            Ver egresado
+                        </button>
                     </span>
                     <span *ngIf='column == "estado"'>
                         {{trabajo.estado}}

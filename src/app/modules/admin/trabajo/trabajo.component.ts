@@ -332,17 +332,25 @@ export class TrabajoAplicacionComponent implements OnInit
     ngOnInit(): void {
         this.trabajoService.getTrabajoEgresadoAll().subscribe((res) => {
             this.trabajoService.getTrabajos().subscribe((res2) => {
-                Object.keys(res['data']).forEach(key => {
-                    Object.keys(res2['data']).forEach(key2 => {
-                        if(res['data'][key]['bolsa_trabajo_id'] == res2['data'][key2]['id']){
-                            res['data'][key]['trabajo'] = res2['data'][key2]['nombre'];
-                        }
-                    })
-                });
-                this.trabajosCount = res['data'].length;
-                this.trabajos = new MatTableDataSource<any>(res['data']);
-                this.trabajos.paginator = this.paginator;
-                this.trabajos.sort = this.sort;
+                this.trabajoService.getEgresadoAll().subscribe((res3) => {
+                    console.log(res3)
+                    Object.keys(res['data']).forEach(key => {
+                        Object.keys(res2['data']).forEach(key2 => {
+                            if(res['data'][key]['bolsa_trabajo_id'] == res2['data'][key2]['id']){
+                                res['data'][key]['trabajo'] = res2['data'][key2]['nombre'];
+                                Object.keys(res3['data']).forEach(key3 => {
+                                    if(res['data'][key]['egresado_id'] == res3['data'][key3]['id']){
+                                        res['data'][key]['egresado_id'] = res3['data'][key3]['cedula'];
+                                    }
+                                })
+                            }
+                        })
+                    });
+                    this.trabajosCount = res['data'].length;
+                    this.trabajos = new MatTableDataSource<any>(res['data']);
+                    this.trabajos.paginator = this.paginator;
+                    this.trabajos.sort = this.sort;
+                })
             })
         })
     }
@@ -356,6 +364,10 @@ export class TrabajoAplicacionComponent implements OnInit
 
     redirectTrabajo(id): void {
         this.route.navigate(['/trabajo/detail/' + id])
+    }
+
+    redirectEgresado(id): void {
+        this.route.navigate(['/usuario/detail/' + id])
     }
 
 
