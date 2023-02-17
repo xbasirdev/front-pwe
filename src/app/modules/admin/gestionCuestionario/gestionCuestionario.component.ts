@@ -113,6 +113,10 @@ export class GestionCuestionarioComponent implements OnInit
       this.route.navigate(['/gestionCuestionario/edit/' + id])
     }
 
+    redirectGraph(id): void {
+        this.route.navigate(['/gestionCuestionario/graph/' + id])
+      }
+
     applyFilter(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
         this.cuestionarios.filter = filterValue.trim().toLowerCase();
@@ -135,6 +139,49 @@ export class CuestionarioGraphComponent implements OnInit
     public chartGithubIssues: ApexOptions = {};
     public chartOptions: Partial<ChartOptions>;
     public series;
+
+    public cuestionarioPreguntas;
+    public opciones = ['Opción 1', 'Opción 2'];
+    public opciones2 = ['Opción 1', 'Opción 2'];
+    public allOpciones: any;
+    public bancos;
+    public showBancos = false;
+    public bancoInit = 1;
+
+    public cuestionario: Cuestionario = {
+      id: null,
+      nombre: '',
+      user_id: 1,
+      descripcion: '',
+      tipo: '',
+      privacidad: '',
+      objetivo: [],
+      fecha_fin: new Date().toLocaleDateString('fr-CA'),
+      fecha_inicio: new Date().toLocaleDateString('fr-CA'),
+    };
+
+    public cuestionarioPregunta = {
+      id: null,
+      tipoPregunta_id: 1,
+      pregunta: '',
+      preguntaBanco: 0,
+      numPregunta: 0,
+      pregunta_id: null,
+      cuestionario_id: this.router.snapshot.params.id,
+      opciones: []
+    };
+
+    public carreras: [];
+
+    public imageShow: string = '';
+    public tipoPreguntas = [];
+
+    showAlert: boolean = false;
+    alert: { type: FuseAlertType, message: string } = {
+        type   : 'success',
+        message: ''
+    };
+
     public data  = {
         "githubIssues": {
             "overview": {
@@ -557,7 +604,9 @@ export class CuestionarioGraphComponent implements OnInit
 
     constructor(  public cuestionarioService: GestionCuestionarioService,
         private route: Router,
-        private router: ActivatedRoute, ) {
+        private router: ActivatedRoute,
+        public gestionCuestionarioService: GestionCuestionarioService,
+        public bancoService: BancoService, ) {
         this.chartOptions = {
           series: [
             {
@@ -627,21 +676,9 @@ export class CuestionarioGraphComponent implements OnInit
       }
 
     ngOnInit(): void {
-
-        console.log("pantalla correcta")
-        if(this.router.snapshot.routeConfig.path !== 'cuestionario/graph/:id'){
-
-            if(this.router.snapshot.routeConfig.path === 'cuestionario/edit/:id') {
-              this.action = 'Edit';
-            }
-
-            if(this.router.snapshot.routeConfig.path === 'cuestionario/detail/:id') {
-              this.action = 'Detail';
-            }
-          }
-          else {
-            this.action = 'Graph';
-          }
+        this.action = 'Graph';
+        this.getCuestionario(this.router.snapshot.params.id);
+        this.getCuestionarioPreguntas(this.router.snapshot.params.id);
     }
 
     onFileSelected(): void {
@@ -659,9 +696,60 @@ export class CuestionarioGraphComponent implements OnInit
     }
 
     listCuestionariosRoute(): void {
-        console.log("entra")
-        this.route.navigate(['/cuestionario']);
+        this.route.navigate(['/gestionCuestionario']);
     }
+
+    getCuestionario(id): void {
+        this.gestionCuestionarioService.getGestionCuestionario(id).subscribe((res) => {
+          this.cuestionario = res['data'];
+          this.gestionCuestionarioService.getGestionCuestionarioCarreras(id).subscribe((res2) => {
+            console.log(res2)
+            this.cuestionario.objetivo = res2['data'];
+          });
+        }), (error) => {
+          console.log(error);
+          this.alert = {
+            type   : 'error',
+            message: 'No se encontro el cuestionario'
+          };
+          this.showAlert = true;
+        };
+      }
+
+      getCuestionarioPreguntas(id): void {
+        this.gestionCuestionarioService.getPreguntasCuestionario(id).subscribe((res) => {
+          this.cuestionarioPreguntas = res['data'];
+          this.bancoService.getPreguntaOpciones().subscribe((res2) => {
+            this.allOpciones = res2['data'];
+            console.log("opciones")
+            console.log(this.cuestionarioPreguntas)
+            console.log(this.allOpciones)
+            Object.keys(this.cuestionarioPreguntas).forEach(key => {
+                this.cuestionarioPreguntas[key]['opciones'] = [];
+                Object.keys(this.allOpciones).forEach(key2 => {
+                    if(this.cuestionarioPreguntas[key]['id'] == this.allOpciones[key2]['pregunta_id']){
+                       this.cuestionarioPreguntas[key]['opciones'][this.cuestionarioPreguntas[key]['opciones'].length] = this.allOpciones[key2]['nombre'];
+                    }
+                })
+            });
+          console.log(this.cuestionarioPreguntas)
+          }), (error) => {
+            console.log(error);
+            this.alert = {
+              type   : 'error',
+              message: 'No se encontron las opciones'
+            };
+            this.showAlert = true;
+          };
+        }), (error) => {
+          console.log(error);
+          this.alert = {
+            type   : 'error',
+            message: 'No se encontro el cuestionario'
+          };
+          this.showAlert = true;
+        };
+      }
 }
 
 @Component({

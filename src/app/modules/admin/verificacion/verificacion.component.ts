@@ -49,9 +49,9 @@ export class VerificacionComponent implements OnInit
     constructor(
         public cuestionarioService: VerificacionService,
         private route: Router,
-        private router: ActivatedRoute, 
+        private router: ActivatedRoute,
     ){
-     
+
     }
 
     showAlert: boolean = false;
@@ -70,38 +70,7 @@ export class VerificacionComponent implements OnInit
     filter: ElementRef;
 
     ngOnInit(): void {
-        this.getList();
-    }
-
-    getList(): void {
-        this.cuestionarioService.getVerificacions().subscribe((res) => {
-          this.cuestionariosCount = res['data'].length;
-          this.cuestionarios = new MatTableDataSource<any>(res['data']);
-          this.cuestionarios.paginator = this.paginator;
-          this.cuestionarios.sort = this.sort;
-        })
-    }
-
-    details(id): void {
-      this.route.navigate(['/verificacion/detail/' + id])
-    }
-
-    delete(id): void {
-      this.cuestionarioService.deleteCuestionario(id).subscribe((res) => {
-        this.alert = {
-          type   : 'success',
-          message: 'Se borro correctamente el registro'
-        };
-        this.showAlert = true;
-        this.getList();
-      }, (error) => {
-        console.log(error);
-        this.alert = {
-          type   : 'error',
-          message: 'No se pudo borrar el registro'
-        };
-        this.showAlert = true;
-      });
+        this.route.navigate(['/cuestionario'])
     }
 
     edit(id): void {
@@ -124,8 +93,8 @@ export class VerificacionComponent implements OnInit
 export class CuestionarioGraphComponent implements OnInit
 {
 
-    public action = ''; 
-    public srcResult = ''; 
+    public action = '';
+    public srcResult = '';
     formFieldHelpers: string[] = [''];
     public chartGithubIssues: ApexOptions = {};
     public chartOptions: Partial<ChartOptions>;
@@ -629,7 +598,7 @@ export class CuestionarioGraphComponent implements OnInit
             if(this.router.snapshot.routeConfig.path === 'cuestionario/edit/:id') {
               this.action = 'Edit';
             }
-      
+
             if(this.router.snapshot.routeConfig.path === 'cuestionario/detail/:id') {
               this.action = 'Detail';
             }
@@ -641,14 +610,14 @@ export class CuestionarioGraphComponent implements OnInit
 
     onFileSelected(): void {
         const inputNode: any = document.querySelector('#file');
-      
+
         if (typeof (FileReader) !== 'undefined') {
           const reader = new FileReader();
-      
+
           reader.onload = (e: any) => {
             this.srcResult = e.target.result;
           };
-      
+
           reader.readAsArrayBuffer(inputNode.files[0]);
         }
     }
@@ -656,7 +625,7 @@ export class CuestionarioGraphComponent implements OnInit
     listCuestionariosRoute(): void {
         console.log("entra")
         this.route.navigate(['/cuestionario']);
-    }   
+    }
 }
 
 @Component({
@@ -668,12 +637,13 @@ export class CuestionarioGraphComponent implements OnInit
 export class VerificacionAddComponent implements OnInit
 {
 
-  public action: string = ''; 
-  public srcResult = ''; 
+  public action: string = '';
+  public srcResult = '';
   formFieldHelpers: string[] = [''];
+  public verCode = this.router.snapshot.params.id;
 
-  
-  public cuestionario: Cuestionario = {    
+
+  public cuestionario: Cuestionario = {
     id: null,
     nombre: '',
     user_id: 1,
@@ -699,9 +669,9 @@ export class VerificacionAddComponent implements OnInit
       public verificacionService: VerificacionService,
       public carreraService: CarreraService,
       private route: Router,
-      private router: ActivatedRoute, 
+      private router: ActivatedRoute,
   ){
-    
+
   }
 
   ngOnInit(): void {
@@ -714,7 +684,6 @@ export class VerificacionAddComponent implements OnInit
       if(this.router.snapshot.routeConfig.path === 'detail/:id') {
         this.action = 'Detail';
       }
-      this.getCuestionario(this.router.snapshot.params.id);
     }
     else {
       this.action = 'Add';
@@ -731,10 +700,6 @@ export class VerificacionAddComponent implements OnInit
   getCuestionario(id): void {
     this.verificacionService.getVerificacion(id).subscribe((res) => {
       this.cuestionario = res['data'];
-      this.verificacionService.getVerificacionCarreras(id).subscribe((res2) => {
-        console.log(res2)
-        this.cuestionario.objetivo = res2['data'];
-      });
     }), (error) => {
       console.log(error);
       this.alert = {
@@ -746,11 +711,11 @@ export class VerificacionAddComponent implements OnInit
   }
 
   listVerificacionRoute(): void {
-      this.route.navigate(['/verificacion']);
-  } 
-  
+      this.route.navigate(['/cuestionario']);
+  }
+
   generateFinalForm(): any {
-     
+
     if(this.cuestionario.privacidad !== 'publico_fecha'){
       this.cuestionario.fecha_fin = new Date().toLocaleDateString('fr-CA');
       this.cuestionario.fecha_inicio = new Date().toLocaleDateString('fr-CA');
@@ -760,44 +725,6 @@ export class VerificacionAddComponent implements OnInit
       finalData.append(key, this.cuestionario[key]);
     })
     return finalData;
-  }
-
-  saveCuestionario(): void {
-    const finalForm = this.generateFinalForm();
-    this.verificacionService.saveVerificacions(finalForm).subscribe((res) => {
-      this.alert = {
-        type   : 'success',
-        message: 'Se guardo correctamente el registro'
-      };
-      this.showAlert = true;
-      this.route.navigate(['/verificacion']);
-    }, (error) => {
-      console.log(error);
-      this.alert = {
-        type   : 'error',
-        message: 'No se pudo guardar el registro'
-      };
-      this.showAlert = true;
-    });
-  }
-
-  updateCuestionario(): void {
-    const finalForm2 = this.generateFinalForm();
-    this.verificacionService.updateCuestionario(this.router.snapshot.params.id, finalForm2).subscribe((res) => {
-      this.alert = {
-        type   : 'success',
-        message: 'Se guardo correctamente el registro'
-      };
-      this.showAlert = true;
-      this.route.navigate(['/verificacion']);
-    }, (error) => {
-      console.log(error);
-      this.alert = {
-        type   : 'error',
-        message: 'No se pudo guardar el registro'
-      };
-      this.showAlert = true;
-    });
   }
 
   seleccionarCarreras(): void {

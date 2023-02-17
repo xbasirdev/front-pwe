@@ -12,16 +12,14 @@
                     <mat-icon
                         class="icon-size-5 text-secondary"
                         [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
-                    <a *ngIf="action === 'Add'" class="ml-1 text-primary-500">Verificacion</a>
+                    <a class="ml-1 text-primary-500">Verificacion</a>
                 </div>
             </div>
             <!-- Title -->
             <div class="mt-2">
                 <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10">
-                    <mat-icon [svgIcon]="'heroicons_outline:clipboard-copy'"></mat-icon> 
-                        <span *ngIf="action === 'Add'">Codigo de verificacion</span>
-                        <span *ngIf="action === 'Detail'">Detalles Cuestionario</span>
-                        <span *ngIf="action === 'Edit'">Editar Cuestionario</span>
+                    <mat-icon [svgIcon]="'heroicons_outline:clipboard-copy'"></mat-icon>
+                        <span>Codigo de verificacion</span>
                 </h2>
             </div>
         </div>
@@ -41,12 +39,22 @@
             <form class="grid mt-8 p-8 pb-4 bg-card rounded-2xl shadow" style="text-align: center">
                 <h2 class="text-2xl tracking-tight leading-7 sm:leading-10">Gracias por responder la encuesta.</h2>
                 <h2 class="text-2xl font-bold tracking-tight leading-7 sm:leading-10">Su codigo de verificacion es:</h2>
-                <h2 class="text-2xl font-extrabold tracking-tight leading-7 sm:leading-10">26262004E05</h2>
+                <h2 class="text-2xl font-extrabold tracking-tight leading-7 sm:leading-10">{{ verCode }}</h2>
+                <div style="text-align: center;">
+                    <button
+                        style="width: 30%"
+                        (click)="listVerificacionRoute()"
+                        mat-flat-button
+                        [color]="'primary'">
+                        <mat-icon [svgIcon]="'heroicons_outline:clipboard-copy'"></mat-icon>
+                        <span class="ml-2 mr-1">Regresar al listado de cuestionarios y encuestas</span>
+                    </button>
+                </div>
             </form>
         </div>
     </div>
     <!-- Main -->
-    <!-- 
+    <!--
     <div class="flex-auto p-6 sm:p">
         <div class="max-w-full">
             <form class="grid grid-cols-2 gap-4 mt-8 p-8 pb-4 bg-card rounded-2xl shadow">

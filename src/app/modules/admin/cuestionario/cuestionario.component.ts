@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CuestionarioService  } from './cuestionario.service';
+import { VerificacionService  } from '../verificacion/verificacion.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -19,9 +20,16 @@ export class CuestionarioComponent implements OnInit
     public userId = localStorage.getItem('userID') ?? '';
     public carreraEgresado: number = null;
     public showCuestionarios = false;
+    public validationCode = '';
+    public validationResponse:any = null;
+    public validationResults:any;
+    public egresadoName = '';
+    public egresadoCedula = '';
+    public cuestionarioAnswer = '';
 
     constructor(
         public cuestionarioService: CuestionarioService,
+        public verificationService: VerificacionService,
         private route: Router,
         private router: ActivatedRoute,
     ){
@@ -80,6 +88,26 @@ export class CuestionarioComponent implements OnInit
     redirectAnswer(id): void {
         //console.log("id", id)
         this.route.navigate(['/cuestionario/responder/' + id])
+    }
+
+    validateCode(code): void {
+        console.log("code", code)
+        if(code == "" || code == " "){
+            code = "empty";
+        }
+        this.verificationService.getVerificacion(code).subscribe((res) => {
+            if(res['data'].length > 0){
+                this.validationResponse = true;
+                //console.log(res['data'][0])
+                this.egresadoName = res['data'][0]['nombreEgresado'] + " " + res['data'][0]['apellidoEgresado'];
+                this.egresadoCedula = res['data'][0]['cedulaEgresado'];
+                this.cuestionarioAnswer = res['data'][0]['cuestionario'];
+                this.validationResults = res['data'];
+                console.log(this.validationResults, "results")
+            }else{
+                this.validationResponse = false;
+            }
+        });
     }
 }
 
@@ -249,8 +277,7 @@ export class CuestionarioAnswerComponent implements OnInit
         let respuestasFinales = this.generateFinalFormRespuestas();
         this.cuestionarioService.saveRespuestas(respuestasFinales).subscribe((res) => {
             console.log("res");
-            alert("Se guardaron sus respuestas correctamente. su codigo de completacion es: " + res['data']['codigo']);
-            this.route.navigate(['/cuestionario']);
+            this.route.navigate(['/verificacion/detail/' + res['data']['codigo']]);
         }), (error) => {
             alert("Hubo un problema. No se guardaron tus respuesta.");
           };

@@ -6,7 +6,7 @@
         <!-- Title -->
         <div class="text-4xl font-extrabold tracking-tight"><mat-icon [svgIcon]="'heroicons_outline:clipboard-list'"></mat-icon> Cuestionarios y Encuestas</div>
         <!-- Actions -->
-        <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+        <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4"  *ngIf="roleId == '2'">
             <mat-slide-toggle
                 class="mt-8 sm:mt-0 sm:ml-auto"
                 [color]="'primary'"
@@ -17,8 +17,43 @@
     </div>
 
     <!-- Main -->
-    <div *ngIf="roleId == '1'">
-        <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">Los cuestionarios a responder solo son visibles para los egresados.</div>
+    <div *ngIf="roleId == '1'" style="overflow: scroll">
+        <div class="text-center">
+            <mat-form-field style="width: 500px; padding-top: 40px;"
+                [ngClass]="formFieldHelpers">
+                <mat-label>Codigo de verificacion</mat-label>
+                <input matInput [(ngModel)]="validationCode" name="validationCode" style="width: 500px;">
+            </mat-form-field>
+            <br>
+            <button
+                (click)="validateCode(validationCode)"
+                class="ml-4"
+                mat-flat-button
+                [color]="'primary'">
+                <mat-icon [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                <span class="ml-2 mr-1">Validar codigo de completacion</span>
+            </button>
+        </div>
+        <div class="mb-5 mt-5 p-5" *ngIf="validationResponse == true" style="background-color: white;">
+            <div class="max-w-full">
+                <form class="mt-8 p-8 pb-4 bg-card rounded shadow">
+                    <h2 style="font-size: 18px; font-weight: bold; text-align: center;">Codigo validado</h2>
+                    <h2 style="font-size: 18px;"> <span style="font-weight: bold;">Cuestionario: </span>: {{ cuestionarioAnswer }}</h2>
+                    <h2 style="font-size: 18px;"> <span style="font-weight: bold;">Egresado: </span>{{egresadoName}} - Cedula: {{ egresadoCedula }}</h2>
+                    <br>
+                    <div>
+                        <div *ngFor="let result of validationResults">
+                            <p ><span style="font-weight: bold;">Pregunta:</span> {{result.pregunta}} - <span style="font-weight: bold;"> Respuesta: </span> {{result.respuesta}} </p>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <div class="mb-5 mt-5 p-4 text-center" *ngIf="validationResponse == false">
+            <h2>No se encontraron resultados para el codigo especificado</h2>
+        </div>
+        <div class="p-8 sm:p-16 tracking-tight text-center" style="font-size: 16px;">Los cuestionarios a responder solo son visibles para los egresados.</div>
     </div>
     <div class="flex flex-auto p-6 sm:p-10" *ngIf="roleId == '2'" style="overflow: scroll">
         <div class="flex flex-col flex-auto w-full max-w-xs sm:max-w-5xl mx-auto">
