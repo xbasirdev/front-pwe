@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Inject, Input,ElementRef, ViewChild  } from '@angular/core';
 import { GestionCuestionarioService  } from './gestionCuestionario.service';
 import { BancoService } from '../banco/banco.service';
 import { CarreraService  } from './../carrera/carrera.service';
@@ -11,6 +11,11 @@ import { Cuestionario } from './cuestionario.model';
 import * as moment from 'moment';
 import { AppSettings } from '../../../core/settings/constants';
 import { ApexOptions } from 'ng-apexcharts';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FuseAnimations } from '@fuse/animations';
+import { saveAs } from 'file-saver';
+import {formatDate} from '@angular/common';
+
 import {
     ApexAxisChartSeries,
     ApexChart,
@@ -557,6 +562,7 @@ export class CuestionarioGraphComponent implements OnInit
 
     constructor(  public cuestionarioService: GestionCuestionarioService,
         private route: Router,
+        public dialog: MatDialog,
         private router: ActivatedRoute, ) {
         this.chartOptions = {
           series: [
@@ -656,6 +662,19 @@ export class CuestionarioGraphComponent implements OnInit
 
           reader.readAsArrayBuffer(inputNode.files[0]);
         }
+    }
+
+    openExportRDialog() {
+      const exportDialog = this.dialog.open(CuestionarioExportRComponent);  
+      exportDialog.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+      });
+    }
+    openExportDialog() {
+      const exportDialog = this.dialog.open(CuestionarioExportDComponent);  
+      exportDialog.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+      });
     }
 
     listCuestionariosRoute(): void {
@@ -1113,4 +1132,112 @@ export class GestionCuestionarioQuestionsComponent implements OnInit
     });
   }*/
 }
+
+
+/**
+ * @title Dialog with header, scrollable content and actions
+ */
+@Component({
+  selector: 'exportar-cuestionario-r',
+  templateUrl: 'gestionCuestionario.export.component.html',
+  animations   : FuseAnimations
+})
+
+export class CuestionarioExportRComponent {
+
+  export_type: string;
+  types: string[] = ['xlsx', 'xls', 'csv'];
+  showAlert: boolean = false;
+  title: string ="respuestas";
+  alert: { type: FuseAlertType, message: string } = {
+    type   : 'success',
+    message: ''
+  };
+  constructor(  public gestionCuestionarioService: GestionCuestionarioService, @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+  
+  export(): void{
+    if( this.export_type == undefined){
+      this.alert = {
+        type   : 'error',
+        message: "Seleccione un formato"
+      };
+      this.showAlert = true;
+      return;
+    }
+    
+    this.gestionCuestionarioService.exportR(1, {'base_format':this.export_type}).subscribe((res) => {      
+      const blob = new Blob([res.body], { type: res.headers.get('content-type') });
+      let date = formatDate(new Date(), 'yyyyMMddhsm', 'en');
+      const fileName ="cuestionarios-"+date+"."+this.export_type;
+      const file = new File([blob], fileName, { type: res.headers.get('content-type') });
+      saveAs(file);
+        this.alert = {
+          type   : 'success',
+          message: 'archivo exportado correctamente'
+        };
+        this.showAlert = true;
+      }, (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se pudo exportar el registro'
+        };
+        this.showAlert = true;
+      });
+  }
+
+}
+
+@Component({
+  selector: 'exportar-cuestionario-d',
+  templateUrl: 'gestionCuestionario.export.component.html',
+  animations   : FuseAnimations
+})
+
+export class CuestionarioExportDComponent {
+  title: string = "datos estadisticos";
+  export_type: string;
+  types: string[] = ['xlsx', 'xls', 'csv'];
+  showAlert: boolean = false;
+  alert: { type: FuseAlertType, message: string } = {
+    type   : 'success',
+    message: ''
+  };
+  constructor(  public gestionCuestionarioService: GestionCuestionarioService, @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+  
+  export(): void{
+    if( this.export_type == undefined){
+      this.alert = {
+        type   : 'error',
+        message: "Seleccione un formato"
+      };
+      this.showAlert = true;
+      return;
+    }
+    
+    this.gestionCuestionarioService.exportD(1, {'base_format':this.export_type, 'total':9,'total_dia':9,'total_mes':9}).subscribe((res) => {      
+      const blob = new Blob([res.body], { type: res.headers.get('content-type') });
+      let date = formatDate(new Date(), 'yyyyMMddhsm', 'en');
+      const fileName ="cuestionarios-"+date+"."+this.export_type;
+      const file = new File([blob], fileName, { type: res.headers.get('content-type') });
+      console.log(res);
+        saveAs(file);
+        this.alert = {
+          type   : 'success',
+          message: 'archivo exportado correctamente'
+        };
+        this.showAlert = true;
+      }, (error) => {
+        console.log(error);
+        this.alert = {
+          type   : 'error',
+          message: 'No se pudo exportar el registro'
+        };
+        this.showAlert = true;
+      });
+  }
+
+}
+
+export interface DialogData {}
 

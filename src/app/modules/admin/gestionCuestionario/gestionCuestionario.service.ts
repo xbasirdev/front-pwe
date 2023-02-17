@@ -72,4 +72,18 @@ export class GestionCuestionarioService {
     };
     return this.httpClient.delete(`${AppSettings.API_GENERAL}cuestionarioPregunta/${id}`, httpOptions);
   }
+  
+  public exportR(id, parameters): any { 
+    const httpOptions = {
+      headers: new HttpHeaders({}),
+     };
+    return this.httpClient.post(`${AppSettings.API_GATEWAY}cuestionario/export-r/${id}`, parameters, {responseType:'arraybuffer', observe: 'response'});
+  }
+
+  public exportD(id, parameters): any { 
+    const httpOptions = {
+      headers: new HttpHeaders({}),
+     };
+    return this.httpClient.post(`${AppSettings.API_GATEWAY}cuestionario/export-d/${id}`, parameters, {responseType:'arraybuffer', observe: 'response'});
+  }
 }
