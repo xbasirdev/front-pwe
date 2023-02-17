@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Exportar {{title}}</h2>
+<!-- Alert -->
+<fuse-alert
+class="mt-8 -mb-4"
+*ngIf="showAlert"
+[appearance]="'outline'"
+[showIcon]="false"
+[type]="alert.type"
+[@shake]="alert.type === 'error'">
+{{alert.message}}
+</fuse-alert>
+<div class="flex-auto p-6 ">
+<label id="radio-group-label mb-2">Selecciona el formato a exportar</label>
+<mat-radio-group role="radiogroup" style="margin-top: 20px;" class="mat-radio-group flex flex-col"
+    aria-labelledby="radio-group-label"
+    [(ngModel)]="export_type">
+    <mat-radio-button *ngFor="let type of types" [value]="type">
+      .{{type}}
+    </mat-radio-button>
+</mat-radio-group>
+</div>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-button (click)="export()" cdkFocusInitial>Exportar</button>
+</mat-dialog-actions>

@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 import { GestionCuestionarioAddComponent, GestionCuestionarioComponent, GestionCuestionarioQuestionsComponent } from 'app/modules/admin/gestionCuestionario/gestionCuestionario.component';
 import { CuestionarioGraphComponent } from 'app/modules/admin/gestionCuestionario/gestionCuestionario.component';
+import { CuestionarioExportRComponent } from 'app/modules/admin/gestionCuestionario/gestionCuestionario.component';
+import { CuestionarioExportDComponent } from 'app/modules/admin/gestionCuestionario/gestionCuestionario.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +19,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatRadioModule } from '@angular/material/radio';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { MatExpansionModule } from '@angular/material/expansion';
 
@@ -52,7 +56,9 @@ const cuestionarioRoutes: Route[] = [
         GestionCuestionarioComponent,
         CuestionarioGraphComponent,
         GestionCuestionarioAddComponent,
-        GestionCuestionarioQuestionsComponent
+        GestionCuestionarioQuestionsComponent,
+        CuestionarioExportDComponent,
+        CuestionarioExportRComponent
     ],
     imports     : [
         MatButtonModule,
@@ -70,6 +76,8 @@ const cuestionarioRoutes: Route[] = [
         MatTableModule,
         MatTooltipModule,
         SharedModule,
+        MatDialogModule,
+        MatRadioModule,
         NgApexchartsModule,
         MatButtonModule,
         MatCheckboxModule,
