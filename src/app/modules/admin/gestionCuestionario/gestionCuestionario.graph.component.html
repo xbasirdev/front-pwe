@@ -111,13 +111,21 @@
                     <apx-chart
                     [series]="chartOptions.series"
                     [chart]="chartOptions.chart"
-                    [dataLabels]="chartOptions.dataLabels"
+                    [labels]="chartOptions.labels"
                     [plotOptions]="chartOptions.plotOptions"
                     [responsive]="chartOptions.responsive"
                     [xaxis]="chartOptions.xaxis"
                     [legend]="chartOptions.legend"
                     [fill]="chartOptions.fill"
                   ></apx-chart>
+                </div>
+                <div *ngIf="preguntaSelect == 'Todas'">
+                    <div *ngFor="let pregunta of cuestionarioPreguntas; index as i">
+                        <span style="font-weight: bold;"> {{ i + 1}}. {{pregunta.pregunta}} - Tipo: {{ pregunta.nombre }}</span>
+                        <div *ngIf="pregunta.opciones.length > 0 && pregunta.opciones[0] != ''">
+                            <span *ngFor="let opcion of pregunta.opciones; index as j"> --- Opcion: {{ j + 1}}. {{opcion}} <br></span>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>

@@ -416,25 +416,217 @@ export class CuestionarioGraphComponent implements OnInit
 
       public generateChart(): void{
         if(this.generatePregunta == null){
-            this.showChart = true;
-        }else{
-            let newChartData = [44, 55, 13, 43, 22]
-            let newType = {
-                width: 380,
-                type: "pie"
+            if(this.chartSelect == "barra"){
+                this.chartTitle = "Grafica de todas las preguntas";
+                let preguntasGeneral = [];
+                let dataGeneral = [];
+                let opcionesMax = 0;
+                for(let i = 0; i < this.cuestionarioPreguntas.length; i++){
+                    preguntasGeneral[i] = "Pregunta - " + (i + 1);
+                    if(this.cuestionarioPreguntas[i]['opciones'].length > opcionesMax){
+                        opcionesMax = this.cuestionarioPreguntas[i]['opciones'].length
+                    }
+                }
+                let dataInit = [];
+                for(let i = 0; i < opcionesMax; i++){
+                    dataInit[i] = []
+                    for(let j = 0; j < this.cuestionarioPreguntas.length; j++){
+                        dataInit[i][j] = 0;
+                    }
+                }
+
+                console.log("data", dataInit)
+                /*
+                for(let i = 0; i < opcionesMax; i++){
+                    dataInit[i] = []
+                    for(let j = 0; j < this.cuestionarioPreguntas.length; j++){
+                        if(this.cuestionarioPreguntas[j]['opciones'].length > 0 && this.cuestionarioPreguntas[j]['opciones'][0] != ''){
+                            console.log("con esta pregunta entra", j)
+                            let indexOpt = 0;
+                            Object.keys(this.cuestionarioPreguntas[j]['opciones']).forEach((key, index) => {
+                                let dataVal = 0;
+                                Object.keys(this.cuestionarioPreguntas[j]['respuestas']).forEach((key2) => {
+                                    if(this.cuestionarioPreguntas[j]['respuestas'][key2]['respuesta'].includes(this.cuestionarioPreguntas[j]['opciones'][key])){
+                                        console.log("si cumple")
+                                        console.log("valida")
+                                        console.log(this.cuestionarioPreguntas[j]['respuestas'][key2]['respuesta'])
+                                        console.log(this.cuestionarioPreguntas[j]['opciones'][key])
+                                        dataVal ++;
+                                    }
+                                });
+                                dataInit[i][j] = dataVal;
+                            });
+                        }
+                    }
+                }*/
+
+                Object.keys(this.cuestionarioPreguntas).forEach((key, index) => {
+                    Object.keys(this.cuestionarioPreguntas[key]['opciones']).forEach((key2, index2) => {
+                        Object.keys(this.cuestionarioPreguntas[key]['respuestas']).forEach((key3, index3) => {
+                            if(this.cuestionarioPreguntas[key]['opciones'][key2].includes(this.cuestionarioPreguntas[key]['respuestas'][key3]['respuesta'])){
+                                dataInit[index2][index] =  dataInit[index2][index] + 1;
+                            }
+                        })
+                    });
+                });
+
+                console.log("data", dataInit)
+                let finalSerie = [];
+                for(let i = 0; i < opcionesMax; i++){
+                    let serieData = {
+                        name: "Opcion " + (i + 1) ,
+                        data: dataInit[i]
+                    }
+                    finalSerie[finalSerie.length] = serieData;
+                }
+
+                this.chartOptions = {
+                    series: finalSerie,
+                    chart: {
+                      type: "bar",
+                      height: 350,
+                      stacked: true,
+                      toolbar: {
+                        show: true
+                      },
+                      zoom: {
+                        enabled: true
+                      }
+                    },
+                    responsive: [
+                      {
+                        breakpoint: 480,
+                        options: {
+                          legend: {
+                            position: "bottom",
+                            offsetX: -10,
+                            offsetY: 0
+                          }
+                        }
+                      }
+                    ],
+                    plotOptions: {
+                      bar: {
+                        horizontal: false
+                      }
+                    },
+                    xaxis: {
+                      type: "category",
+                      categories: preguntasGeneral
+                    },
+                    legend: {
+                      position: "right",
+                      offsetY: 40
+                    },
+                    fill: {
+                      opacity: 1
+                    }
+                  };
+                this.showChart = true;
+            }else if(this.chartSelect == "dispersion"){
+                this.chartTitle = "Grafica de todas las preguntas";
+                this.showChart = true;
             }
-            let newChartAxis =
-                [
-                  "Pregunta 1",
-                  "Pregunta 2",
-                  "Pregunta 3",
-                  "Pregunta 4",
-                  "Pregunta 5",
-                  "Pregunta 18"
-                ]
-            this.chartOptions['chart'] = newType;
-            this.chartOptions['series'] = newChartData;
-            this.chartOptions['xaxis']['categories'] = newChartAxis;
+        }else{
+            if(this.chartSelect == "pie"){
+                if(this.generatePregunta['nombre'] == "rango"){
+                    this.generatePregunta['opciones'] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+                    let arrayOptions = []
+                    for(let i = 0; i < this.generatePregunta['opciones'].length; i++){
+                        arrayOptions[i] = 0;
+                    }
+
+                    Object.keys(this.generatePregunta['respuestas']).forEach(key => {
+                        let indexOpt = 0;
+                        Object.keys(this.generatePregunta['opciones']).forEach((key2, index) => {
+                            if(this.generatePregunta['opciones'][key2].includes(this.generatePregunta['respuestas'][key]['respuesta'])){
+                                arrayOptions[index] = arrayOptions[index] + 1;
+                            }
+                        });
+                    });
+                    this.chartTitle = 'Pregunta: ' + this.generatePregunta['pregunta'] + ' - Pregunta tipo: ' + this.generatePregunta['nombre'] ;
+                    let newChartData = arrayOptions;
+                    let newType = {
+                        width: 380,
+                        type: "pie"
+                    }
+                    let newChartAxis = this.generatePregunta['opciones'];
+                    this.chartOptions['chart'] = newType;
+                    this.chartOptions['series'] = newChartData;
+                    this.chartOptions['xaxis']['categories'] = newChartAxis;
+                    this.chartOptions['labels'] = newChartAxis;
+                    this.showChart = true;
+                }else{
+                    let arrayOptions = []
+                    for(let i = 0; i < this.generatePregunta['opciones'].length; i++){
+                        arrayOptions[i] = 0;
+                    }
+
+                    Object.keys(this.generatePregunta['respuestas']).forEach(key => {
+                        let indexOpt = 0;
+                        Object.keys(this.generatePregunta['opciones']).forEach((key2, index) => {
+                            if(this.generatePregunta['opciones'][key2].includes(this.generatePregunta['respuestas'][key]['respuesta'])){
+                                arrayOptions[index] = arrayOptions[index] + 1;
+                            }
+                        });
+                    });
+                    this.chartTitle = 'Pregunta: ' + this.generatePregunta['pregunta'] + ' - Pregunta tipo: ' + this.generatePregunta['nombre'] ;
+                    let newChartData = arrayOptions;
+                    let newType = {
+                        width: 380,
+                        type: "pie"
+                    }
+                    let newChartAxis = this.generatePregunta['opciones'];
+                    this.chartOptions['chart'] = newType;
+                    this.chartOptions['series'] = newChartData;
+                    this.chartOptions['xaxis']['categories'] = newChartAxis;
+                    this.chartOptions['labels'] = newChartAxis;
+                    this.showChart = true;
+                }
+            }else if(this.chartSelect == 'linea'){
+                let arrayOptions = []
+                let arrayData = []
+                this.chartTitle = 'Pregunta: ' + this.generatePregunta['pregunta'] + ' - Pregunta tipo: ' + this.generatePregunta['nombre'] ;
+                for(let i = 0; i < this.generatePregunta['respuestas'].length; i++){
+                    arrayOptions[i] = 'E' + (i + 1);
+                    arrayData[i] = parseInt(this.generatePregunta['respuestas'][i]['respuesta']);
+                }
+
+                this.chartOptions = {
+                    series: [
+                      {
+                        name: "respuesta",
+                        data: arrayData
+                      }
+                    ],
+                    chart: {
+                      height: 350,
+                      type: "line",
+                      zoom: {
+                        enabled: false
+                      }
+                    },
+                    dataLabels: {
+                      enabled: false
+                    },
+                    stroke: {
+                      curve: "straight"
+                    },
+                    grid: {
+                      row: {
+                        colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+                        opacity: 0.5
+                      }
+                    },
+                    xaxis: {
+                      categories: arrayOptions
+                    }
+                  };
+                  console.log(arrayOptions);
+                  console.log(arrayData);
+                  console.log(this.generatePregunta)
+                  this.showChart = true;
+            }
         }
       }
 
@@ -449,11 +641,11 @@ export class CuestionarioGraphComponent implements OnInit
         Object.keys(this.cuestionarioPreguntas).forEach(key => {
             if(this.cuestionarioPreguntas[key]['pregunta'] == id){
                 if(this.cuestionarioPreguntas[key]['nombre'] == 'seleccion' || this.cuestionarioPreguntas[key]['nombre'] == 'multiple' || this.cuestionarioPreguntas[key]['nombre'] == 'rango'){
-                    this.chartSelectOptions = ['barra', 'dispersion', 'pie'];
+                    this.chartSelectOptions = ['barra', 'pie'];
                     this.generatePregunta = this.cuestionarioPreguntas[key];
                 }
                 if(this.cuestionarioPreguntas[key]['nombre'] == 'numerica'){
-                    this.chartSelectOptions = ['barra', 'dispersion', 'linea'];
+                    this.chartSelectOptions = ['linea'];
                     this.generatePregunta = this.cuestionarioPreguntas[key];
                 }
                 if(this.cuestionarioPreguntas[key]['nombre'] == 'texto'){
