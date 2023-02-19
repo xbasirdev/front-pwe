@@ -47,7 +47,6 @@ export class UserMenuComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: User) => {
                 this.user = user;
-                console.log(this.user)
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();

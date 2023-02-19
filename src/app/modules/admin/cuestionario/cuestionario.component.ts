@@ -41,7 +41,6 @@ export class CuestionarioComponent implements OnInit
     ngOnInit(): void {
         this.cuestionarioService.getCuestionarios().subscribe((res) => {
             this.cuestionarioService.getObjetivoCuestionario().subscribe((res2) => {
-                console.log(res2)
                 this.cuestionarios = res['data'];
                 Object.keys(this.cuestionarios).forEach(key => {
                     this.cuestionarios[key]['show'] = false;
@@ -53,7 +52,6 @@ export class CuestionarioComponent implements OnInit
                         }
                     });
                     if(this.cuestionarios[key]['show'] == true && this.cuestionarios[key]['privacidad'] == 'publico_fecha'){
-                        console.log("este es rango fecha");
                         let current_date = new Date();
                         let start_date = new Date(this.cuestionarios[key]['fecha_inicio']);
                         let end_date = new Date(this.cuestionarios[key]['fecha_fin']);
@@ -67,8 +65,6 @@ export class CuestionarioComponent implements OnInit
                     }
                 })
                 this.cuestionarioService.getCuestionariosRespuesta().subscribe((res3) => {
-                    console.log(res3)
-                    console.log(this.cuestionarios)
                     this.showCuestionarios = true;
                 })
             });
@@ -76,34 +72,28 @@ export class CuestionarioComponent implements OnInit
     }
 
     filterByCategory(event): void {
-      console.log("entra")
       this.route.navigate(['/cuestionario']);
     }
 
     toggleCompleted(event): void {
-      console.log("entra")
       this.route.navigate(['/cuestionario']);
     }
 
     redirectAnswer(id): void {
-        //console.log("id", id)
         this.route.navigate(['/cuestionario/responder/' + id])
     }
 
     validateCode(code): void {
-        console.log("code", code)
         if(code == "" || code == " "){
             code = "empty";
         }
         this.verificationService.getVerificacion(code).subscribe((res) => {
             if(res['data'].length > 0){
                 this.validationResponse = true;
-                //console.log(res['data'][0])
                 this.egresadoName = res['data'][0]['nombreEgresado'] + " " + res['data'][0]['apellidoEgresado'];
                 this.egresadoCedula = res['data'][0]['cedulaEgresado'];
                 this.cuestionarioAnswer = res['data'][0]['cuestionario'];
                 this.validationResults = res['data'];
-                console.log(this.validationResults, "results")
             }else{
                 this.validationResponse = false;
             }
@@ -134,7 +124,6 @@ export class CuestionarioAddComponent implements OnInit
     }
 
     ngOnInit(): void {
-        console.log("pantalla correcta")
         if(this.router.snapshot.routeConfig.path !== 'cuestionario/create'){
 
             if(this.router.snapshot.routeConfig.path === 'cuestionario/edit/:id') {
@@ -199,7 +188,6 @@ export class CuestionarioAnswerComponent implements OnInit
   }
 
   ngOnInit(): void {
-    console.log("pantalla correcta")
     this.cuestionarioService.getCuestionario(this.router.snapshot.params.id).subscribe((res) => {
         this.cuestionario = res['data'];
         console.log(this.cuestionario)

@@ -18,7 +18,7 @@
             <!-- Title -->
             <div class="mt-2">
                 <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
-                    <mat-icon [svgIcon]="'heroicons_outline:chart-square-bar'"></mat-icon> Resultados y Estadisticas
+                    <mat-icon [svgIcon]="'heroicons_outline:chart-square-bar'"></mat-icon> Resultados y Estadisticas - {{cuestionario.nombre}}
                 </h2>
             </div>
         </div>
@@ -30,20 +30,20 @@
                 <div class="flex flex-col gt-xs:flex-row">
                     <mat-form-field appearance="fill">
                         <mat-label>Seleccionar Pregunta</mat-label>
-                        <mat-select>
+                        <mat-select  [(value)]="preguntaSelect"  (selectionChange)="onChangePregunta($event.value)">
                           <mat-option [value]="'Todas'">
                             Todas
                           </mat-option>
+                          <mat-option *ngFor="let pregunta of cuestionarioPreguntas" [value]="pregunta.pregunta">
+                            {{ pregunta.pregunta }} - {{ pregunta.nombre }}
+                          </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <section class="example-section mb-4">
-                        <mat-checkbox class="example-margin">Seleccionar todas las preguntas</mat-checkbox>
-                    </section>
                     <mat-form-field appearance="fill">
                         <mat-label>Tipo Grafico</mat-label>
-                        <mat-select>
-                          <mat-option [value]="'Barra'">
-                            Barra
+                        <mat-select [(value)]="chartSelect">
+                          <mat-option *ngFor="let chart of chartSelectOptions" [value]="chart">
+                            {{ chart }}
                           </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -53,56 +53,32 @@
                         <div class="font-medium text-secondary">
                             <span>Datos</span>
                             <div style="position: absolute; margin-left: 50px; margin-top: -30px;">
-                                <button [color]="'primary'"mat-flat-button (click)="openExportDialog()">
+                                <button [color]="'primary'"mat-flat-button (click)="openExportDialogBtn()">
                                     <mat-icon [svgIcon]="'heroicons_outline:chart-square-bar'"></mat-icon>
                                     <span class="ml-2 mr-1">Exportar Datos</span>
                                 </button>
-                                <button [color]="'primary'"mat-flat-button (click)="openExportRDialog()">
+                                <button [color]="'primary'"mat-flat-button (click)="openExportRDialogBtn()">
                                     <mat-icon [svgIcon]="'heroicons_outline:chart-square-bar'"></mat-icon>
                                     <span class="ml-2 mr-1">Exportar Respuestas</span>
                                 </button>
                             </div>
                         </div>
                         <div class="flex-auto grid grid-cols-4 gap-4 mt-6">
-                            <!-- New issues -->
-                            <div class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-indigo-50 text-indigo-800 dark:bg-white dark:bg-opacity-5 dark:text-indigo-400">
-                                <div class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight">
-                                    17
-                                </div>
-                                <div class="mt-1 text-sm sm:text-lg font-medium">Total Veces Iniciada</div>
-                            </div>
-                            <!-- Closed -->
                             <div class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-green-50 text-green-800 dark:bg-white dark:bg-opacity-5 dark:text-green-500">
-                                <div class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight">
-                                    9
+                                <div  class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight">
+                                    {{ completeTotal }}
                                 </div>
                                 <div class="mt-1 text-sm sm:text-lg font-medium">Total Veces Completada</div>
                             </div>
-                            <!-- Fixed -->
                             <div class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
                                 <div class="text-5xl font-semibold leading-none tracking-tight">
-                                    1
-                                </div>
-                                <div class="mt-1 text-sm font-medium text-center">Iniciadas hoy</div>
-                            </div>
-                            <!-- Won't fix -->
-                            <div class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
-                                <div class="text-5xl font-semibold leading-none tracking-tight">
-                                    0
+                                     {{ completeToday }}
                                 </div>
                                 <div class="mt-1 text-sm font-medium text-center">Completadas Hoy</div>
                             </div>
-                            <!-- Re-opened -->
                             <div class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
                                 <div class="text-5xl font-semibold leading-none tracking-tight">
-                                    17
-                                </div>
-                                <div class="mt-1 text-sm font-medium text-center">Iniciadas este Mes</div>
-                            </div>
-                            <!-- Needs triage -->
-                            <div class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
-                                <div class="text-5xl font-semibold leading-none tracking-tight">
-                                    9
+                                    {{ completeMonth }}
                                 </div>
                                 <div class="mt-1 text-sm font-medium text-center">Completadas este Mes</div>
                             </div>
@@ -112,17 +88,25 @@
             </form>
         </div>
         <div style="margin-top: 10px; width: 100%; text-align: right;">
-            <button
-                [routerLink]="[ './create']"
+            <button *ngIf="chartSelectOptions.length > 0"
+                (click)="generateChart()"
+                mat-flat-button
+                [color]="'primary'">
+                <mat-icon [svgIcon]="'heroicons_outline:chart-square-bar'"></mat-icon>
+                <span class="ml-2 mr-1">Generar Grafico</span>
+            </button>
+
+            <button *ngIf="chartSelectOptions.length == 0"
+                disabled
                 mat-flat-button
                 [color]="'primary'">
                 <mat-icon [svgIcon]="'heroicons_outline:chart-square-bar'"></mat-icon>
                 <span class="ml-2 mr-1">Generar Grafico</span>
             </button>
         </div>
-        <div class="max-w-full">
+        <div *ngIf="showChart" class="max-w-full">
             <form class="grid gap-4 mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
-                <div class="font-medium text-secondary">Grafica Generada - Que tecnologias de desarrollo usaste a lo largo de la carrera?</div>
+                <div class="font-medium text-secondary">{{ chartTitle }}</div>
                 <div id="chart">
                     <apx-chart
                     [series]="chartOptions.series"

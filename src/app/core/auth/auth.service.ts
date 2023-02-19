@@ -59,10 +59,10 @@ export class AuthService
     {
         localStorage.setItem('access_token', token);
     }
-    
+
     set accessUserCedula(cedula:string)
     {
-        localStorage.setItem('cedula', cedula);   
+        localStorage.setItem('cedula', cedula);
     }
 
     get accessUsername(): string
@@ -133,8 +133,6 @@ export class AuthService
 
         return this._httpClient.post(`${AppSettings.API_GATEWAY}auth/login`, credentials).pipe(
             switchMap((response: any) => {
-                console.log("al hacer login")
-                console.log(response)
                 // Store the access token in the local storage
                 this.accessToken = response.access_token;
 

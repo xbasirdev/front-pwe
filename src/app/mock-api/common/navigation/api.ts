@@ -38,10 +38,7 @@ export class NavigationMockApi
         this._fuseMockApiService
             .onGet('api/common/navigation')
             .reply(() => {
-                console.log("se define")
-                console.log(this._authService.accessRole)
                 if(this._authService.accessRole === '1'){
-                    console.log("entra uno")
                     this._compactNavigation.forEach((compactNavItem) => {
                         this._adminNavigation.forEach((defaultNavItem) => {
                             if ( defaultNavItem.id === compactNavItem.id )
@@ -58,7 +55,6 @@ export class NavigationMockApi
                         }
                     ];
                 }else if(this._authService.accessRole === '2'){
-                    console.log("entra dos")
                     this._compactNavigation.forEach((compactNavItem) => {
                         this._egresadoNavigation.forEach((defaultNavItem) => {
                             if ( defaultNavItem.id === compactNavItem.id )
@@ -75,7 +71,6 @@ export class NavigationMockApi
                         }
                     ];
                 }else {
-                    console.log("entra ninguno")
                     this._compactNavigation.forEach((compactNavItem) => {
                         this._noneNavigation.forEach((defaultNavItem) => {
                             if ( defaultNavItem.id === compactNavItem.id )

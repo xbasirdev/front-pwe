@@ -296,7 +296,6 @@ export class BancoQuestionsComponent implements OnInit
                 }
             })
         });
-      console.log(this.bancoPreguntas)
       }), (error) => {
         console.log(error);
         this.alert = {

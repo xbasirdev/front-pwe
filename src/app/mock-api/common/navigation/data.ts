@@ -1,6 +1,5 @@
 /* tslint:disable:max-line-length */
 import { FuseNavigationItem } from '@fuse/components/navigation';
-console.log("define el menu")
 export const adminNavigation: FuseNavigationItem[] = [
     {
         id   : 'usuarios',
